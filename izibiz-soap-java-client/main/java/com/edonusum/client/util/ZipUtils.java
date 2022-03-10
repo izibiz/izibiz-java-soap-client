@@ -1,8 +1,6 @@
 package com.edonusum.client.util;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -21,6 +19,26 @@ public class ZipUtils {
             fis = new FileOutputStream(pathToExtract+entry.getName());
 
             is.transferTo(fis);
+        }
+    }
+
+    public static String base64ToZip(byte[] base64, String path) {
+        try {
+            File file = new File(path);
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path+"user.zip"), base64.length);
+            bos.write(base64);
+            ZipFile zf = new ZipFile(path+"user.zip");
+
+            UnZipAllFiles(zf, path);
+
+            return "Created files: " + zf.getName();
+
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 }

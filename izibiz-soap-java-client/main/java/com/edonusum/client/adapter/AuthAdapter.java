@@ -40,31 +40,14 @@ public class AuthAdapter extends Adapter {
         return respObj.getValue();
     }
 
-    public String getGibUserList(GetGibUserListRequest request) {
+    public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) {
         JAXBElement<GetGibUserListResponse> response = (JAXBElement<GetGibUserListResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(URL, of.createGetGibUserListRequest(request));
 
-        try {
-            byte[] content = response.getValue().getCONTENT().getValue();
-            String pathToDocuments = System.getProperty("user.home")+"\\documents\\izibiz\\";
+        String pathToDocuments = System.getProperty("user.home")+"\\documents\\izibiz\\";
+        ZipUtils.base64ToZip(response.getValue().getCONTENT().getValue(), pathToDocuments);
 
-            File file = new File(pathToDocuments);
-            if(!file.exists()) {
-                file.mkdirs();
-            }
-
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(pathToDocuments+"user.zip"), content.length);
-            bos.write(content);
-            ZipFile zf = new ZipFile(pathToDocuments+"user.zip");
-
-            ZipUtils.UnZipAllFiles(zf, pathToDocuments);
-
-            return "Created files: " + zf.getName();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response.getValue().getERRORTYPE().getERRORCODE()+"";
+        return response.getValue();
     }
 
     public CheckUserResponse checkUser(CheckUserRequest request) {

@@ -16,7 +16,7 @@ public class AuthTests {
     AuthAdapter adapter;
 
     @Test
-    public void loginRequest_getsResponse() {
+    public void canLogin_returnsSessionID() {
         LoginRequest req = new LoginRequest();
 
         req.setUSERNAME("izibiz-test2");
@@ -35,9 +35,9 @@ public class AuthTests {
 
         System.out.println(resp.getSESSIONID());
 
-        //getGibUserListRequest_returnsResponse(resp.getSESSIONID());
+        getGibUserListRequest_returnsResponse(resp.getSESSIONID());
         checkUser_returnsResponse(resp.getSESSIONID());
-        //logoutRequest_returnsResponse(resp.getSESSIONID());
+        logoutRequest_returnsResponse(resp.getSESSIONID());
     }
 
     @Test
@@ -70,11 +70,11 @@ public class AuthTests {
 
         request.setREQUESTHEADER(header);
 
-        String resp = adapter.getGibUserList(request);
+        GetGibUserListResponse resp = adapter.getGibUserList(request);
 
-        Assertions.assertNotNull(resp);
+        Assertions.assertNull(resp.getERRORTYPE());
 
-        System.out.println(resp);
+        System.out.println("\n"+resp.getERRORTYPE());
     }
 
     @Test
