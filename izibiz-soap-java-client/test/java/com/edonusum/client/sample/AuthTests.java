@@ -2,25 +2,12 @@ package com.edonusum.client.sample;
 
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.wsdl.auth.*;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.ws.client.core.WebServiceTemplate;
 
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import java.io.IOException;
 
 @SpringBootTest
 public class AuthTests {
@@ -29,7 +16,7 @@ public class AuthTests {
     AuthAdapter adapter;
 
     @Test
-    public void loginRequest_getsResponse() throws IOException {
+    public void loginRequest_getsResponse() {
         LoginRequest req = new LoginRequest();
 
         req.setUSERNAME("izibiz-test2");
@@ -48,14 +35,16 @@ public class AuthTests {
 
         System.out.println(resp.getSESSIONID());
 
-        getGibUserListRequest_returnsResponse(resp.getSESSIONID());
+        //getGibUserListRequest_returnsResponse(resp.getSESSIONID());
+        checkUser_returnsResponse(resp.getSESSIONID());
+        //logoutRequest_returnsResponse(resp.getSESSIONID());
     }
 
     @Test
-    public void logoutRequest_returnsResponse(String id) {
+    public void logoutRequest_returnsResponse(String sessionId) {
         LogoutRequest req = new LogoutRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
-        header.setSESSIONID(id);
+        header.setSESSIONID(sessionId);
 
         req.setREQUESTHEADER(header);
 
@@ -68,21 +57,49 @@ public class AuthTests {
     }
 
     @Test
-    public void getGibUserListRequest_returnsResponse(String id) throws IOException {
-        GetGibUserListRequest ggulr = new GetGibUserListRequest();
+    public void getGibUserListRequest_returnsResponse(String sessionId) {
+        GetGibUserListRequest request = new GetGibUserListRequest();
 
         REQUESTHEADERType header = new REQUESTHEADERType();
-        header.setSESSIONID(id);
+        header.setSESSIONID(sessionId);
         header.setAPPLICATIONNAME("?");
 
-        ggulr.setALIASTYPE(ALIASTYPE.ALL);
-        ggulr.setTYPE("XML");
-        ggulr.setDOCUMENTTYPE("ALL");
+        request.setALIASTYPE(ALIASTYPE.ALL);
+        request.setTYPE("XML");
+        request.setDOCUMENTTYPE("ALL");
 
-        ggulr.setREQUESTHEADER(header);
+        request.setREQUESTHEADER(header);
 
-        GetGibUserListResponse response = adapter.getGibUserList(ggulr);
+        String resp = adapter.getGibUserList(request);
 
-        Assertions.assertNotNull(response.getCONTENT());
+        Assertions.assertNotNull(resp);
+
+        System.out.println(resp);
     }
+
+    @Test
+    public void checkUser_returnsResponse(String sessionId) {
+        String exampleId = "4840847211";
+
+        CheckUserRequest request = new CheckUserRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+        GIBUSER gibUser = new GIBUSER();
+
+        header.setSESSIONID(sessionId);
+        request.setREQUESTHEADER(header);
+
+        gibUser.setIDENTIFIER(exampleId);
+        request.setUSER(gibUser);
+
+        request.setDOCUMENTTYPE("DESPATCHADVICE");
+
+        CheckUserResponse response = adapter.checkUser(request);
+
+        Assertions.assertNotNull(response.getUSER());
+
+        System.out.println("\n"+response.getUSER().get(0).getTITLE());
+        System.out.println(response.getUSER().get(0).getTYPE());
+    }
+
+
 }
