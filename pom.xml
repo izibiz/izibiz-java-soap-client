@@ -38,6 +38,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <profiles>
@@ -70,6 +78,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
@@ -86,6 +95,51 @@
                             <schemas>
                                 <schema>
                                     <url>https://efaturatest.izibiz.com.tr/AuthenticationWS?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsdl-2</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.einvoice</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/EInvoiceWS?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsdl-3</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.eiarchive</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/EIArchiveWS/EFaturaArchive?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsdl-4</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.eirsaliye</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/EIrsaliyeWS/EIrsaliye?wsdl</url>
                                 </schema>
                             </schemas>
                         </configuration>

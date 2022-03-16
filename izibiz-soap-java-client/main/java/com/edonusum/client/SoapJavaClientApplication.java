@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SoapJavaClientApplication {
-
     private AuthAdapter authAdapter;
 
     @Autowired
@@ -24,5 +23,4 @@ public class SoapJavaClientApplication {
     public AuthAdapter auth() {
         return this.authAdapter;
     }
-
 }

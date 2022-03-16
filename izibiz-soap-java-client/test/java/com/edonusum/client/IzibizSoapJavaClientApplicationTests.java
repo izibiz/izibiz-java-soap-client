@@ -25,7 +25,7 @@ class IzibizSoapJavaClientApplicationTests {
 
         LoginResponse response = client.auth().login(request);
 
-        Assertions.assertNotNull(response);
+        Assertions.assertNull(response.getERRORTYPE());
 
         System.out.println(response.getSESSIONID());
     }

@@ -2,17 +2,10 @@ package com.edonusum.client.adapter;
 
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.auth.*;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
-import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.zip.ZipFile;
 
 @Component
 public class AuthAdapter extends Adapter {
@@ -23,7 +16,6 @@ public class AuthAdapter extends Adapter {
 
     public AuthAdapter() {
         of = new ObjectFactory();
-
         setContextPath(CONTEXT_PATH);
     }
 
@@ -46,6 +38,8 @@ public class AuthAdapter extends Adapter {
 
         String pathToDocuments = System.getProperty("user.home")+"\\documents\\izibiz\\";
         ZipUtils.base64ToZip(response.getValue().getCONTENT().getValue(), pathToDocuments);
+
+        ByteInputStream bis = new ByteInputStream(response.getValue().getCONTENT().getValue(), response.getValue().getCONTENT().getValue().length);
 
         return response.getValue();
     }

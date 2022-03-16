@@ -1,22 +1,20 @@
-package com.edonusum.client.sample;
+package com.edonusum.client.sample.auth;
 
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.wsdl.auth.*;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
 
 @SpringBootTest
 public class AuthTests {
 
-    @Autowired
-    AuthAdapter adapter;
+    AuthAdapter adapter = new AuthAdapter();
 
-    @Test
-    public void canLogin_returnsSessionID() {
+    // session id gereken testlerde kullanılması için yazılmıştır, login ile aynı işi yapmaktadır
+    public static LoginRequest prepareLoginRequest() {
         LoginRequest req = new LoginRequest();
 
         req.setUSERNAME("izibiz-test2");
@@ -27,42 +25,52 @@ public class AuthTests {
 
         req.setREQUESTHEADER(reqh);
 
+        return req;
+    }
+
+    @DisplayName("Oturum Açma")
+    @Test
+    public void givenLoginRequest_then_returnsSessionId() { // login
+        LoginRequest req = prepareLoginRequest();
+
         LoginResponse resp = adapter.login(req);
 
         Assertions.assertNotNull(resp);
 
-        System.out.println("\nSession ID:");
-
         System.out.println(resp.getSESSIONID());
-
-        getGibUserListRequest_returnsResponse(resp.getSESSIONID());
-        checkUser_returnsResponse(resp.getSESSIONID());
-        logoutRequest_returnsResponse(resp.getSESSIONID());
     }
 
+    @DisplayName("Oturum Kapatma")
     @Test
-    public void logoutRequest_returnsResponse(String sessionId) {
-        LogoutRequest req = new LogoutRequest();
+    public void givenSessionId_then_logoutSuccess() { // logout
+        LoginRequest req = prepareLoginRequest();
+
+        String sessionId = adapter.login(req).getSESSIONID();
+
+        LogoutRequest logoutReq = new LogoutRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
         header.setSESSIONID(sessionId);
 
-        req.setREQUESTHEADER(header);
+        logoutReq.setREQUESTHEADER(header);
 
-        LogoutResponse response = adapter.logout(req);
+        LogoutResponse response = adapter.logout(logoutReq);
 
-        Assertions.assertNotNull(response);
+        Assertions.assertNull(response.getERRORTYPE());
 
-        System.out.println("\nLogout Return Code:");
         System.out.println(response.getREQUESTRETURN().getRETURNCODE());
     }
 
+    @DisplayName("Mükellef Listesi Çekme")
     @Test
-    public void getGibUserListRequest_returnsResponse(String sessionId) {
+    public void givenAlias_andGivenType_then_returnsGibUserList() { // getGibUserList
+        LoginRequest req = prepareLoginRequest();
+
+        String sessionId = adapter.login(req).getSESSIONID();
+
         GetGibUserListRequest request = new GetGibUserListRequest();
 
         REQUESTHEADERType header = new REQUESTHEADERType();
         header.setSESSIONID(sessionId);
-        header.setAPPLICATIONNAME("?");
 
         request.setALIASTYPE(ALIASTYPE.ALL);
         request.setTYPE("XML");
@@ -74,11 +82,16 @@ public class AuthTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        System.out.println("\n"+resp.getERRORTYPE());
+        System.out.println(resp.getERRORTYPE());
     }
 
+    @DisplayName("E-Fatura Mükellefi Sorgulama")
     @Test
-    public void checkUser_returnsResponse(String sessionId) {
+    public void givenGibUserId_then_returnsGibUser() { // checkUser
+        LoginRequest req = prepareLoginRequest();
+
+        String sessionId = adapter.login(req).getSESSIONID();
+
         String exampleId = "4840847211";
 
         CheckUserRequest request = new CheckUserRequest();
@@ -97,9 +110,7 @@ public class AuthTests {
 
         Assertions.assertNotNull(response.getUSER());
 
-        System.out.println("\n"+response.getUSER().get(0).getTITLE());
-        System.out.println(response.getUSER().get(0).getTYPE());
+        System.out.println(response.getUSER().get(0).getTITLE());
     }
-
 
 }
