@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+
 
 @SpringBootTest
 public class AuthTests {
@@ -62,7 +66,7 @@ public class AuthTests {
 
     @DisplayName("Mükellef Listesi Çekme")
     @Test
-    public void givenAlias_andGivenType_then_returnsGibUserList() { // getGibUserList
+    public void givenAlias_andGivenType_then_returnsGibUserList() throws JAXBException, IOException, XMLStreamException { // getGibUserList
         LoginRequest req = prepareLoginRequest();
 
         String sessionId = adapter.login(req).getSESSIONID();
