@@ -20,29 +20,26 @@ public class ZipUtils {
         while(entries.hasMoreElements()) {
             entry = entries.nextElement();
             is = zf.getInputStream(entry);
-            fis = new FileOutputStream(pathToExtract+entry.getName());
+            fis = new FileOutputStream(pathToExtract+"\\"+entry.getName());
 
             is.transferTo(fis);
         }
     }
 
-    public static String base64ToZip(byte[] base64, String path) {
+    public static ZipFile base64ToZip(byte[] base64, String path, String fileName) {
         try {
-            File file = new File(path);
-            if(!file.exists()) {
-                file.mkdirs();
-            }
+            File file = new File(path+"\\");
+            file.mkdirs();
 
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path+"user.zip"), base64.length);
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file.getPath()+"\\"+fileName), base64.length);
             bos.write(base64);
-            ZipFile zf = new ZipFile(path+"user.zip");
+            ZipFile zf = new ZipFile(path+"\\"+fileName);
 
-            UnZipAllFiles(zf, path);
-
-            return "Created files: " + zf.getName();
+            return zf;
 
         } catch (Exception e) {
-            return e.getMessage();
+            e.printStackTrace();
+            return null;
         }
     }
 

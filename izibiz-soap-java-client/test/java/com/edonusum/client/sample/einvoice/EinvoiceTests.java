@@ -1,8 +1,10 @@
 package com.edonusum.client.sample.einvoice;
 
+import com.edonusum.client.adapter.Adapter;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.einvoice.*;
 import org.junit.Test;
@@ -10,8 +12,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class EinvoiceTests {
@@ -31,31 +42,44 @@ public class EinvoiceTests {
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(getSessionId());
-        header.setCOMPRESSED("Y");
-
-        INVOICE i = new INVOICE();
-
-        Base64Binary b64array = new Base64Binary();
-
-        String desktopFile = System.getProperty("user.home")+"\\Desktop"+"\\test.zip";
-
-        b64array.setValue(ZipUtils.zipToBase64(desktopFile));
-        i.setCONTENT(b64array);
-        INVOICE.HEADER h = new INVOICE.HEADER();
-        h.setDIRECTION("OUT");
-        i.setHEADER(h);
-
-        request.getINVOICE().add(i);
+        header.setCOMPRESSED("N");
         request.setREQUESTHEADER(header);
 
+        INVOICE inv = new INVOICE();
+
+        //invoice header
+        INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
+        invoiceHeader.setDIRECTION("IN");
+        inv.setHEADER(invoiceHeader);
+
+        //invoice ID
+        DecimalFormat formatter = new DecimalFormat("#000000000");
+        Random random = new Random();
+        long id = random.nextInt(999999999);
+        String invoiceId = "DMY" + LocalDate.now().getYear() + formatter.format(id);
+        UUID invoiceUUID = UUID.randomUUID();
+
+        //invoice content
+        File draft = new File("xml\\ornek.xml"); // örnek fatura
+        File createdXML = XMLUtils.createXmlFromDraft(draft,invoiceUUID, invoiceId);
+
+        Base64Binary b64array = new Base64Binary();
+        b64array.setValue(Files.readAllBytes(createdXML.toPath()));
+
+        inv.setCONTENT(b64array);
+
+        request.getINVOICE().add(inv);
+
         SendInvoiceResponse resp = einvoiceAdapter.sendInvoice(request);
+
+        createdXML.delete();
 
         Assertions.assertNull(resp.getERRORTYPE());
     }
 
     @DisplayName("E-Fatura Okuma")
     @Test
-    public void givenInvoiceSearchKey_then_returnsInvoiceList() { // getInvoice
+    public void givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, FileNotFoundException { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -63,6 +87,7 @@ public class EinvoiceTests {
         request.setREQUESTHEADER(header);
 
         GetInvoiceRequest.INVOICESEARCHKEY key = new GetInvoiceRequest.INVOICESEARCHKEY();
+        key.setDIRECTION("OUT");
         request.setINVOICESEARCHKEY(key);
 
         GetInvoiceResponse response = einvoiceAdapter.getInvoice(request);
@@ -73,7 +98,7 @@ public class EinvoiceTests {
     }
 
     // Toplu fatura listesi ile test gerektiğinde kullanılmak üzere yazılmıştır, getInvoice ile aynı işi yapmaktadır
-    private List<INVOICE> getInvoiceList(String sessionId) {
+    private List<INVOICE> getInvoiceList(String sessionId) throws JAXBException, FileNotFoundException {
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -81,11 +106,36 @@ public class EinvoiceTests {
         request.setREQUESTHEADER(header);
 
         GetInvoiceRequest.INVOICESEARCHKEY key = new GetInvoiceRequest.INVOICESEARCHKEY();
+        key.setDIRECTION("OUT");
         request.setINVOICESEARCHKEY(key);
 
         GetInvoiceResponse response = einvoiceAdapter.getInvoice(request);
 
         return response.getINVOICE();
+    }
+
+    @DisplayName("Fatura Görsel Okuma")
+    @Test
+    public void givenInvoiceSearchKeyWithType_then_returnsInvoiceList() { // getInvoiceWithType
+        GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(getSessionId());
+        request.setREQUESTHEADER(header);
+
+        GetInvoiceWithTypeRequest.INVOICESEARCHKEY key = new GetInvoiceWithTypeRequest.INVOICESEARCHKEY();
+
+        key.setTYPE("PDF");
+        key.setDIRECTION("OUT");
+        request.setINVOICESEARCHKEY(key);
+
+        request.setHEADERONLY("N");
+
+        GetInvoiceWithTypeResponse response = einvoiceAdapter.getInvoiceWithType(request);
+
+        Assertions.assertNull(response.getERRORTYPE());
+
+        System.out.println(response.getINVOICE().get(0).getHEADER().getSUPPLIER());
     }
 
     @DisplayName("Taslak Fatura Yükleme")
@@ -97,15 +147,23 @@ public class EinvoiceTests {
         header.setSESSIONID(getSessionId());
         request.setREQUESTHEADER(header);
 
-        String desktopFile = System.getProperty("user.home")+"\\Desktop"+"\\fatura.zip";
+        INVOICE inv = new INVOICE();
+
+        // invoice header
+        INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
+        invoiceHeader.setDIRECTION("IN");
+        inv.setHEADER(invoiceHeader);
+
+        File draft = new File("xml\\taslak.zip");
 
         Base64Binary b64binary = new Base64Binary();
-        b64binary.setValue(ZipUtils.zipToBase64(desktopFile));
+        b64binary.setValue(Files.readAllBytes(draft.toPath()));
 
-        INVOICE inv = new INVOICE();
         inv.setCONTENT(b64binary);
 
         request.getINVOICE().add(inv);
+
+        header.setCOMPRESSED("Y");
 
         LoadInvoiceResponse response = einvoiceAdapter.loadInvoice(request);
 
@@ -116,7 +174,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Okundu İşaretleme")
     @Test
-    public void givenInvoice_andGivenMarkValue_then_returnsTransactionCode() { // markInvoice
+    public void givenInvoice_andGivenMarkValue_then_returnsTransactionCode() throws JAXBException, FileNotFoundException { // markInvoice
         MarkInvoiceRequest request = new MarkInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -140,7 +198,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Durum Sorgulama")
     @Test
-    public void givenInvoice_then_returnsStatus() { // getInvoiceStatus
+    public void givenInvoice_then_returnsStatus() throws JAXBException, FileNotFoundException { // getInvoiceStatus
         GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -158,7 +216,7 @@ public class EinvoiceTests {
 
     @DisplayName("Toplu Fatura Durum Sorgulama")
     @Test
-    public void givenInvoiceList_then_returnsStatusList() { // getInvoiceStatusAll
+    public void givenInvoiceList_then_returnsStatusList() throws JAXBException, FileNotFoundException { // getInvoiceStatusAll
         GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -166,13 +224,14 @@ public class EinvoiceTests {
 
         request.setREQUESTHEADER(header);
 
-        request.getUUID().add("c2916482-983d-4822-8846-33edfb77ddb0");
+        // getting status for all invoices that returns from getInvoice
+        request.getUUID().addAll(getInvoiceList(header.getSESSIONID()).stream().map(inv -> inv.getUUID()).collect(Collectors.toList()));
 
         GetInvoiceStatusAllResponse response = einvoiceAdapter.getInvoiceStatusAll(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
-        System.out.println(response.getINVOICESTATUS().get(0).getID());
+        System.out.println(response.getINVOICESTATUS().get(0).getHEADER().getSTATUS());
     }
 
     @DisplayName("Uygulama Yanıtı Gönderme (Sunucu imzası ile)")
@@ -186,39 +245,16 @@ public class EinvoiceTests {
 
         request.setSTATUS("KABUL");
 
-        List<INVOICE> invoices = getInvoiceList(header.getSESSIONID());
+        INVOICE inv = new INVOICE();
+        inv.setID("AKN2022000000076"); // Portal üzerinden oluşturulan fatura ile denenmiştir. ID değeri değiştirilmelidir.
 
-        request.getINVOICE().add(invoices.get(5));
+        request.getINVOICE().add(inv);
 
         SendInvoiceResponseWithServerSignResponse response = einvoiceAdapter.sendInvoiceResponseWithServerSign(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
         System.out.println(response.getERRORTYPE());
-    }
-
-    @DisplayName("Fatura Görsel Okuma")
-    @Test
-    public void givenInvoiceSearchKeyWithType_then_returnsInvoiceList() { // getInvoiceWithType
-        GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(getSessionId());
-        request.setREQUESTHEADER(header);
-
-        GetInvoiceWithTypeRequest.INVOICESEARCHKEY key = new GetInvoiceWithTypeRequest.INVOICESEARCHKEY();
-
-        key.setTYPE("XML");
-        key.setDIRECTION("IN");
-        request.setINVOICESEARCHKEY(key);
-
-        request.setHEADERONLY("N");
-
-        GetInvoiceWithTypeResponse response = einvoiceAdapter.getInvoiceWithType(request);
-
-        Assertions.assertNull(response.getERRORTYPE());
-
-        System.out.println(response.getINVOICE().get(0).getHEADER().getSUPPLIER());
     }
 
 }

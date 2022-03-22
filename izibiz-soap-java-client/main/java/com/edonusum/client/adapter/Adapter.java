@@ -4,8 +4,14 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 public class Adapter extends WebServiceGatewaySupport {
     private Jaxb2Marshaller jaxb2;
+    public static final String PATH_TO_DOCUMENTS = System.getProperty("user.home")+"\\documents\\izibiz";
 
     public Adapter() {
         jaxb2 = new Jaxb2Marshaller();
@@ -18,7 +24,17 @@ public class Adapter extends WebServiceGatewaySupport {
         setUnmarshaller(jaxb2);
     }
 
-    public Jaxb2Marshaller jaxb2() {
-        return this.jaxb2;
+    public <T> Marshaller marshaller(Class<T> clazz) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(clazz);
+        Marshaller marshaller = context.createMarshaller();
+
+        return marshaller;
+    }
+
+    public <T> Unmarshaller unmarshaller(Class<T> clazz) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(clazz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+
+        return unmarshaller;
     }
 }
