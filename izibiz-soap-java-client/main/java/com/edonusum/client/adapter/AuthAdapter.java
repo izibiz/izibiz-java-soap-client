@@ -5,9 +5,6 @@ import com.edonusum.client.wsdl.auth.*;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.ZipFile;
 
