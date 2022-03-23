@@ -1,21 +1,16 @@
 package com.edonusum.client.adapter;
 
 import com.edonusum.client.util.ZipUtils;
-import com.edonusum.client.wsdl.auth.LogoutResponse;
 import com.edonusum.client.wsdl.einvoice.*;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.zip.ZipFile;
 

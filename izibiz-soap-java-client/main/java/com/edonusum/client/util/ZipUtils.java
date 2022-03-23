@@ -43,14 +43,6 @@ public class ZipUtils {
         }
     }
 
-    public static byte[] zipToBase64(String path) throws IOException {
-        FileInputStream fis = new FileInputStream(path);
-
-        byte[] b64content = fis.readAllBytes();
-
-        return b64content;
-    }
-
     public static byte[] unzipWithCommons(InputStream is) {
         ArchiveInputStream stream = null;
         byte[] bytes = null;

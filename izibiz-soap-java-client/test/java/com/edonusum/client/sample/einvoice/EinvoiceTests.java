@@ -60,8 +60,8 @@ public class EinvoiceTests {
         UUID invoiceUUID = UUID.randomUUID();
 
         //invoice content
-        File draft = new File("xml\\ornek.xml"); // örnek fatura
-        File createdXML = XMLUtils.createXmlFromDraft(draft,invoiceUUID, invoiceId);
+        File draft = new File("xml\\draft-invoice.xml"); // örnek fatura
+        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft,invoiceUUID, invoiceId);
 
         Base64Binary b64array = new Base64Binary();
         b64array.setValue(Files.readAllBytes(createdXML.toPath()));

@@ -1,11 +1,18 @@
 package com.edonusum.client.adapter;
 
+import com.edonusum.client.dto.GibUserDTO;
+import com.edonusum.client.dto.GibUsers;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.auth.*;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.zip.ZipFile;
 
 @Component
@@ -34,13 +41,17 @@ public class AuthAdapter extends Adapter {
         return respObj.getValue();
     }
 
-    public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) throws IOException {
+    public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) throws IOException, JAXBException {
         JAXBElement<GetGibUserListResponse> response = (JAXBElement<GetGibUserListResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(URL, of.createGetGibUserListRequest(request));
 
         String pathToFile = PATH_TO_DOCUMENTS + "\\auth\\getGibUserList\\";
         ZipFile file = ZipUtils.base64ToZip(response.getValue().getCONTENT().getValue(), pathToFile, "users.zip");
         ZipUtils.UnZipAllFiles(file,pathToFile);
+
+        GibUsers users = (GibUsers) unmarshaller(GibUsers.class).unmarshal(new File(pathToFile+"\\users"));
+        List<GibUserDTO> userList = users.getUsers();
+        System.out.println(userList.get(0).getTITLE());
 
         return response.getValue();
     }

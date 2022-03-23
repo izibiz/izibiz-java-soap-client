@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.File;
 
 @SpringBootTest
-class IzibizSoapJavaClientApplicationTests {
+class SoapJavaClientTests {
 
     @Test
     void contextLoads() {

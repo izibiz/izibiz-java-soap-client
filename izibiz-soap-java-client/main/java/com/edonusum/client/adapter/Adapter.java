@@ -24,14 +24,14 @@ public class Adapter extends WebServiceGatewaySupport {
         setUnmarshaller(jaxb2);
     }
 
-    public <T> Marshaller marshaller(Class<T> clazz) throws JAXBException {
+    public Marshaller marshaller(Class... clazz) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(clazz);
         Marshaller marshaller = context.createMarshaller();
 
         return marshaller;
     }
 
-    public <T> Unmarshaller unmarshaller(Class<T> clazz) throws JAXBException {
+    public Unmarshaller unmarshaller(Class... clazz) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
