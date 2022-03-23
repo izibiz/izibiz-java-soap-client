@@ -42,35 +42,4 @@ public class ZipUtils {
             return null;
         }
     }
-
-    public static byte[] unzipWithCommons(InputStream is) {
-        ArchiveInputStream stream = null;
-        byte[] bytes = null;
-        try {
-            ArchiveStreamFactory factory = new ArchiveStreamFactory();
-            stream = factory.createArchiveInputStream(ArchiveStreamFactory.ZIP, is);
-            ZipArchiveEntry entry = (ZipArchiveEntry) stream.getNextEntry();
-
-            bytes = IOUtils.toByteArray(stream);
-            return bytes;
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (Exception e2) {
-                    System.out.println("error");
-                }
-            }
-
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception e2) {
-                    System.out.println("error");
-                }
-            }
-        }
-    }
 }
