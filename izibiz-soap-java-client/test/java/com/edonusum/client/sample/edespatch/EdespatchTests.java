@@ -35,7 +35,7 @@ public class EdespatchTests {
         header.setSESSIONID(getSessionId());
         request.setREQUESTHEADER(header);
 
-        String exampleUUID = "UGR2022000000011";
+        String exampleUUID = "552f87b8-aa28-42bc-a326-7da282976cda"; // example id
 
         request.getUUID().add(exampleUUID);
 
@@ -47,7 +47,7 @@ public class EdespatchTests {
     }
 
     @Test
-    public void getDespatchAdvice_givenSearchKey_returnsDespatchList() { // GetDespatchAdvice
+    public void getDespatchAdvice_givenSearchKey_returnsDespatchList() throws IOException { // GetDespatchAdvice
         GetDespatchAdviceRequest request = new GetDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -57,6 +57,7 @@ public class EdespatchTests {
         GetDespatchAdviceRequest.SEARCHKEY key = new GetDespatchAdviceRequest.SEARCHKEY();
 
         key.setDIRECTION("OUT");
+        key.setUUID("552f87b8-aa28-42bc-a326-7da282976cda"); // example id
 
         // key.setUUID("UUID");
         // key.setDIRECTION("IN");
@@ -87,7 +88,7 @@ public class EdespatchTests {
         DecimalFormat formatter = new DecimalFormat("#000000000");
         Random random = new Random();
         long id = random.nextInt(999999999); // 9 haneli
-        String despatchId = "X01" + LocalDate.now().getYear() + formatter.format(id); // seri + yıl + 9 haneli id
+        String despatchId = "EIR" + LocalDate.now().getYear() + formatter.format(id); // seri + yıl + 9 haneli id
         UUID uuid = UUID.randomUUID();
 
         File draft = new File("xml\\draft-edespatch.xml");
@@ -95,18 +96,59 @@ public class EdespatchTests {
 
         b64.setValue(Files.readAllBytes(createdXml.toPath()));
         despatch.setCONTENT(b64);
-        despatch.setID(despatchId);
-        despatch.setUUID(uuid.toString());
-        despatch.setDIRECTION("OUT");
 
         DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
-        despatchHeader.setID(despatchId);
-        despatchHeader.setUUID(uuid.toString());
         despatch.setDESPATCHADVICEHEADER(despatchHeader);
 
         request.getDESPATCHADVICE().add(despatch);
 
         LoadDespatchAdviceResponse resp = edespatchAdapter.loadDespatchAdvice(request);
+
+        createdXml.delete();
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
+    }
+
+    @Test
+    public void sendDespatchAdvice_givenValidDestpachAdvice_then_canSendDespatchAdvice() throws IOException { // LoadDespatchAdvice
+        SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setCOMPRESSED("N");
+
+        header.setSESSIONID(getSessionId());
+        request.setREQUESTHEADER(header);
+
+        SendDespatchAdviceRequest.RECEIVER receiver = new SendDespatchAdviceRequest.RECEIVER();
+        receiver.setVkn("4840847211");
+        receiver.setAlias("urn:mail:defaultgb@izibiz.com.tr");
+
+        request.setRECEIVER(receiver);
+
+        DESPATCHADVICE despatch = new DESPATCHADVICE();
+        Base64Binary b64 = new Base64Binary();
+
+        // ID
+        DecimalFormat formatter = new DecimalFormat("#000000000");
+        Random random = new Random();
+        long id = random.nextInt(999999999); // 9 haneli
+        String despatchId = "EIR" + LocalDate.now().getYear() + formatter.format(id); // seri + yıl + 9 haneli id
+        UUID uuid = UUID.randomUUID();
+
+        File draft = new File("xml\\draft-edespatch.xml");
+        File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, despatchId);
+
+        b64.setValue(Files.readAllBytes(createdXml.toPath()));
+        despatch.setCONTENT(b64);
+
+        DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
+        despatch.setDESPATCHADVICEHEADER(despatchHeader);
+
+        request.getDESPATCHADVICE().add(despatch);
+
+        SendDespatchAdviceResponse resp = edespatchAdapter.sendDespatchAdvice(request);
 
         createdXml.delete();
 
