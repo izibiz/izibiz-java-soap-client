@@ -34,7 +34,7 @@ public class AuthTests {
 
     @DisplayName("Oturum Açma")
     @Test
-    public void givenLoginRequest_then_returnsSessionId() { // login
+    public void login_givenLoginRequest_then_returnsSessionId() { // login
         LoginRequest req = prepareLoginRequest();
 
         LoginResponse resp = adapter.login(req);
@@ -46,7 +46,7 @@ public class AuthTests {
 
     @DisplayName("Oturum Kapatma")
     @Test
-    public void givenSessionId_then_logoutSuccess() { // logout
+    public void logout_givenSessionId_then_logoutSucceeds() { // logout
         LoginRequest req = prepareLoginRequest();
 
         String sessionId = adapter.login(req).getSESSIONID();
@@ -66,7 +66,7 @@ public class AuthTests {
 
     @DisplayName("Mükellef Listesi Çekme")
     @Test
-    public void givenAlias_andGivenType_then_returnsGibUserList() throws JAXBException, IOException, XMLStreamException { // getGibUserList
+    public void getGibUserList_GivenSearchParameters_then_returnsUserList() throws JAXBException, IOException, XMLStreamException { // getGibUserList
         LoginRequest req = prepareLoginRequest();
 
         String sessionId = adapter.login(req).getSESSIONID();
@@ -91,7 +91,7 @@ public class AuthTests {
 
     @DisplayName("E-Fatura Mükellefi Sorgulama")
     @Test
-    public void givenGibUserId_then_returnsGibUser() { // checkUser
+    public void checkUser_givenGibUserId_then_returnsGibUser() { // checkUser
         LoginRequest req = prepareLoginRequest();
 
         String sessionId = adapter.login(req).getSESSIONID();

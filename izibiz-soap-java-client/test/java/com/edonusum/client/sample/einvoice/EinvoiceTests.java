@@ -37,7 +37,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Gönderme")
     @Test
-    public void givenValidInvoice_then_sendInvoiceSucceeds() throws IOException { // sendInvoice
+    public void sendInvoice_givenValidInvoice_then_sendInvoiceSucceeds() throws IOException { // sendInvoice
         SendInvoiceRequest request = new SendInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -79,7 +79,7 @@ public class EinvoiceTests {
 
     @DisplayName("E-Fatura Okuma")
     @Test
-    public void givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, FileNotFoundException { // getInvoice
+    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, FileNotFoundException { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -116,7 +116,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Görsel Okuma")
     @Test
-    public void givenInvoiceSearchKeyWithType_then_returnsInvoiceList() { // getInvoiceWithType
+    public void getInvoiceWithType_givenInvoiceSearchKey_andGivenType_then_returnsInvoiceList() { // getInvoiceWithType
         GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -140,7 +140,7 @@ public class EinvoiceTests {
 
     @DisplayName("Taslak Fatura Yükleme")
     @Test
-    public void givenDraftInvoice_then_loadInvoiceSucceeds() throws IOException { // loadInvoice
+    public void loadInvoice_givenValidDraftInvoice_then_loadInvoiceSucceeds() throws IOException { // loadInvoice
         LoadInvoiceRequest request = new LoadInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -174,7 +174,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Okundu İşaretleme")
     @Test
-    public void givenInvoice_andGivenMarkValue_then_returnsTransactionCode() throws JAXBException, FileNotFoundException { // markInvoice
+    public void markInvoice_givenValidInvoice_andGivenMarkValue_then_marksInvoice() throws JAXBException, FileNotFoundException { // markInvoice
         MarkInvoiceRequest request = new MarkInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -198,7 +198,7 @@ public class EinvoiceTests {
 
     @DisplayName("Fatura Durum Sorgulama")
     @Test
-    public void givenInvoice_then_returnsStatus() throws JAXBException, FileNotFoundException { // getInvoiceStatus
+    public void getInvoiceStatus_givenValidInvoice_then_returnsStatus() throws JAXBException, FileNotFoundException { // getInvoiceStatus
         GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -216,7 +216,7 @@ public class EinvoiceTests {
 
     @DisplayName("Toplu Fatura Durum Sorgulama")
     @Test
-    public void givenInvoiceList_then_returnsStatusList() throws JAXBException, FileNotFoundException { // getInvoiceStatusAll
+    public void getInvoiceStatusAll_givenInvoiceList_then_returnsStatusList() throws JAXBException, FileNotFoundException { // getInvoiceStatusAll
         GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -236,7 +236,7 @@ public class EinvoiceTests {
 
     @DisplayName("Uygulama Yanıtı Gönderme (Sunucu imzası ile)")
     @Test
-    public void sendInvoiceResponseWithServerSign_then_returnsErrorTypeNull() { // sendInvoiceResponseWithServerSign
+    public void sendInvoiceResponseWithServerSign_givenStatus_then_sendsResponse() { // sendInvoiceResponseWithServerSign
         SendInvoiceResponseWithServerSignRequest request = new SendInvoiceResponseWithServerSignRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

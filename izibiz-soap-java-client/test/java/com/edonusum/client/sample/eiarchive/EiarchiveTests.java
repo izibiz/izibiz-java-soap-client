@@ -32,13 +32,13 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenInvoiceId_then_returnsArchiveInvoice() { // readFromArchive
+    public void readFromArchive_givenInvoiceId_then_returnsArchiveInvoice() { // readFromArchive
         ArchiveInvoiceReadRequest request = new ArchiveInvoiceReadRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(getSessionId());
 
-        request.setINVOICEID("08f7d8cf-ff85-40d2-8fe8-14028e865108");
+        request.setINVOICEID("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
         request.setPORTALDIRECTION("OUT");
         request.setPROFILE("XML");
 
@@ -52,14 +52,14 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenInvoiceId_then_returnsEArchiveInvoiceStatus() { // getEArchiveStatus
+    public void getEarchiveStatus_givenInvoiceId_then_returnsEArchiveInvoiceStatus() { // getEArchiveStatus
         GetEArchiveInvoiceStatusRequest request = new GetEArchiveInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(getSessionId());
         request.setREQUESTHEADER(header);
 
-        request.getUUID().add("08f7d8cf-ff85-40d2-8fe8-14028e865108");
+        request.getUUID().add("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
 
         GetEArchiveInvoiceStatusResponse resp = eiarchiveAdapter.getEArchiveStatus(request);
 
@@ -69,7 +69,7 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenInvoiceUUID_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
+    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -90,7 +90,7 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenInvoiceUUID_withDeleteFlag_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
+    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_andGivenDeleteFlag_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -122,15 +122,15 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail() { // getEmailEarchiveInvoice
+    public void getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail() { // getEmailEarchiveInvoice
         GetEmailEarchiveInvoiceRequest request = new GetEmailEarchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(getSessionId());
         request.setREQUESTHEADER(header);
 
-        request.setFATURAUUID("08f7d8cf-ff85-40d2-8fe8-14028e865108");
-        request.setEMAIL("example@email.com"); // test edilmek istenen e-posta adresi
+        request.setFATURAUUID("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
+        request.setEMAIL("example@email.com"); // email address to send
 
         GetEmailEarchiveInvoiceResponse resp = eiarchiveAdapter.getEmailEarchiveInvoice(request);
 
@@ -140,7 +140,7 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenPeriod_andFlag_then_returnsReportList() { // getEarchiveReport
+    public void getEarchiveReport_givenPeriod_andGivenFlagValues_then_returnsReportList() { // getEarchiveReport
         GetEArchiveReportRequest request = new GetEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -186,7 +186,7 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenReportId_thenReturnsReportContent() throws IOException {
+    public void readArchiveReport_givenReportId_thenReturnsReportContent() throws IOException { // ReadArchiveReport
         ReadEArchiveReportRequest request = new ReadEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -209,7 +209,7 @@ public class EiarchiveTests {
     }
 
     @Test
-    public void givenValidEiarchive_then_writesToArchive() throws IOException { // writeToEiArchiveExtended
+    public void writeToEiarchiveExtended_givenValidEiarchive_then_writesToArchive() throws IOException { // writeToEiArchiveExtended
         ArchiveInvoiceExtendedRequest request = new ArchiveInvoiceExtendedRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

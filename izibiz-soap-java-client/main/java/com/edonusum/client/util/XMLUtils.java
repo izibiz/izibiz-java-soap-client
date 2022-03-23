@@ -22,16 +22,4 @@ public class XMLUtils {
         return newFile;
     }
 
-    public static File createXmlFromDraftEiarchive(File draft, UUID uuid, String invoiceId) throws IOException {
-        String entireFile = Files.readString(draft.toPath());
-
-        entireFile = entireFile
-                .replaceAll("%UUID%", uuid.toString())
-                .replaceAll("%INVOICEID%", invoiceId);
-
-        File newFile = new File("xml\\temp.xml");
-        Files.writeString(newFile.toPath(), entireFile, StandardOpenOption.CREATE);
-
-        return newFile;
-    }
 }

@@ -136,7 +136,7 @@
                         </goals>
                         <configuration>
                             <schemaLanguage>WSDL</schemaLanguage>
-                            <generatePackage>com.edonusum.client.wsdl.eirsaliye</generatePackage>
+                            <generatePackage>com.edonusum.client.wsdl.edespatch</generatePackage>
                             <schemas>
                                 <schema>
                                     <url>https://efaturatest.izibiz.com.tr/EIrsaliyeWS/EIrsaliye?wsdl</url>
