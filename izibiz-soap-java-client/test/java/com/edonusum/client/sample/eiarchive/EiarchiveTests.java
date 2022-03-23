@@ -2,12 +2,9 @@ package com.edonusum.client.sample.eiarchive;
 
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EiarchiveAdapter;
-import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.eiarchive.*;
-import com.edonusum.client.wsdl.einvoice.SendInvoiceRequest;
-import com.edonusum.client.wsdl.einvoice.SendInvoiceResponse;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;

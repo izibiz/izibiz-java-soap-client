@@ -1,11 +1,9 @@
 package com.edonusum.client.sample.einvoice;
 
-import com.edonusum.client.adapter.Adapter;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.XMLUtils;
-import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.einvoice.*;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
