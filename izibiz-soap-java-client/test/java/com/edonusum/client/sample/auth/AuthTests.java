@@ -44,20 +44,6 @@ public class AuthTests {
 
         LoginResponse resp = adapter.login(req);
 
-        String path = "C:\\Users\\Taha Donuk\\Desktop\\test.xml";
-
-        try {
-            byte[] bytes = Files.readAllBytes(Paths.get(path));
-
-            InvoiceType inv = (InvoiceType) JAXBContext.newInstance(InvoiceType.class).createUnmarshaller().unmarshal(new ByteInputStream(bytes,bytes.length));
-
-            System.out.println(inv.getID());
-
-
-        } catch (IOException | JAXBException e) {
-            e.printStackTrace();
-        }
-
         Assertions.assertNotNull(resp);
 
         System.out.println(resp.getSESSIONID());
