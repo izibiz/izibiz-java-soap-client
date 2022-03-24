@@ -3,6 +3,7 @@ package com.edonusum.client.sample.einvoice;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.einvoice.*;
 import org.junit.Test;
@@ -50,16 +51,9 @@ public class EinvoiceTests {
         invoiceHeader.setDIRECTION("IN");
         inv.setHEADER(invoiceHeader);
 
-        //invoice ID
-        DecimalFormat formatter = new DecimalFormat("#000000000");
-        Random random = new Random();
-        long id = random.nextInt(999999999);
-        String invoiceId = "DMY" + LocalDate.now().getYear() + formatter.format(id);
-        UUID invoiceUUID = UUID.randomUUID();
-
         //invoice content
-        File draft = new File("xml\\draft-invoice.xml"); // örnek fatura
-        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft,invoiceUUID, invoiceId);
+        File draft = new File("xml\\draft-invoice.xml"); // draft invoice
+        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft, UUID.randomUUID(), IdentifierUtils.createInvoiceIdRandom("DMY"));
 
         Base64Binary b64array = new Base64Binary();
         b64array.setValue(Files.readAllBytes(createdXML.toPath()));
@@ -77,7 +71,7 @@ public class EinvoiceTests {
 
     @DisplayName("E-Fatura Okuma")
     @Test
-    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, FileNotFoundException { // getInvoice
+    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, IOException { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -96,7 +90,7 @@ public class EinvoiceTests {
     }
 
     // Toplu fatura listesi ile test gerektiğinde kullanılmak üzere yazılmıştır, getInvoice ile aynı işi yapmaktadır
-    private List<INVOICE> getInvoiceList(String sessionId) throws JAXBException, FileNotFoundException {
+    private List<INVOICE> getInvoiceList(String sessionId) throws JAXBException {
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

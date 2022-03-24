@@ -2,14 +2,19 @@ package com.edonusum.client.sample.auth;
 
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.wsdl.auth.*;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 @SpringBootTest
@@ -38,6 +43,20 @@ public class AuthTests {
         LoginRequest req = prepareLoginRequest();
 
         LoginResponse resp = adapter.login(req);
+
+        String path = "C:\\Users\\Taha Donuk\\Desktop\\test.xml";
+
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(path));
+
+            InvoiceType inv = (InvoiceType) JAXBContext.newInstance(InvoiceType.class).createUnmarshaller().unmarshal(new ByteInputStream(bytes,bytes.length));
+
+            System.out.println(inv.getID());
+
+
+        } catch (IOException | JAXBException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertNotNull(resp);
 

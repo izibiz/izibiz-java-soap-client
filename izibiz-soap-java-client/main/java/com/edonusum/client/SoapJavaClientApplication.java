@@ -1,8 +1,6 @@
 package com.edonusum.client;
 
-import com.edonusum.client.adapter.AuthAdapter;
-import com.edonusum.client.adapter.EiarchiveAdapter;
-import com.edonusum.client.adapter.EinvoiceAdapter;
+import com.edonusum.client.adapter.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
@@ -10,16 +8,20 @@ public class SoapJavaClientApplication {
     private AuthAdapter authAdapter;
     private EinvoiceAdapter einvoiceAdapter;
     private EiarchiveAdapter eiarchiveAdapter;
+    private EdespatchAdapter edespatchAdapter;
+    private CreditNoteAdapter creditNoteAdapter;
 
     public SoapJavaClientApplication() {
         this.authAdapter = new AuthAdapter();
         this.eiarchiveAdapter = new EiarchiveAdapter();
         this.einvoiceAdapter = new EinvoiceAdapter();
+        this.eiarchiveAdapter = new EiarchiveAdapter();
+        this.creditNoteAdapter = new CreditNoteAdapter();
 
         //TODO: declarations
     }
 
-    public AuthAdapter auth() {
+    public AuthAdapter authWS() {
         return this.authAdapter;
     }
 
@@ -29,5 +31,13 @@ public class SoapJavaClientApplication {
 
     public EiarchiveAdapter eiarchiveWS() {
         return this.eiarchiveAdapter;
+    }
+
+    public EdespatchAdapter despatchAdviceWS() {
+        return this.edespatchAdapter;
+    }
+
+    public CreditNoteAdapter creditNoteWS() {
+        return this. creditNoteAdapter;
     }
 }

@@ -10,7 +10,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.zip.ZipFile;
 
 @Component
@@ -48,8 +47,8 @@ public class AuthAdapter extends Adapter {
         ZipUtils.UnZipAllFiles(file,pathToFile);
 
         GibUsers users = (GibUsers) unmarshaller(GibUsers.class).unmarshal(new File(pathToFile+"\\users"));
-        List<GibUserDTO> userList = users.getUsers();
-        System.out.println(userList.get(0).getTITLE());
+        GibUserDTO [] userList = users.getUsers();
+        System.out.println(userList[0].getTITLE());
 
         return response.getValue();
     }

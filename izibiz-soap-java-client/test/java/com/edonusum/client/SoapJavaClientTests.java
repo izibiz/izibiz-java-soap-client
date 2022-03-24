@@ -23,7 +23,7 @@ class SoapJavaClientTests {
         request.setUSERNAME("izibiz-test2");
         request.setPASSWORD("izi321");
 
-        LoginResponse response = client.auth().login(request);
+        LoginResponse response = client.authWS().login(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 

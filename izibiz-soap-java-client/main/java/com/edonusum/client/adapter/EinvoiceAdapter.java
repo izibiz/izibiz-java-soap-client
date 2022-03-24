@@ -69,8 +69,9 @@ public class EinvoiceAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest getInvoiceRequest) throws JAXBException, FileNotFoundException {
-        JAXBElement<GetInvoiceResponse> respObj = (JAXBElement<GetInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceRequest(getInvoiceRequest));
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest getInvoiceRequest) throws JAXBException {
+        JAXBElement<GetInvoiceResponse> respObj = (JAXBElement<GetInvoiceResponse>)
+                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceRequest(getInvoiceRequest));
 
         String dir = PATH_TO_DOCUMENTS+"\\einvoice\\getInvoice\\";
 

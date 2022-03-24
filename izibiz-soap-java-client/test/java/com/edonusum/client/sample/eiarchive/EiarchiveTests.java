@@ -3,6 +3,7 @@ package com.edonusum.client.sample.eiarchive;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EiarchiveAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.eiarchive.*;
 import org.junit.Test;
@@ -219,15 +220,8 @@ public class EiarchiveTests {
 
         props.setEARSIVFLAG(FLAGVALUE.Y);
 
-        //invoice ID example: 'ABC2009123456789'
-        DecimalFormat formatter = new DecimalFormat("#000000000"); // her zaman 9 haneli olmalı
-        Random random = new Random();
-        long id = random.nextInt(999999999); // 9 haneli
-        String invoiceId = "X01" + LocalDate.now().getYear() + formatter.format(id); // seri + yıl + 9 haneli id
-        UUID invoiceUUID = UUID.randomUUID();
-
         File draftFile = new File("xml\\draft-eiarchive.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, invoiceUUID, invoiceId);
+        File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, UUID.randomUUID(), IdentifierUtils.createInvoiceIdRandom("X01"));
 
         Base64Binary b64 = new Base64Binary();
         b64.setValue(Files.readAllBytes(createdXml.toPath()));

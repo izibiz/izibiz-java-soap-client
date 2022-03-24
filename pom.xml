@@ -45,6 +45,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -144,7 +148,41 @@
                             </schemas>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>wsdl-5</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.crnote</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/CreditNoteWS/CreditNote?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>xsd-to-java</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>izibiz-soap-java-client/main/resources/xsdrt/maindoc</source>
+                    </sources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
