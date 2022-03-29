@@ -41,6 +41,7 @@ public class AuthTests {
     @Test
     public void login_givenLoginRequest_then_returnsSessionId() { // login
         LoginRequest req = prepareLoginRequest();
+
         LoginResponse resp = adapter.login(req);
 
         Assertions.assertNotNull(resp);

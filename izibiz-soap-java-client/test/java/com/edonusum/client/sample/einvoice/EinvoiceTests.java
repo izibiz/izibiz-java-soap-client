@@ -16,11 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -71,7 +67,7 @@ public class EinvoiceTests {
 
     @DisplayName("E-Fatura Okuma")
     @Test
-    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException, IOException { // getInvoice
+    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws JAXBException { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -81,6 +77,27 @@ public class EinvoiceTests {
         GetInvoiceRequest.INVOICESEARCHKEY key = new GetInvoiceRequest.INVOICESEARCHKEY();
         key.setDIRECTION("OUT");
         request.setINVOICESEARCHKEY(key);
+
+        /* okunmuş faturaları alma */
+        // key.setREADINCLUDED(true);
+
+        // Tarihe göre alma
+        /*
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date());
+
+        XMLGregorianCalendar end = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        XMLGregorianCalendar start = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        start.setMonth(start.getMonth()-1); (son 30 günün alınması)
+
+        key.setSTARTDATE(start);
+        key.setENDDATE(end);
+         */
+
+        // ID ye göre alma
+        /*
+        key.setUUID("EXAMPLE");
+        */
 
         GetInvoiceResponse response = einvoiceAdapter.getInvoice(request);
 

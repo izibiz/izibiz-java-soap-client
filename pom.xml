@@ -89,7 +89,7 @@
                 <version>0.14.0</version>
                 <executions>
                     <execution>
-                        <id>wsdl-1</id>
+                        <id>auth</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -104,7 +104,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>wsdl-2</id>
+                        <id>efatura</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -119,7 +119,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>wsdl-3</id>
+                        <id>earsiv</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -134,7 +134,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>wsdl-4</id>
+                        <id>irsaliye</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -149,7 +149,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>wsdl-5</id>
+                        <id>mustahsil</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -159,6 +159,21 @@
                             <schemas>
                                 <schema>
                                     <url>https://efaturatest.izibiz.com.tr/CreditNoteWS/CreditNote?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>serbest-meslek</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.smm</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/SmmWS?wsdl</url>
                                 </schema>
                             </schemas>
                         </configuration>

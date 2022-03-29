@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @SpringBootTest
@@ -105,11 +104,10 @@ public class EiarchiveTests {
         * content.setDELETEFLAG("N");
         */
 
-        /*
-        * E_Arşiv platformunda bulunmayan bir faturanın iptali için:
-        * content.setUPLOADFLAG("Y")
-        * */
-
+        /* E_Arşiv platformunda bulunmayan bir faturanın iptali için:
+        dökümantasyonda istenen parametreler doldurulduktan sonra
+        content.setUPLOADFLAG("Y")
+        */
         request.getCancelEArsivInvoiceContent().add(content);
 
         CancelEArchiveInvoiceResponse resp = eiarchiveAdapter.cancelEArchiveInvoice(request);
