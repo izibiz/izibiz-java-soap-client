@@ -1,7 +1,6 @@
 package com.edonusum.client.sample.auth;
 
 import com.edonusum.client.SoapJavaClientApplication;
-import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.wsdl.auth.*;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;

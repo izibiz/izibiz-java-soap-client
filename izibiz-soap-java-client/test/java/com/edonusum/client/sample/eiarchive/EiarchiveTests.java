@@ -1,8 +1,6 @@
 package com.edonusum.client.sample.eiarchive;
 
 import com.edonusum.client.SoapJavaClientApplication;
-import com.edonusum.client.adapter.AuthAdapter;
-import com.edonusum.client.adapter.EiarchiveAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;

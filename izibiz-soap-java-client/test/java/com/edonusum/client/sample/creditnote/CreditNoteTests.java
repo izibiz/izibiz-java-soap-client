@@ -1,8 +1,6 @@
 package com.edonusum.client.sample.creditnote;
 
 import com.edonusum.client.SoapJavaClientApplication;
-import com.edonusum.client.adapter.AuthAdapter;
-import com.edonusum.client.adapter.CreditNoteAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
