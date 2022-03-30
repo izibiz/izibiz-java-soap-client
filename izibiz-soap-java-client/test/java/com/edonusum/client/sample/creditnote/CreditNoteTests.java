@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class CreditNoteTests {
-    private AuthAdapter authAdapter = new AuthAdapter();
     private CreditNoteAdapter creditNoteAdapter = new CreditNoteAdapter();
 
     private String loadCreditNoteUUID = "";

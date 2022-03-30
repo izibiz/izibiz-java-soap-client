@@ -20,7 +20,6 @@ import java.util.UUID;
 
 @SpringBootTest
 public class EiarchiveTests {
-    private final AuthAdapter authAdapter = new AuthAdapter();
     private final EiarchiveAdapter eiarchiveAdapter = new EiarchiveAdapter();
 
     private String loadEiarchiveUUID = "";

@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class EinvoiceTests {
-
-    private AuthAdapter authAdapter = new AuthAdapter();
     private EinvoiceAdapter einvoiceAdapter = new EinvoiceAdapter();
     
     private String sendEinvoiceUUID = "";

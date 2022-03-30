@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class EdespatchTests {
-    private AuthAdapter authAdapter = new AuthAdapter();
     private EdespatchAdapter edespatchAdapter = new EdespatchAdapter();
 
     private static String loadDespatchAdviceUUID = "";
