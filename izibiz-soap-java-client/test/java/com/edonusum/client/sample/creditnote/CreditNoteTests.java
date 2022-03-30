@@ -1,5 +1,6 @@
 package com.edonusum.client.sample.creditnote;
 
+import com.edonusum.client.SoapJavaClientApplication;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.CreditNoteAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class CreditNoteTests {
-    private CreditNoteAdapter creditNoteAdapter = new CreditNoteAdapter();
+    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
 
     private String loadCreditNoteUUID = "";
     private String sendCreditNoteUUID = "";
@@ -93,7 +94,7 @@ public class CreditNoteTests {
         request.setCREDITNOTESEARCHKEY(key);
         request.setHEADERONLY(FLAGVALUE.N);
 
-        GetCreditNoteResponse resp = creditNoteAdapter.getCreditNote(request);
+        GetCreditNoteResponse resp = client.creditNoteWS().getCreditNote(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -111,7 +112,7 @@ public class CreditNoteTests {
 
         request.getUUID().addAll(creditnotes.stream().map(c -> c.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
 
-        GetCreditNoteStatusResponse resp = creditNoteAdapter.getCreditNoteStatus(request);
+        GetCreditNoteStatusResponse resp = client.creditNoteWS().getCreditNoteStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -148,7 +149,7 @@ public class CreditNoteTests {
         request.setCREDITNOTEPROPERTIES(props);
         request.getCREDITNOTE().add(cr);
 
-        SendCreditNoteResponse resp = creditNoteAdapter.sendCreditNote(request);
+        SendCreditNoteResponse resp = client.creditNoteWS().sendCreditNote(request);
 
         createdXml.delete();
 
@@ -170,7 +171,7 @@ public class CreditNoteTests {
 
         request.getUUID().add(uuid);
 
-        CancelCreditNoteResponse resp = creditNoteAdapter.cancelCreditNote(request);
+        CancelCreditNoteResponse resp = client.creditNoteWS().cancelCreditNote(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -213,7 +214,7 @@ public class CreditNoteTests {
 
         created.delete();
 
-        LoadCreditNoteResponse resp = creditNoteAdapter.loadCreditNote(request);
+        LoadCreditNoteResponse resp = client.creditNoteWS().loadCreditNote(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -235,7 +236,7 @@ public class CreditNoteTests {
 
         request.setMARK(mark);
 
-        MarkCreditNoteResponse resp = creditNoteAdapter.markCreditNote(request);
+        MarkCreditNoteResponse resp = client.creditNoteWS().markCreditNote(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -254,7 +255,7 @@ public class CreditNoteTests {
 
         request.setHEADERONLY(FLAGVALUE.N);
 
-        GetCreditNoteReportResponse resp = creditNoteAdapter.getCreditNoteReport(request);
+        GetCreditNoteReportResponse resp = client.creditNoteWS().getCreditNoteReport(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 

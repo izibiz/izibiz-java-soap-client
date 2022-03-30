@@ -1,5 +1,6 @@
 package com.edonusum.client.sample.eiarchive;
 
+import com.edonusum.client.SoapJavaClientApplication;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EiarchiveAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 @SpringBootTest
 public class EiarchiveTests {
-    private final EiarchiveAdapter eiarchiveAdapter = new EiarchiveAdapter();
+    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
 
     private String loadEiarchiveUUID = "";
     private String sendEiarchiveUUID = "";
@@ -29,6 +30,7 @@ public class EiarchiveTests {
     private List<REPORT> reports;
 
     private static String SESSION_ID;
+
 
     @Test
     public void runAllTests() throws Exception{
@@ -89,7 +91,7 @@ public class EiarchiveTests {
 
         request.setREQUESTHEADER(header);
 
-        ArchiveInvoiceReadResponse resp = eiarchiveAdapter.readFromArchive(request);
+        ArchiveInvoiceReadResponse resp = client.eiarchiveWS().readFromArchive(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -105,7 +107,7 @@ public class EiarchiveTests {
 
         request.getUUID().add(sendEiarchiveUUID); // toplu status sorgulama
 
-        GetEArchiveInvoiceStatusResponse resp = eiarchiveAdapter.getEArchiveStatus(request);
+        GetEArchiveInvoiceStatusResponse resp = client.eiarchiveWS().getEArchiveStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -125,7 +127,7 @@ public class EiarchiveTests {
 
         request.getCancelEArsivInvoiceContent().add(content);
 
-        CancelEArchiveInvoiceResponse resp = eiarchiveAdapter.cancelEArchiveInvoice(request);
+        CancelEArchiveInvoiceResponse resp = client.eiarchiveWS().cancelEArchiveInvoice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -155,7 +157,7 @@ public class EiarchiveTests {
         */
         request.getCancelEArsivInvoiceContent().add(content);
 
-        CancelEArchiveInvoiceResponse resp = eiarchiveAdapter.cancelEArchiveInvoice(request);
+        CancelEArchiveInvoiceResponse resp = client.eiarchiveWS().cancelEArchiveInvoice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -172,7 +174,7 @@ public class EiarchiveTests {
         request.setFATURAUUID(sendEiarchiveUUID); // example id
         request.setEMAIL("example@email.com"); // email address to send
 
-        GetEmailEarchiveInvoiceResponse resp = eiarchiveAdapter.getEmailEarchiveInvoice(request);
+        GetEmailEarchiveInvoiceResponse resp = client.eiarchiveWS().getEmailEarchiveInvoice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -195,7 +197,7 @@ public class EiarchiveTests {
 
         request.setREPORTSTATUSFLAG("Y");
 
-        GetEArchiveReportResponse resp = eiarchiveAdapter.getEarchiveReport(request);
+        GetEArchiveReportResponse resp = client.eiarchiveWS().getEarchiveReport(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -216,7 +218,7 @@ public class EiarchiveTests {
 
         for (REPORT rep : reports) {
             request.setRAPORNO(rep.getREPORTNO());
-            response = eiarchiveAdapter.readEarchiveReport(request);
+            response = client.eiarchiveWS().readEarchiveReport(request);
 
             Assertions.assertNull(response.getERRORTYPE());
 
@@ -259,7 +261,7 @@ public class EiarchiveTests {
 
         request.setArchiveInvoiceExtendedContent(content);
 
-        ArchiveInvoiceExtendedResponse resp = eiarchiveAdapter.writeToArchiveExtended(request);
+        ArchiveInvoiceExtendedResponse resp = client.eiarchiveWS().writeToArchiveExtended(request);
 
         createdXml.delete();
 

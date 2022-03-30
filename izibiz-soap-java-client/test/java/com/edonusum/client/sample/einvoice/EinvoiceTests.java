@@ -1,5 +1,6 @@
 package com.edonusum.client.sample.einvoice;
 
+import com.edonusum.client.SoapJavaClientApplication;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class EinvoiceTests {
-    private EinvoiceAdapter einvoiceAdapter = new EinvoiceAdapter();
+    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
     
     private String sendEinvoiceUUID = "";
     private String loadEinvoiceUUID = "";
@@ -103,7 +104,7 @@ public class EinvoiceTests {
 
         request.getINVOICE().add(inv);
 
-        SendInvoiceResponse resp = einvoiceAdapter.sendInvoice(request);
+        SendInvoiceResponse resp = client.einvoiceWS().sendInvoice(request);
 
         createdXML.delete();
 
@@ -135,7 +136,7 @@ public class EinvoiceTests {
         key.setUUID("EXAMPLE");
         */
 
-        GetInvoiceResponse response = einvoiceAdapter.getInvoice(request);
+        GetInvoiceResponse response = client.einvoiceWS().getInvoice(request);
 
         invoices = response.getINVOICE();
 
@@ -166,7 +167,7 @@ public class EinvoiceTests {
 
         request.setHEADERONLY("N");
 
-        GetInvoiceWithTypeResponse response = einvoiceAdapter.getInvoiceWithType(request);
+        GetInvoiceWithTypeResponse response = client.einvoiceWS().getInvoiceWithType(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -203,7 +204,7 @@ public class EinvoiceTests {
 
         header.setCOMPRESSED("N");
 
-        LoadInvoiceResponse response = einvoiceAdapter.loadInvoice(request);
+        LoadInvoiceResponse response = client.einvoiceWS().loadInvoice(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -229,7 +230,7 @@ public class EinvoiceTests {
 
         request.setREQUESTHEADER(header);
 
-        MarkInvoiceResponse response = einvoiceAdapter.markInvoice(request);
+        MarkInvoiceResponse response = client.einvoiceWS().markInvoice(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -245,7 +246,7 @@ public class EinvoiceTests {
 
         request.setINVOICE(invoices.get(0));
 
-        GetInvoiceStatusResponse response = einvoiceAdapter.getInvoiceStatus(request);
+        GetInvoiceStatusResponse response = client.einvoiceWS().getInvoiceStatus(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -263,7 +264,7 @@ public class EinvoiceTests {
         // getting status for all invoices that returns from getInvoice
         request.getUUID().addAll(invoices.stream().map(inv -> inv.getUUID()).collect(Collectors.toList()));
 
-        GetInvoiceStatusAllResponse response = einvoiceAdapter.getInvoiceStatusAll(request);
+        GetInvoiceStatusAllResponse response = client.einvoiceWS().getInvoiceStatusAll(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -281,7 +282,7 @@ public class EinvoiceTests {
 
         request.getINVOICE().addAll(invoices);
 
-        SendInvoiceResponseWithServerSignResponse response = einvoiceAdapter.sendInvoiceResponseWithServerSign(request);
+        SendInvoiceResponseWithServerSignResponse response = client.einvoiceWS().sendInvoiceResponseWithServerSign(request);
 
         // Belirtilen ID ye sahip bir fatura bulunamadı
         Assertions.assertNull(response.getERRORTYPE());

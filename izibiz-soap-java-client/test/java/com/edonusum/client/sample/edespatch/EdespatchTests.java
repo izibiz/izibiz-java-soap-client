@@ -1,5 +1,6 @@
 package com.edonusum.client.sample.edespatch;
 
+import com.edonusum.client.SoapJavaClientApplication;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.adapter.EdespatchAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class EdespatchTests {
-    private EdespatchAdapter edespatchAdapter = new EdespatchAdapter();
+    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
 
     private static String loadDespatchAdviceUUID = "";
     private static String loadReceiptAdviceUUID = "";
@@ -91,7 +92,7 @@ public class EdespatchTests {
 
         request.getUUID().addAll(despatchadvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
 
-        GetDespatchAdviceStatusResponse resp = edespatchAdapter.getDespatchAdviseStatus(request);
+        GetDespatchAdviceStatusResponse resp = client.despatchAdviceWS().getDespatchAdviseStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -125,7 +126,7 @@ public class EdespatchTests {
 
         request.setSEARCHKEY(key);
 
-        GetDespatchAdviceResponse resp = edespatchAdapter.getDespatchAdvice(request);
+        GetDespatchAdviceResponse resp = client.despatchAdviceWS().getDespatchAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -161,7 +162,7 @@ public class EdespatchTests {
 
         request.getDESPATCHADVICE().add(despatch);
 
-        LoadDespatchAdviceResponse resp = edespatchAdapter.loadDespatchAdvice(request);
+        LoadDespatchAdviceResponse resp = client.despatchAdviceWS().loadDespatchAdvice(request);
 
         createdXml.delete();
 
@@ -205,7 +206,7 @@ public class EdespatchTests {
 
         request.getDESPATCHADVICE().add(despatch);
 
-        SendDespatchAdviceResponse resp = edespatchAdapter.sendDespatchAdvice(request);
+        SendDespatchAdviceResponse resp = client.despatchAdviceWS().sendDespatchAdvice(request);
 
         createdXml.delete();
 
@@ -233,7 +234,7 @@ public class EdespatchTests {
 
         request.setMARK(mark);
 
-        MarkDespatchAdviceResponse resp = edespatchAdapter.markDespatchAdvice(request);
+        MarkDespatchAdviceResponse resp = client.despatchAdviceWS().markDespatchAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -270,7 +271,7 @@ public class EdespatchTests {
 
         request.getRECEIPTADVICE().add(receipt);
 
-        SendReceiptAdviceResponse resp = edespatchAdapter.sendReceiptAdvice(request);
+        SendReceiptAdviceResponse resp = client.despatchAdviceWS().sendReceiptAdvice(request);
 
         createdXml.delete();
 
@@ -304,7 +305,7 @@ public class EdespatchTests {
 
         request.getRECEIPTADVICE().add(receiptadvice);
 
-        LoadReceiptAdviceResponse resp = edespatchAdapter.loadReceiptAdvice(request);
+        LoadReceiptAdviceResponse resp = client.despatchAdviceWS().loadReceiptAdvice(request);
 
         created.delete();
 
@@ -333,7 +334,7 @@ public class EdespatchTests {
 
         request.setSEARCHKEY(key);
 
-        GetReceiptAdviceResponse resp = edespatchAdapter.getReceiptAdvice(request);
+        GetReceiptAdviceResponse resp = client.despatchAdviceWS().getReceiptAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -351,7 +352,7 @@ public class EdespatchTests {
 
         request.getUUID().addAll(receiptadvices.stream().map(r -> r.getUUID()).collect(Collectors.toList()));
 
-        GetReceiptAdviceStatusResponse resp = edespatchAdapter.getReceiptAdviceStatus(request);
+        GetReceiptAdviceStatusResponse resp = client.despatchAdviceWS().getReceiptAdviceStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -374,7 +375,7 @@ public class EdespatchTests {
 
         request.setMARK(mark);
 
-        MarkReceiptAdviceResponse resp = edespatchAdapter.markReceiptAdvice(request);
+        MarkReceiptAdviceResponse resp = client.despatchAdviceWS().markReceiptAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 

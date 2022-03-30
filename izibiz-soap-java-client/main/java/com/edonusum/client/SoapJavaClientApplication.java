@@ -15,7 +15,7 @@ public class SoapJavaClientApplication {
         this.authAdapter = new AuthAdapter();
         this.eiarchiveAdapter = new EiarchiveAdapter();
         this.einvoiceAdapter = new EinvoiceAdapter();
-        this.eiarchiveAdapter = new EiarchiveAdapter();
+        this.edespatchAdapter = new EdespatchAdapter();
         this.creditNoteAdapter = new CreditNoteAdapter();
 
         //TODO: declarations

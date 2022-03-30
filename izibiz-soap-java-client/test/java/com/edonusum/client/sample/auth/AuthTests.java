@@ -1,5 +1,6 @@
 package com.edonusum.client.sample.auth;
 
+import com.edonusum.client.SoapJavaClientApplication;
 import com.edonusum.client.adapter.AuthAdapter;
 import com.edonusum.client.wsdl.auth.*;
 import org.junit.Test;
@@ -13,10 +14,27 @@ import java.io.IOException;
 @SpringBootTest
 public class AuthTests {
 
-    private static AuthAdapter adapter = new AuthAdapter();
+    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
+
     public static String SESSION_ID = "";
     public static String USERNAME = "izibiz-test2";
     public static String PASSWORD = "izi321";
+
+    @Test
+    public void runAllTestsWithOrder() throws Exception {
+        // login
+        login_givenLoginRequest_then_returnsSessionId();
+
+        // getGibUserList
+        getGibUserList_GivenSearchParameters_then_returnsUserList();
+
+        // checkUser
+        checkUser_givenGibUserId_then_returnsGibUser();
+
+        // logout
+        logout_givenSessionId_then_logoutSucceeds();
+
+    }
 
     private void login_givenLoginRequest_then_returnsSessionId() { // login
         LoginRequest req = new LoginRequest();
@@ -24,9 +42,9 @@ public class AuthTests {
         req.setPASSWORD(PASSWORD);
         req.setUSERNAME(USERNAME);
 
-        LoginResponse resp = adapter.login(req);
+        LoginResponse resp = client.authWS().login(req);
 
-        Assertions.assertNotNull(resp.getERRORTYPE());
+        Assertions.assertNull(resp.getERRORTYPE());
         
         SESSION_ID = resp.getSESSIONID();
 
@@ -39,7 +57,7 @@ public class AuthTests {
         req.setPASSWORD(PASSWORD);
         req.setUSERNAME(USERNAME);
 
-        return adapter.login(req).getSESSIONID();
+        return client.authWS().login(req).getSESSIONID();
     }
 
     public static void logout(String session) {
@@ -49,7 +67,7 @@ public class AuthTests {
         header.setSESSIONID(session);
         req.setREQUESTHEADER(header);
 
-        adapter.logout(req);
+        client.authWS().logout(req);
     }
 
     private void logout_givenSessionId_then_logoutSucceeds() { // logout
@@ -59,7 +77,7 @@ public class AuthTests {
 
         logoutReq.setREQUESTHEADER(header);
 
-        LogoutResponse response = adapter.logout(logoutReq);
+        LogoutResponse response = client.authWS().logout(logoutReq);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -78,7 +96,7 @@ public class AuthTests {
 
         request.setREQUESTHEADER(header);
 
-        GetGibUserListResponse resp = adapter.getGibUserList(request);
+        GetGibUserListResponse resp = client.authWS().getGibUserList(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -100,27 +118,11 @@ public class AuthTests {
 
         request.setDOCUMENTTYPE("DESPATCHADVICE");
 
-        CheckUserResponse response = adapter.checkUser(request);
+        CheckUserResponse response = client.authWS().checkUser(request);
 
         Assertions.assertNotNull(response.getUSER());
 
         System.out.println(response.getUSER().get(0).getTITLE());
-    }
-
-    @Test
-    public void runAllTestsWithOrder() throws Exception {
-        // login
-        login_givenLoginRequest_then_returnsSessionId();
-
-        // getGibUserList
-        getGibUserList_GivenSearchParameters_then_returnsUserList();
-
-        // checkUser
-        checkUser_givenGibUserId_then_returnsGibUser();
-
-        // logout
-        logout_givenSessionId_then_logoutSucceeds();
-
     }
 
 }
