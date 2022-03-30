@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipFile;
 
 @Component
 public class EdespatchAdapter extends Adapter{
@@ -57,7 +56,6 @@ public class EdespatchAdapter extends Adapter{
         file.mkdirs();
 
         File tempFile;
-        ZipFile zip;
         String currentPath = "";
         for(DESPATCHADVICE despatchAdvice : respObj.getValue().getDESPATCHADVICE()) {
             currentPath = path + despatchAdvice.getID();

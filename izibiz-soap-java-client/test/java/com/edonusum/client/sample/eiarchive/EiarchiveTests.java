@@ -23,19 +23,68 @@ public class EiarchiveTests {
     private final AuthAdapter authAdapter = new AuthAdapter();
     private final EiarchiveAdapter eiarchiveAdapter = new EiarchiveAdapter();
 
-    private String getSessionId() {
-        String sessionId = authAdapter.login(AuthTests.prepareLoginRequest()).getSESSIONID();
-        return sessionId;
-    }
+    private String loadEiarchiveUUID = "";
+    private String sendEiarchiveUUID = "";
+
+    private List<EARCHIVEINV> invoices;
+    private List<REPORT> reports;
+
+    private static String SESSION_ID;
 
     @Test
-    public void readFromArchive_givenInvoiceId_then_returnsArchiveInvoice() { // readFromArchive
+    public void runAllTests() throws Exception{
+        // login
+        login();
+
+        // writeToEiarchiveExtended (send or load eiarchive)
+        writeToEiarchiveExtended_givenValidEiarchive_then_writesToArchive();
+
+        // readFromArchive
+        readFromArchive_givenInvoiceId_then_returnsArchiveInvoice();
+
+        // getEarchiveInvoice
+        getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail();
+
+        // getEmailEarchiveInvoice
+        getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail();
+
+        // getEarchiveStatus
+        getEarchiveStatus_givenInvoiceId_then_returnsEArchiveInvoiceStatus();
+
+        // cancelEarchiveInvoice
+        cancelEarchiveInvoiceResponse_givenInvoiceUUID_then_cancelsInvoice();
+
+        // cancelEarchiveInvoice (with delete flag)
+        cancelEarchiveInvoiceResponse_givenInvoiceUUID_andGivenDeleteFlag_then_cancelsInvoice();
+
+        // getEarchiveReport
+        getEarchiveReport_givenPeriod_andGivenFlagValues_then_returnsReportList();
+
+        // readArchiveReport
+        readArchiveReport_givenReportId_thenReturnsReportContent();
+
+        // logout
+        logout();
+    }
+
+    private void login() {
+        SESSION_ID = AuthTests.login();
+    }
+
+    private void logout() {
+        AuthTests.logout(SESSION_ID);
+
+        SESSION_ID = "";
+    }
+
+    private void readFromArchive_givenInvoiceId_then_returnsArchiveInvoice() { // readFromArchive
         ArchiveInvoiceReadRequest request = new ArchiveInvoiceReadRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setCOMPRESSED("N");
+        header.setSESSIONID(SESSION_ID);
 
-        request.setINVOICEID("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
+        request.setINVOICEID(sendEiarchiveUUID); // son gönderilen fatura
         request.setPORTALDIRECTION("OUT");
         request.setPROFILE("XML");
 
@@ -48,15 +97,14 @@ public class EiarchiveTests {
         System.out.println(resp.getINVOICE().get(0));
     }
 
-    @Test
-    public void getEarchiveStatus_givenInvoiceId_then_returnsEArchiveInvoiceStatus() { // getEArchiveStatus
+    private void getEarchiveStatus_givenInvoiceId_then_returnsEArchiveInvoiceStatus() { // getEArchiveStatus
         GetEArchiveInvoiceStatusRequest request = new GetEArchiveInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().add("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
+        request.getUUID().add(sendEiarchiveUUID); // toplu status sorgulama
 
         GetEArchiveInvoiceStatusResponse resp = eiarchiveAdapter.getEArchiveStatus(request);
 
@@ -65,17 +113,16 @@ public class EiarchiveTests {
         System.out.println(resp.getINVOICE().get(0).getHEADER().getSTATUSDESC());
     }
 
-    @Test
-    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
+    private void cancelEarchiveInvoiceResponse_givenInvoiceUUID_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
 
         request.setREQUESTHEADER(header);
 
         CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent content = new CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent();
-        content.setFATURAUUID("08f7d8cf-ff85-40d2-8fe8-14028e865108");
+        content.setFATURAUUID(sendEiarchiveUUID);
 
         request.getCancelEArsivInvoiceContent().add(content);
 
@@ -86,17 +133,16 @@ public class EiarchiveTests {
         System.out.println(resp.getREQUESTRETURN().getINTLTXNID());
     }
 
-    @Test
-    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_andGivenDeleteFlag_then_cancelsInvoice() { // cancelEArchiveInvoiceResponse
+    private void cancelEarchiveInvoiceResponse_givenInvoiceUUID_andGivenDeleteFlag_then_cancelsInvoice() { // cancelEArchiveInvoice
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
 
         request.setREQUESTHEADER(header);
 
         CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent content = new CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent();
-        content.setFATURAUUID("08f7d8cf-ff85-40d2-8fe8-14028e865108");
+        content.setFATURAUUID(sendEiarchiveUUID);
         /* GiB'e hiçbir zaman raporlanmamalı ise: */
         content.setDELETEFLAG("Y");
 
@@ -117,15 +163,14 @@ public class EiarchiveTests {
         System.out.println(resp.getREQUESTRETURN().getINTLTXNID());
     }
 
-    @Test
-    public void getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail() { // getEmailEarchiveInvoice
+    private void getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail() { // getEmailEarchiveInvoice
         GetEmailEarchiveInvoiceRequest request = new GetEmailEarchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.setFATURAUUID("08f7d8cf-ff85-40d2-8fe8-14028e865108"); // example id
+        request.setFATURAUUID(sendEiarchiveUUID); // example id
         request.setEMAIL("example@email.com"); // email address to send
 
         GetEmailEarchiveInvoiceResponse resp = eiarchiveAdapter.getEmailEarchiveInvoice(request);
@@ -135,12 +180,11 @@ public class EiarchiveTests {
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
-    @Test
-    public void getEarchiveReport_givenPeriod_andGivenFlagValues_then_returnsReportList() { // getEarchiveReport
+    private void getEarchiveReport_givenPeriod_andGivenFlagValues_then_returnsReportList() { // getEarchiveReport
         GetEArchiveReportRequest request = new GetEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
         DecimalFormat format = new DecimalFormat("#00");
@@ -156,45 +200,22 @@ public class EiarchiveTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
+        reports = resp.getREPORT();
+
         System.out.println(resp.getREPORT().get(0).getREPORTSTATUS());
     }
 
-    // Rapor listesi ile yapılan testlerde kullanılmak üzere yazılmıştır, getEarchiveReport ile aynı işi yapmaktadır
-    private List<REPORT> getReportList(String sessionId) {
-        GetEArchiveReportRequest request = new GetEArchiveReportRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(sessionId);
-        request.setREQUESTHEADER(header);
-
-        DecimalFormat format = new DecimalFormat("#00");
-
-        // period text
-        String period = LocalDate.now().getYear() + format.format(LocalDate.now().getMonthValue());  // 2018 mayıs = 201805 şeklinde formatlanmalı
-
-        request.setREPORTPERIOD(period);
-
-        request.setREPORTSTATUSFLAG("Y");
-
-        GetEArchiveReportResponse resp = eiarchiveAdapter.getEarchiveReport(request);
-
-        return resp.getREPORT();
-    }
-
-    @Test
-    public void readArchiveReport_givenReportId_thenReturnsReportContent() throws IOException { // ReadArchiveReport
+    private void readArchiveReport_givenReportId_thenReturnsReportContent() throws IOException { // ReadArchiveReport
         ReadEArchiveReportRequest request = new ReadEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
 
         request.setREQUESTHEADER(header);
 
-        List<REPORT> reportList = getReportList(header.getSESSIONID());
-
         ReadEArchiveReportResponse response;
 
-        for (REPORT rep : reportList) {
+        for (REPORT rep : reports) {
             request.setRAPORNO(rep.getREPORTNO());
             response = eiarchiveAdapter.readEarchiveReport(request);
 
@@ -204,12 +225,11 @@ public class EiarchiveTests {
         }
     }
 
-    @Test
-    public void writeToEiarchiveExtended_givenValidEiarchive_then_writesToArchive() throws IOException { // writeToEiArchiveExtended
+    private void writeToEiarchiveExtended_givenValidEiarchive_then_writesToArchive() throws IOException { // writeToEiArchiveExtended
         ArchiveInvoiceExtendedRequest request = new ArchiveInvoiceExtendedRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
-        header.setSESSIONID(getSessionId());
+        header.setSESSIONID(SESSION_ID);
         header.setCOMPRESSED("N");
         request.setREQUESTHEADER(header);
 
@@ -218,8 +238,12 @@ public class EiarchiveTests {
 
         props.setEARSIVFLAG(FLAGVALUE.Y);
 
+        // id
+        UUID uuid = UUID.randomUUID();
+        String id = IdentifierUtils.createInvoiceIdRandom("X01");
+
         File draftFile = new File("xml\\draft-eiarchive.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, UUID.randomUUID(), IdentifierUtils.createInvoiceIdRandom("X01"));
+        File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, uuid, id);
 
         Base64Binary b64 = new Base64Binary();
         b64.setValue(Files.readAllBytes(createdXml.toPath()));
@@ -228,7 +252,7 @@ public class EiarchiveTests {
 
         EARSIVPROPERTIES eiarchiveProps = new EARSIVPROPERTIES();
         eiarchiveProps.setEARSIVTYPE(EARSIVTYPEVALUE.NORMAL);
-        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.DRAFT); // new or draft
+        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.NEW); // new or draft
 
         props.setEARSIVPROPERTIES(eiarchiveProps);
 
@@ -241,6 +265,8 @@ public class EiarchiveTests {
         createdXml.delete();
 
         Assertions.assertNull(resp.getERRORTYPE());
+
+        sendEiarchiveUUID = uuid.toString();
 
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
