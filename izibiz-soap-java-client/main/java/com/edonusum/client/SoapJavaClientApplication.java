@@ -10,6 +10,7 @@ public class SoapJavaClientApplication {
     private EiarchiveAdapter eiarchiveAdapter;
     private EdespatchAdapter edespatchAdapter;
     private CreditNoteAdapter creditNoteAdapter;
+    private SmmAdapter smmAdapter;
 
     public SoapJavaClientApplication() {
         this.authAdapter = new AuthAdapter();
@@ -17,6 +18,7 @@ public class SoapJavaClientApplication {
         this.einvoiceAdapter = new EinvoiceAdapter();
         this.edespatchAdapter = new EdespatchAdapter();
         this.creditNoteAdapter = new CreditNoteAdapter();
+        this.smmAdapter = new SmmAdapter();
 
         //TODO: declarations
     }
@@ -39,5 +41,9 @@ public class SoapJavaClientApplication {
 
     public CreditNoteAdapter creditNoteWS() {
         return this. creditNoteAdapter;
+    }
+
+    public SmmAdapter smmWS() {
+        return this.smmAdapter;
     }
 }

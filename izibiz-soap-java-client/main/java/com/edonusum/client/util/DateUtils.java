@@ -13,11 +13,12 @@ public class DateUtils {
 
     public static XMLGregorianCalendar lastMonth() throws DatatypeConfigurationException {
         LocalDate date = LocalDate.now();
-        date = date.minusMonths(1);
-
-        Date d = Date.from(date.atStartOfDay()
-                .atZone(ZoneId.systemDefault())
-                .toInstant());
+        
+        Date d = Date.from(date.minusMonths(1)
+                    .withDayOfMonth(1)
+                    .atStartOfDay()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant());
 
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(d);

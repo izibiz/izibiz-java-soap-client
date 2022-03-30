@@ -329,6 +329,7 @@ public class EdespatchTests {
         key.setDIRECTION("OUT");
         key.setREADINCLUDED(true);
         key.setCONTENTTYPE(CONTENTTYPE.XML);
+        // key.setLIMIT(10);
 
         request.setSEARCHKEY(key);
 
@@ -357,7 +358,7 @@ public class EdespatchTests {
         System.out.println(resp.getRECEIPTADVICESTATUS().get(0).getID());
     }
 
-    private void markReceiptAdvice_marksReceipts_withGivenParameters() { // markReceiptAdvice
+    private void markReceiptAdvice_marksReceipts_withGivenParameters() throws Exception{ // markReceiptAdvice
         MarkReceiptAdviceRequest request = new MarkReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
