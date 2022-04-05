@@ -44,7 +44,7 @@ public class CreditNoteTests {
     @Test
     @Order(2)
     @DisplayName("E-Müstahsil okuma")
-    public void getCreditNote_canGetCreditNoteList_withGivenParameters() throws Exception { // getCreditNote
+    public void canGetCreditNoteList() throws Exception { // getCreditNote
         GetCreditNoteRequest request = new GetCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -52,19 +52,19 @@ public class CreditNoteTests {
         request.setREQUESTHEADER(header);
 
         /* Tarihe göre sorgulama */
-        GetCreditNoteRequest.CREDITNOTESEARCHKEY key = new GetCreditNoteRequest.CREDITNOTESEARCHKEY();
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
+        GetCreditNoteRequest.CREDITNOTESEARCHKEY searchKey = new GetCreditNoteRequest.CREDITNOTESEARCHKEY();
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
 
         /* Query with ID */
-        // key.setUUID("");
+        // searchKey.setUUID("");
 
         /* Okunmuş belgelerin alınması */
-        key.setREADINCLUDED(FLAGVALUE.Y);
+        searchKey.setREADINCLUDED(FLAGVALUE.Y);
 
         request.setCONTENTTYPE(CONTENTTYPE.PDF);
 
-        request.setCREDITNOTESEARCHKEY(key);
+        request.setCREDITNOTESEARCHKEY(searchKey);
         request.setHEADERONLY(FLAGVALUE.N);
 
         header.setSESSIONID(AuthTests.login());
@@ -80,7 +80,7 @@ public class CreditNoteTests {
     @Test
     @Order(3)
     @DisplayName("Taslak e-müstahsil yükleme")
-    public void loadCreditNote_canLoadDraftCreditNote_whenGivenValidContent() throws IOException { // loadCreditNote
+    public void canLoadCreditNote() throws IOException { // loadCreditNote
         LoadCreditNoteRequest request = new LoadCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -95,10 +95,10 @@ public class CreditNoteTests {
 
         request.setCREDITNOTEPROPERTIES(props);
 
-        CREDITNOTE cr = new CREDITNOTE();
+        CREDITNOTE creditNote = new CREDITNOTE();
         CREDITNOTE.HEADER crheader = new CREDITNOTE.HEADER();
 
-        cr.setHEADER(crheader);
+        creditNote.setHEADER(crheader);
 
         // id
         String id = IdentifierUtils.createInvoiceIdRandom("X01");
@@ -107,12 +107,12 @@ public class CreditNoteTests {
         File draft = new File("xml\\draft-creditNote.xml");
         File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(created.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(created.toPath()));
 
-        cr.setCONTENT(b64);
+        creditNote.setCONTENT(base64Binary);
 
-        request.getCREDITNOTE().add(cr);
+        request.getCREDITNOTE().add(creditNote);
 
         created.delete();
 
@@ -128,7 +128,7 @@ public class CreditNoteTests {
     @Test
     @Order(4)
     @DisplayName("E-Müstahsil gönderme")
-    public void sendCreditNote_canSendCreditNote_whenValidContentIsGiven() throws IOException { // sendCreditNote
+    public void canSendCreditNote() throws IOException { // sendCreditNote
         SendCreditNoteRequest request = new SendCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -136,9 +136,9 @@ public class CreditNoteTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        CREDITNOTE cr = new CREDITNOTE();
+        CREDITNOTE creditnote = new CREDITNOTE();
         CREDITNOTE.HEADER crheader = new CREDITNOTE.HEADER();
-        cr.setHEADER(crheader);
+        creditnote.setHEADER(crheader);
 
         // id
         UUID uuid = UUID.randomUUID();
@@ -147,16 +147,16 @@ public class CreditNoteTests {
         File draft = new File("xml\\draft-creditNote.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(createdXml.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
 
-        cr.setCONTENT(b64);
+        creditnote.setCONTENT(base64Binary);
 
         CREDITNOTEPROPERTIES props = new CREDITNOTEPROPERTIES();
         props.setSENDINGTYPE(SENDINGTYPE.KAGIT);
 
         request.setCREDITNOTEPROPERTIES(props);
-        request.getCREDITNOTE().add(cr);
+        request.getCREDITNOTE().add(creditnote);
 
         SendCreditNoteResponse resp = adapter.sendCreditNote(request);
 
@@ -172,7 +172,7 @@ public class CreditNoteTests {
     @Test
     @Order(5)
     @DisplayName("E-Müstahsil durum sorgulama")
-    public void getCreditNoteStatus_canGetCreditNoteStatus_whenUUID_isGiven() { // getCreditNoteStatus
+    public void canGetCreditNoteStatus() { // getCreditNoteStatus
         GetCreditNoteStatusRequest request = new GetCreditNoteStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -191,7 +191,7 @@ public class CreditNoteTests {
     @Test
     @Order(6)
     @DisplayName("E-Müstahsil iptal etme")
-    public void cancelCreditNote_canCancelCreditNote_whenGivenValidUUID() { // cancelCreditNote
+    public void canCancelCreditNote() { // cancelCreditNote
         CancelCreditNoteRequest request = new CancelCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -212,7 +212,7 @@ public class CreditNoteTests {
     @Test
     @Order(7)
     @DisplayName("E-Müstahsil raporu çekme")
-    public void getCreditNoteReport_givenValidUUID_then_canGetReport() throws Exception { // getCreditNoteReport
+    public void canGetCreditNoteReport() throws Exception { // getCreditNoteReport
         GetCreditNoteReportRequest request = new GetCreditNoteReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -234,7 +234,7 @@ public class CreditNoteTests {
     @Test
     @Order(8)
     @DisplayName("E-Müstahsil işaretleme")
-    public void markCreditNote_canMarkCreditNote_withGivenUUID() { // markCreditNote
+    public void canMarkCreditNote() { // markCreditNote
         MarkCreditNoteRequest request = new MarkCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

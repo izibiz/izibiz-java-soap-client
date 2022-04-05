@@ -64,10 +64,10 @@ public class EiarchiveTests {
         File draftFile = new File("xml\\draft-eiarchive.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, uuid, id);
 
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(createdXml.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
 
-        props.setINVOICECONTENT(b64);
+        props.setINVOICECONTENT(base64Binary);
 
         EARSIVPROPERTIES eiarchiveProps = new EARSIVPROPERTIES();
         eiarchiveProps.setEARSIVTYPE(EARSIVTYPEVALUE.NORMAL);

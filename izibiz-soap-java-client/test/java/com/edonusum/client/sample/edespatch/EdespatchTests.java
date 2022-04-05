@@ -31,8 +31,8 @@ public class EdespatchTests {
     private static String sendDespatchAdviceUUID = "";
     private static String sendReceiptAdviceUUID = "";
 
-    private static List<DESPATCHADVICE> despatchadvices;
-    private static List<RECEIPTADVICE> receiptadvices;
+    private static List<DESPATCHADVICE> despatchAdvices;
+    private static List<RECEIPTADVICE> receiptAdvices;
     
     private static String SESSION_ID;
 
@@ -55,32 +55,32 @@ public class EdespatchTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetDespatchAdviceRequest.SEARCHKEY key = new GetDespatchAdviceRequest.SEARCHKEY();
+        GetDespatchAdviceRequest.SEARCHKEY searchKey = new GetDespatchAdviceRequest.SEARCHKEY();
 
-        key.setDIRECTION("OUT");
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
-        key.setCONTENTTYPE(CONTENTTYPE.XML);
+        searchKey.setDIRECTION("OUT");
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
+        searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
 
         /* bkz: dev.izibiz
-        key.setLIMIT(20);
-        key.setCONTENTTYPE(CONTENTTYPE.XML);
-        key.setDATETYPE(DATETYPE.CREATE);
+        searchKey.setLIMIT(20);
+        searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
+        searchKey.setDATETYPE(DATETYPE.CREATE);
         */
 
         /* Okunmuş belgeler isteniyorsa */
-        key.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(true);
 
         /* Query with ID */
-        // key.setUUID("552f87b8-aa28-42bc-a326-7da282976cda");
+        // searchKey.setUUID("552f87b8-aa28-42bc-a326-7da282976cda");
 
-        request.setSEARCHKEY(key);
+        request.setSEARCHKEY(searchKey);
 
         GetDespatchAdviceResponse resp = adapter.getDespatchAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        despatchadvices = resp.getDESPATCHADVICE();
+        despatchAdvices = resp.getDESPATCHADVICE();
 
         System.out.println(resp.getDESPATCHADVICE().get(0).getID());
     }
@@ -97,24 +97,24 @@ public class EdespatchTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetReceiptAdviceRequest.SEARCHKEY key = new GetReceiptAdviceRequest.SEARCHKEY();
+        GetReceiptAdviceRequest.SEARCHKEY searchKey = new GetReceiptAdviceRequest.SEARCHKEY();
 
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
 
-        key.setDIRECTION("OUT");
-        key.setREADINCLUDED(true);
-        key.setCONTENTTYPE(CONTENTTYPE.XML);
-        // key.setLIMIT(10);
+        searchKey.setDIRECTION("OUT");
+        searchKey.setREADINCLUDED(true);
+        searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
+        // searchKey.setLIMIT(10);
 
-        request.setSEARCHKEY(key);
+        request.setSEARCHKEY(searchKey);
 
         header.setSESSIONID(AuthTests.login());
         GetReceiptAdviceResponse resp = adapter.getReceiptAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        receiptadvices = resp.getRECEIPTADVICE();
+        receiptAdvices = resp.getRECEIPTADVICE();
 
         System.out.println(resp.getRECEIPTADVICE().get(0).getID());
     }
@@ -132,7 +132,7 @@ public class EdespatchTests {
         request.setREQUESTHEADER(header);
 
         DESPATCHADVICE despatch = new DESPATCHADVICE();
-        Base64Binary b64 = new Base64Binary();
+        Base64Binary base64Binary = new Base64Binary();
 
         // ID
         String id = IdentifierUtils.createInvoiceIdRandom("EIR");
@@ -141,8 +141,8 @@ public class EdespatchTests {
         File draft = new File("xml\\draft-edespatch.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        b64.setValue(Files.readAllBytes(createdXml.toPath()));
-        despatch.setCONTENT(b64);
+        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
+        despatch.setCONTENT(base64Binary);
 
         DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
         despatch.setDESPATCHADVICEHEADER(despatchHeader);
@@ -178,11 +178,11 @@ public class EdespatchTests {
         File draft = new File("xml\\draft-receiptAdvice.xml");
         File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(created.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(created.toPath()));
 
         RECEIPTADVICE receiptadvice = new RECEIPTADVICE();
-        receiptadvice.setCONTENT(b64);
+        receiptadvice.setCONTENT(base64Binary);
 
         request.getRECEIPTADVICE().add(receiptadvice);
 
@@ -216,7 +216,7 @@ public class EdespatchTests {
         request.setRECEIVER(receiver);
 
         DESPATCHADVICE despatch = new DESPATCHADVICE();
-        Base64Binary b64 = new Base64Binary();
+        Base64Binary base64Binary = new Base64Binary();
 
         //ID
         String id = IdentifierUtils.createInvoiceIdRandom("EIR");
@@ -225,8 +225,8 @@ public class EdespatchTests {
         File draft = new File("xml\\draft-edespatch.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        b64.setValue(Files.readAllBytes(createdXml.toPath()));
-        despatch.setCONTENT(b64);
+        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
+        despatch.setCONTENT(base64Binary);
 
         DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
         despatch.setDESPATCHADVICEHEADER(despatchHeader);
@@ -264,8 +264,8 @@ public class EdespatchTests {
         File draft = new File("xml\\draft-receiptAdvice.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(createdXml.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
 
         RECEIPTADVICE receipt = new RECEIPTADVICE();
         receipt.setUUID(UUID.randomUUID().toString());
@@ -298,7 +298,7 @@ public class EdespatchTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().addAll(despatchadvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
+        request.getUUID().addAll(despatchAdvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
 
         GetDespatchAdviceStatusResponse resp = adapter.getDespatchAdviseStatus(request);
 
@@ -317,7 +317,7 @@ public class EdespatchTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().addAll(receiptadvices.stream().map(r -> r.getUUID()).collect(Collectors.toList()));
+        request.getUUID().addAll(receiptAdvices.stream().map(r -> r.getUUID()).collect(Collectors.toList()));
 
         GetReceiptAdviceStatusResponse resp = adapter.getReceiptAdviceStatus(request);
 
@@ -364,7 +364,7 @@ public class EdespatchTests {
         request.setREQUESTHEADER(header);
 
         RECEIPTADVICEINFO info = new RECEIPTADVICE();
-        info.setUUID(receiptadvices.get(0).getUUID()); // Query with ID
+        info.setUUID(receiptAdvices.get(0).getUUID()); // Query with ID
 
         MarkReceiptAdviceRequest.MARK mark = new MarkReceiptAdviceRequest.MARK();
         mark.setValue("READ");

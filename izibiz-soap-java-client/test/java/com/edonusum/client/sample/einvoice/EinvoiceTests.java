@@ -53,20 +53,20 @@ public class EinvoiceTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetInvoiceRequest.INVOICESEARCHKEY key = new GetInvoiceRequest.INVOICESEARCHKEY();
-        key.setDIRECTION("OUT");
-        request.setINVOICESEARCHKEY(key);
+        GetInvoiceRequest.INVOICESEARCHKEY searchKey = new GetInvoiceRequest.INVOICESEARCHKEY();
+        searchKey.setDIRECTION("OUT");
+        request.setINVOICESEARCHKEY(searchKey);
 
         /* okunmuş faturaları alma */
-        key.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(true);
 
         // Tarihe göre alma
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
 
         // ID ye göre alma
         /*
-        key.setUUID("EXAMPLE");
+        searchKey.setUUID("EXAMPLE");
         */
 
         GetInvoiceResponse response = adapter.getInvoice(request);
@@ -88,18 +88,18 @@ public class EinvoiceTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetInvoiceWithTypeRequest.INVOICESEARCHKEY key = new GetInvoiceWithTypeRequest.INVOICESEARCHKEY();
+        GetInvoiceWithTypeRequest.INVOICESEARCHKEY searchKey = new GetInvoiceWithTypeRequest.INVOICESEARCHKEY();
 
-        key.setTYPE("PDF");
-        key.setDIRECTION("OUT");
+        searchKey.setTYPE("PDF");
+        searchKey.setDIRECTION("OUT");
         // Tarihe göre alma
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
 
         /* Okunmuş faturaların alınması */
-        key.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(true);
 
-        request.setINVOICESEARCHKEY(key);
+        request.setINVOICESEARCHKEY(searchKey);
 
         request.setHEADERONLY("N");
 
@@ -180,10 +180,10 @@ public class EinvoiceTests {
         File draft = new File("xml\\draft-invoice.xml"); // draft invoice
         File createdXML = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
-        Base64Binary b64array = new Base64Binary();
-        b64array.setValue(Files.readAllBytes(createdXML.toPath()));
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(createdXML.toPath()));
 
-        inv.setCONTENT(b64array);
+        inv.setCONTENT(base64Binary);
 
         request.getINVOICE().add(inv);
 

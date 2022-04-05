@@ -50,18 +50,18 @@ public class ESmmTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetSmmRequest.SMMSEARCHKEY key = new GetSmmRequest.SMMSEARCHKEY();
+        GetSmmRequest.SMMSEARCHKEY searchKey = new GetSmmRequest.SMMSEARCHKEY();
         // tarihe göre sorgu
-        key.setENDDATE(DateUtils.now());
-        key.setSTARTDATE(DateUtils.minusDays(30));
+        searchKey.setENDDATE(DateUtils.now());
+        searchKey.setSTARTDATE(DateUtils.minusDays(30));
 
         /* UUID ile sorgu */
-        // key.setUUID("example");
+        // searchKey.setUUID("example");
 
         /* okunmuş belgeleri alma */
-        key.setREADINCLUDED(FLAGVALUE.Y);
+        searchKey.setREADINCLUDED(FLAGVALUE.Y);
 
-        request.setSMMSEARCHKEY(key);
+        request.setSMMSEARCHKEY(searchKey);
         request.setCONTENTTYPE(CONTENTTYPE.XML);
         request.setHEADERONLY(FLAGVALUE.N);
 

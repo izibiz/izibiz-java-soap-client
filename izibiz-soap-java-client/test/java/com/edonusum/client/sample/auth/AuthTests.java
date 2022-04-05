@@ -25,13 +25,13 @@ public class AuthTests {
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void login_givenLoginRequest_then_returnsSessionId() { // login
-        LoginRequest req = new LoginRequest();
+    public void canLogin() { // login
+        LoginRequest request = new LoginRequest();
+
+        request.setPASSWORD(PASSWORD);
+        request.setUSERNAME(USERNAME);
         
-        req.setPASSWORD(PASSWORD);
-        req.setUSERNAME(USERNAME);
-        
-        LoginResponse resp = adapter.login(req);
+        LoginResponse resp = adapter.login(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
         
@@ -43,7 +43,7 @@ public class AuthTests {
     @Test
     @Order(2)
     @DisplayName("Mükellef listesi çekme")
-    public void getGibUserList_GivenSearchParameters_then_returnsUserList() throws Exception { // getGibUserList
+    public void canGetGiBUserList() throws Exception { // getGibUserList
         GetGibUserListRequest request = new GetGibUserListRequest();
 
         REQUESTHEADERType header = new REQUESTHEADERType();
@@ -65,7 +65,7 @@ public class AuthTests {
     @Test
     @Order(3)
     @DisplayName("Mükellef sorgulama")
-    public void checkUser_givenGibUserId_then_returnsGibUser() { // checkUser
+    public void canCheckUser() { // checkUser
         String exampleId = "4840847211";
 
         CheckUserRequest request = new CheckUserRequest();
@@ -90,14 +90,14 @@ public class AuthTests {
     @Test
     @Order(4)
     @DisplayName("Çıkış yapma")
-    public void logout_givenSessionId_then_logoutSucceeds() { // logout
-        LogoutRequest logoutReq = new LogoutRequest();
+    public void canLogout() { // logout
+        LogoutRequest request = new LogoutRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
         header.setSESSIONID(SESSION_ID);
 
-        logoutReq.setREQUESTHEADER(header);
+        request.setREQUESTHEADER(header);
 
-        LogoutResponse response = adapter.logout(logoutReq);
+        LogoutResponse response = adapter.logout(request);
 
         Assertions.assertNull(response.getERRORTYPE());
         Assertions.assertEquals(0, response.getREQUESTRETURN().getRETURNCODE());
@@ -106,12 +106,12 @@ public class AuthTests {
     }
 
     public static String login() {
-        LoginRequest req = new LoginRequest();
+        LoginRequest request = new LoginRequest();
 
-        req.setPASSWORD(PASSWORD);
-        req.setUSERNAME(USERNAME);
+        request.setPASSWORD(PASSWORD);
+        request.setUSERNAME(USERNAME);
 
-        return client.authWS().login(req).getSESSIONID();
+        return client.authWS().login(request).getSESSIONID();
     }
 
 

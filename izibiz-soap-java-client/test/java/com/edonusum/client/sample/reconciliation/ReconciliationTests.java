@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ReconciliationTests {
 
     private static String SESSION_ID;
-    private static String sendReconciliatonUUID;
+    private static String sendReconciliationUUID;
 
     @Autowired
     private ReconciliationAdapter reconciliationAdapter;
@@ -51,16 +51,16 @@ public class ReconciliationTests {
 
         // Cari Mutabakat için zorunlu alanlar
         reconciliation.setCMAMOUNT(BigDecimal.valueOf(5001));
-        reconciliation.setCMAMOUNTTYPE(CMTYPE.B);
+        reconciliation.setCMAMOUNTTYPE(CMTYPE.A);
         reconciliation.setCMDATE(LocalDate.now().toString());
 
-        reconciliation.setEMAIL("rtdonuk@gmail.com");
+        reconciliation.setEMAIL("example@example.com");
 
         request.getRECONCILIATION().add(reconciliation);
 
         SendReconciliationResponse resp = reconciliationAdapter.sendReconciliation(request);
 
-        sendReconciliatonUUID = reconciliation.getUUID();
+        sendReconciliationUUID = reconciliation.getUUID();
 
         Assertions.assertNull(resp.getERRORTYPE());
         Assertions.assertEquals(0, resp.getREQUESTRETURN().getRETURNCODE());
@@ -76,10 +76,10 @@ public class ReconciliationTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetReconciliationStatusRequest.RECONCILIATIONSEARCHING key = new GetReconciliationStatusRequest.RECONCILIATIONSEARCHING();
-        key.getUUID().add(sendReconciliatonUUID);
+        GetReconciliationStatusRequest.RECONCILIATIONSEARCHING searchKey = new GetReconciliationStatusRequest.RECONCILIATIONSEARCHING();
+        searchKey.getUUID().add(sendReconciliationUUID);
 
-        request.setRECONCILIATIONSEARCHING(key);
+        request.setRECONCILIATIONSEARCHING(searchKey);
 
         GetReconciliationStatusResponse resp = reconciliationAdapter.getReconciliationStatus(request);
 
@@ -97,10 +97,10 @@ public class ReconciliationTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        SendMailReconciliationRequest.MAILSEARCHING key = new SendMailReconciliationRequest.MAILSEARCHING();
-        key.getUUID().add(sendReconciliatonUUID);
+        SendMailReconciliationRequest.MAILSEARCHING searchKey = new SendMailReconciliationRequest.MAILSEARCHING();
+        searchKey.getUUID().add(sendReconciliationUUID);
 
-        request.setMAILSEARCHING(key);
+        request.setMAILSEARCHING(searchKey);
 
         SendMailReconciliationResponse resp = reconciliationAdapter.sendReconciliationMail(request);
 
