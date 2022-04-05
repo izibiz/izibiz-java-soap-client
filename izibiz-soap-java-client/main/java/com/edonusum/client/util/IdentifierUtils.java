@@ -8,17 +8,15 @@ import java.util.Random;
 public class IdentifierUtils {
     private IdentifierUtils() {}
 
-    private static DecimalFormat formatter = new DecimalFormat("#000000000");
-    private static Random random = new Random();
+    private static final DecimalFormat formatter = new DecimalFormat("#000000000");
+    private static final Random random = new Random();
     private static final char[] alphabet = "abcdefghijklmnopqrstuvwxyz0123456789".toUpperCase(Locale.ENGLISH).toCharArray();
     private static final int ID_UPPER_BOUND = 999999999;
 
 
     public static String createInvoiceIdRandom(String prefix) {
         long id = random.nextInt(ID_UPPER_BOUND); // 9 hane
-        String result = prefix + LocalDate.now().getYear() + formatter.format(id); // seri + yıl + 9 haneli id
-
-        return result;
+        return prefix + LocalDate.now().getYear() + formatter.format(id);
     }
 
     public static String createInvoiceIdRandomPrefix() {
@@ -28,10 +26,8 @@ public class IdentifierUtils {
 
         char[] prefix = {alphabet[firstIndex], alphabet[secondIndex], alphabet[thirdIndex]};
 
-        long id = 000000001; // her yeni seri 1'den başlar
+        long id = 1; // her yeni seri 1'den başlar
 
-        String result = String.copyValueOf(prefix) + LocalDate.now().getYear() + formatter.format(id);
-
-        return result;
+        return String.copyValueOf(prefix) + LocalDate.now().getYear() + formatter.format(id);
     }
 }

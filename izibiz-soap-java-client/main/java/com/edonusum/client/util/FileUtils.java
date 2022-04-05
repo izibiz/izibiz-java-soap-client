@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
+
+    private FileUtils() {}
+
     public static List<File> writeToFile(List<byte[]> contents, String basePath, String folderPrefix, String extension) throws Exception{
         List<File> files = new ArrayList<>();
 
         Path currentFile;
-        Path currentDir;
         int index = 1;
         String tempDir;
         for (byte[] content : contents) {

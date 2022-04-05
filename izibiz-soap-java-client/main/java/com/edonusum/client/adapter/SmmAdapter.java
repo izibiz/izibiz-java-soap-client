@@ -15,7 +15,7 @@ public class SmmAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/SmmWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.smm";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\smm";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public SmmAdapter() {
         setContextPath(CONTEXT_PATH);
@@ -23,7 +23,7 @@ public class SmmAdapter extends Adapter{
     }
 
     private boolean isCompressed(REQUESTHEADERType header) {
-        return (null == header.getCOMPRESSED() || "Y".equals(header.getCOMPRESSED())) ? true : false;
+        return (null == header.getCOMPRESSED() || "Y".equals(header.getCOMPRESSED()));
     }
 
     public GetSmmResponse getSmm(GetSmmRequest request) throws Exception{

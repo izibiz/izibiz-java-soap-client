@@ -22,17 +22,13 @@ public class DateUtils {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(d);
 
-        XMLGregorianCalendar result = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-        return result;
+        return DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
     }
 
     public static XMLGregorianCalendar now() throws  DatatypeConfigurationException {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(new Date());
 
-        XMLGregorianCalendar result = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-        return result;
+        return DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
     }
 }

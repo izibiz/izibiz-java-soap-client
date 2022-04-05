@@ -19,7 +19,7 @@ public class AuthAdapter extends Adapter {
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.auth";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\auth";
 
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public AuthAdapter() {
         of = new ObjectFactory();

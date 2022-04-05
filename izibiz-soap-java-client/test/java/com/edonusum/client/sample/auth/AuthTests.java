@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @DisplayName("Kimlik doğrulama servisi")
 public class AuthTests {
-    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
+    private static final SoapJavaClientApplication client = new SoapJavaClientApplication();
     
     @Autowired
     private AuthAdapter adapter;
@@ -25,7 +25,7 @@ public class AuthTests {
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void canLogin() { // login
+    void canLogin() { // login
         LoginRequest request = new LoginRequest();
 
         request.setPASSWORD(PASSWORD);
@@ -43,7 +43,7 @@ public class AuthTests {
     @Test
     @Order(2)
     @DisplayName("Mükellef listesi çekme")
-    public void canGetGiBUserList() throws Exception { // getGibUserList
+    void canGetGiBUserList() throws Exception { // getGibUserList
         GetGibUserListRequest request = new GetGibUserListRequest();
 
         REQUESTHEADERType header = new REQUESTHEADERType();
@@ -65,7 +65,7 @@ public class AuthTests {
     @Test
     @Order(3)
     @DisplayName("Mükellef sorgulama")
-    public void canCheckUser() { // checkUser
+    void canCheckUser() { // checkUser
         String exampleId = "4840847211";
 
         CheckUserRequest request = new CheckUserRequest();
@@ -90,7 +90,7 @@ public class AuthTests {
     @Test
     @Order(4)
     @DisplayName("Çıkış yapma")
-    public void canLogout() { // logout
+    void canLogout() { // logout
         LogoutRequest request = new LogoutRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
         header.setSESSIONID(SESSION_ID);

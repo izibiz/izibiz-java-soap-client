@@ -15,7 +15,7 @@ import java.util.UUID;
 @DisplayName("E-Mutabakat servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReconciliationTests {
+class ReconciliationTests {
 
     private static String SESSION_ID;
     private static String sendReconciliationUUID;
@@ -26,14 +26,16 @@ public class ReconciliationTests {
     @Order(1)
     @DisplayName("Giriş yapma")
     @Test
-    public void login() {
+    void login() {
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertNotEquals("", SESSION_ID);
     }
 
     @Order(2)
     @DisplayName("E-Mutabakat gönderme")
     @Test
-    public void canSendReconciliation() {
+    void canSendReconciliation() {
         SendReconciliationRequest request = new SendReconciliationRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -69,7 +71,7 @@ public class ReconciliationTests {
     @Order(3)
     @DisplayName("E-Mutabakat durum sorgulama")
     @Test
-    public void canGetReconciliationStatus() {
+    void canGetReconciliationStatus() {
         GetReconciliationStatusRequest request = new GetReconciliationStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -90,7 +92,7 @@ public class ReconciliationTests {
     @Order(4)
     @DisplayName("E-Mutabakat mail gönderme")
     @Test
-    public void canSendMailReconciliation() {
+    void canSendMailReconciliation() {
         SendMailReconciliationRequest request = new SendMailReconciliationRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -111,7 +113,7 @@ public class ReconciliationTests {
     @Order(5)
     @DisplayName("Çıkış yapma")
     @Test
-    public void logout() {
+    void logout() {
         AuthTests.logout(SESSION_ID);
 
         SESSION_ID = "";

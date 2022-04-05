@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class CreditNoteAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/CreditNoteWS/CreditNote";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.crnote";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\creditnote";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public CreditNoteAdapter() {
         setContextPath(CONTEXT_PATH);
@@ -24,7 +23,7 @@ public class CreditNoteAdapter extends Adapter{
     }
 
     private boolean isCompressed(REQUESTHEADERType header) {
-        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED()) ? true : false;
+        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED());
     }
 
     public GetCreditNoteResponse getCreditNote(GetCreditNoteRequest request) throws Exception{
@@ -37,8 +36,7 @@ public class CreditNoteAdapter extends Adapter{
 
         String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getCONTENTTYPE().value();
 
-        List<byte[]> contents = new ArrayList<>();
-        contents.addAll(respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList()));
+        List<byte[]> contents = respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList());
 
         List<File> files = FileUtils.writeToFile(contents,path, "credit_note", ext);
         if(ext.equals("zip")) {
@@ -91,8 +89,7 @@ public class CreditNoteAdapter extends Adapter{
 
         String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : "xml";
 
-        List<byte[]> contents = new ArrayList<>();
-        contents.addAll(respObj.getValue().getCREDITNOTEREPORT().stream().map(report -> report.getCONTENT().getValue()).collect(Collectors.toList()));
+        List<byte[]> contents = respObj.getValue().getCREDITNOTEREPORT().stream().map(report -> report.getCONTENT().getValue()).collect(Collectors.toList());
 
         List<File> files = FileUtils.writeToFile(contents, path, "credit_note_report",ext);
 

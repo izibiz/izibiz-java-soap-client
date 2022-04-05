@@ -21,13 +21,11 @@ import java.util.stream.Collectors;
 @DisplayName("E-İrsaliye servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class EdespatchTests {
+class EdespatchTests {
 
     @Autowired
     private EdespatchAdapter adapter;
 
-    private static String loadDespatchAdviceUUID = "";
-    private static String loadReceiptAdviceUUID = "";
     private static String sendDespatchAdviceUUID = "";
     private static String sendReceiptAdviceUUID = "";
 
@@ -39,14 +37,14 @@ public class EdespatchTests {
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void login() {
+    void login() {
         SESSION_ID = AuthTests.login();
     }
 
     @Test
     @Order(2)
     @DisplayName("E-İrsaliye listesi çekme")
-    public void canGetDespatchAdviceList() throws Exception { // GetDespatchAdvice
+    void canGetDespatchAdviceList() throws Exception { // GetDespatchAdvice
         GetDespatchAdviceRequest request = new GetDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -88,7 +86,7 @@ public class EdespatchTests {
     @Test
     @Order(3)
     @DisplayName("E-İrsaliye yanıt listesi çekme")
-    public void canGetReceiptAdviceList() throws Exception { // getReceiptAdvice
+    void canGetReceiptAdviceList() throws Exception { // getReceiptAdvice
         GetReceiptAdviceRequest request = new GetReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -122,7 +120,7 @@ public class EdespatchTests {
     @Test
     @Order(4)
     @DisplayName("Taslak E-İrsaliye yükleme")
-    public void canLoadDespatchAdvice() throws IOException { // LoadDespatchAdvice
+    void canLoadDespatchAdvice() throws IOException { // LoadDespatchAdvice
         LoadDespatchAdviceRequest request = new LoadDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -155,15 +153,13 @@ public class EdespatchTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        loadDespatchAdviceUUID = uuid.toString();
-
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
     @Test
     @Order(5)
     @DisplayName("Taslak E-İrsaliye yanıtı yükleme")
-    public void canLoadReceiptAdvice() throws IOException { // loadReceiptAdvice
+    void canLoadReceiptAdvice() throws IOException { // loadReceiptAdvice
         LoadReceiptAdviceRequest request = new LoadReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -192,15 +188,13 @@ public class EdespatchTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        loadReceiptAdviceUUID = uuid.toString();
-
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
     @Test
     @Order(6)
     @DisplayName("E-İrsaliye gönderme")
-    public void canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
+    void canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
         SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -249,7 +243,7 @@ public class EdespatchTests {
     @Test
     @Order(7)
     @DisplayName("E-irsaliye yanıtı gönderme")
-    public void canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
+    void canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
         SendReceiptAdviceRequest request = new SendReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -291,14 +285,14 @@ public class EdespatchTests {
     @Test
     @Order(8)
     @DisplayName("E-İrsaliye durum sorgulama")
-    public void canGetDespatchAdviceStatus() { // GetDespatchAdviceStatus
+    void canGetDespatchAdviceStatus() { // GetDespatchAdviceStatus
         GetDespatchAdviceStatusRequest request = new GetDespatchAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().addAll(despatchAdvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
+        request.getUUID().addAll(despatchAdvices.stream().map(DESPATCHADVICEINFO::getUUID).collect(Collectors.toList())); // toplu status sorgulama
 
         GetDespatchAdviceStatusResponse resp = adapter.getDespatchAdviseStatus(request);
 
@@ -310,14 +304,14 @@ public class EdespatchTests {
     @Test
     @Order(9)
     @DisplayName("E-İrsaliye yanıtı durumu sorgulama")
-    public void canGetReceiptAdviceStatus() { // getReceiptAdviceStatus
+    void canGetReceiptAdviceStatus() { // getReceiptAdviceStatus
         GetReceiptAdviceStatusRequest request = new GetReceiptAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().addAll(receiptAdvices.stream().map(r -> r.getUUID()).collect(Collectors.toList()));
+        request.getUUID().addAll(receiptAdvices.stream().map(RECEIPTADVICEINFO::getUUID).collect(Collectors.toList()));
 
         GetReceiptAdviceStatusResponse resp = adapter.getReceiptAdviceStatus(request);
 
@@ -329,7 +323,7 @@ public class EdespatchTests {
     @Test
     @Order(10)
     @DisplayName("E-İrsaliye işaretleme")
-    public void canMarkDespatchAdvice() { // markDespatchAdvice
+    void canMarkDespatchAdvice() { // markDespatchAdvice
         MarkDespatchAdviceRequest request = new MarkDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -356,7 +350,7 @@ public class EdespatchTests {
     @Test
     @Order(11)
     @DisplayName("E-İrsaliye yanıtı işaretleme")
-    public void canMarkReceiptAdvice() { // markReceiptAdvice
+    void canMarkReceiptAdvice() { // markReceiptAdvice
         MarkReceiptAdviceRequest request = new MarkReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

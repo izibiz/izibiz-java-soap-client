@@ -14,7 +14,7 @@ public class EiarchiveAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.eiarchive";
     private static final String DOCUMENT_DIR = PATH_TO_DOCUMENTS + "\\eiarchive";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public EiarchiveAdapter() {
         of = new ObjectFactory();
@@ -22,7 +22,7 @@ public class EiarchiveAdapter extends Adapter{
     }
 
     private boolean isCompressed(REQUESTHEADERType header) {
-        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED()) ? true : false;
+        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED());
     }
 
     public ArchiveInvoiceReadResponse readFromArchive(ArchiveInvoiceReadRequest request) {
@@ -60,7 +60,6 @@ public class EiarchiveAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    private static int index = 0;
     public ReadEArchiveReportResponse readEarchiveReport(ReadEArchiveReportRequest request) throws Exception {
         JAXBElement<ReadEArchiveReportResponse> respObj = (JAXBElement<ReadEArchiveReportResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL,of.createReadEArchiveReportRequest(request));
@@ -70,10 +69,10 @@ public class EiarchiveAdapter extends Adapter{
         // reportlar 2 kez ziplenerek gönderildiği için (bug) her zaman zip kullanılmalı
         String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : "xml";
 
-        List<byte[]> contents = respObj.getValue().getEARCHIVEREPORT().stream().map(report -> report.getValue()).collect(Collectors.toList());
+        List<byte[]> contents = respObj.getValue().getEARCHIVEREPORT().stream().map(Base64Binary::getValue).collect(Collectors.toList());
         List<File> files = FileUtils.writeToFile(contents, path,"eiarchive_report", ext);
 
-        // continue with files
+        // dosyalar ile devam edilir
 
         return respObj.getValue();
     }

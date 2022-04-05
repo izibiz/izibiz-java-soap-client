@@ -21,14 +21,13 @@ import java.util.stream.Collectors;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("E-Fatura servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
-public class EinvoiceTests {
+class EinvoiceTests {
     
     @Autowired
     private EinvoiceAdapter adapter;
     
     private static String sendEinvoiceUUID = "";
     private static String sendEinvoiceID = "";
-    private static String loadEinvoiceUUID = "";
     
     private static List<INVOICE> invoices;
     
@@ -37,17 +36,17 @@ public class EinvoiceTests {
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void login() { // login
+    void login() { // login
         SESSION_ID = AuthTests.login();
 
-        Assertions.assertFalse(SESSION_ID == "");
+        Assertions.assertNotEquals("", SESSION_ID);
         Assertions.assertNotNull(SESSION_ID);
     }
 
     @Test
     @Order(2)
     @DisplayName("E-Fatura listesi çekme")
-    public void canGetInvoiceList() throws Exception { // getInvoice
+    void canGetInvoiceList() throws Exception { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -82,7 +81,7 @@ public class EinvoiceTests {
     @Test
     @Order(3)
     @DisplayName("E-Fatura okuma (Tip ile))")
-    public void canGetInvoiceList_withType() throws Exception{ // getInvoiceWithType
+    void canGetInvoiceList_withType() throws Exception{ // getInvoiceWithType
         GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -114,7 +113,7 @@ public class EinvoiceTests {
     @Test
     @Order(4)
     @DisplayName("Taslak e-fatura yükleme")
-    public void canLoadInvoice() throws IOException { // loadInvoice
+    void canLoadInvoice() throws IOException { // loadInvoice
         LoadInvoiceRequest request = new LoadInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -148,8 +147,6 @@ public class EinvoiceTests {
 
         Assertions.assertNull(response.getERRORTYPE());
 
-        loadEinvoiceUUID = uuid.toString();
-
         created.delete();
 
         System.out.println(response.getREQUESTRETURN().getRETURNCODE());
@@ -158,7 +155,7 @@ public class EinvoiceTests {
     @Test
     @Order(5)
     @DisplayName("E-Fatura gönderme")
-    public void canSendInvoice() throws IOException { // sendInvoice
+    void canSendInvoice() throws IOException { // sendInvoice
         SendInvoiceRequest request = new SendInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -202,7 +199,7 @@ public class EinvoiceTests {
     @Test
     @Order(6)
     @DisplayName("E-Fatura yanıtı gönderme (Server imzalı)")
-    public void canSendInvoiceResponse_withServerSign() { // sendInvoiceResponseWithServerSign
+    void canSendInvoiceResponse_withServerSign() { // sendInvoiceResponseWithServerSign
         SendInvoiceResponseWithServerSignRequest request = new SendInvoiceResponseWithServerSignRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -228,7 +225,7 @@ public class EinvoiceTests {
     @Test
     @Order(7)
     @DisplayName("E-Fatura işaretleme")
-    public void canMarkInvoice() { // markInvoice
+    void canMarkInvoice() { // markInvoice
         MarkInvoiceRequest request = new MarkInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -253,7 +250,7 @@ public class EinvoiceTests {
     @Test
     @Order(8)
     @DisplayName("E-Fatura durum sorgulama")
-    public void canGetInvoiceStatus() { // getInvoiceStatus
+    void canGetInvoiceStatus() { // getInvoiceStatus
         GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -272,7 +269,7 @@ public class EinvoiceTests {
     @Test
     @Order(9)
     @DisplayName("E-Fatura toplu durum sorgulama")
-    public void canGetInvoiceStatus_multiple() { // getInvoiceStatusAll
+    void canGetInvoiceStatus_multiple() { // getInvoiceStatusAll
         GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -281,7 +278,7 @@ public class EinvoiceTests {
         request.setREQUESTHEADER(header);
 
         // getting status for all invoices that returns from getInvoice
-        request.getUUID().addAll(invoices.stream().map(inv -> inv.getUUID()).collect(Collectors.toList()));
+        request.getUUID().addAll(invoices.stream().map(INVOICE::getUUID).collect(Collectors.toList()));
 
         GetInvoiceStatusAllResponse response = adapter.getInvoiceStatusAll(request);
 
@@ -293,7 +290,7 @@ public class EinvoiceTests {
     @Test
     @Order(10)
     @DisplayName("Çıkış yapma")
-    public void logout() { // logout
+    void logout() { // logout
         AuthTests.logout(SESSION_ID);
 
         SESSION_ID = "";

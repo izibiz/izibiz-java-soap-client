@@ -12,38 +12,34 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
 @DisplayName("E-SMM Servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ESmmTests {
+class ESmmTests {
     
     @Autowired
     private SmmAdapter adapter;
 
     private static String loadSmmUUID = "";
-    private static String sendSmmUUID = "";
-
     private static String SESSION_ID = "";
-
-    private static List<SMM> smmList;
-    private static List<REPORT> smmReports;
 
 
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void login() {
+    void login() {
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertNotEquals("", SESSION_ID);
     }
 
     @Test
     @Order(2)
     @DisplayName("Serbest meslek makbuz listesi çekme")
-    public void getSmm_canGetSmmList_withGivenParameters() throws Exception{ // getSmm
+    void getSmm_canGetSmmList_withGivenParameters() throws Exception{ // getSmm
         GetSmmRequest request = new GetSmmRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -68,8 +64,7 @@ public class ESmmTests {
         GetSmmResponse resp = adapter.getSmm(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
-
-        smmList = resp.getSMM();
+        Assertions.assertNotEquals(0, resp.getSMM().size());
 
         System.out.println(resp.getSMM().get(0).getID());
     }
@@ -77,7 +72,7 @@ public class ESmmTests {
     @Test
     @Order(3)
     @DisplayName("Taslak e-serbest meslek makbuzu yükleme")
-    public void loadSmm_givenValidDraftSmm_then_loadsSmmAsDraft() throws Exception{ // loadSmm
+    void loadSmm_givenValidDraftSmm_then_loadsSmmAsDraft() throws Exception{ // loadSmm
         LoadSmmRequest request = new LoadSmmRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -123,7 +118,7 @@ public class ESmmTests {
     @Test
     @Order(4)
     @DisplayName("Serbest meslek makbuzu gönderme")
-    public void sendSmm() throws Exception{ // sendSmm
+    void sendSmm() throws Exception{ // sendSmm
         SendSmmRequest request = new SendSmmRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -160,15 +155,13 @@ public class ESmmTests {
         Assertions.assertNull(resp.getERRORTYPE());
         Assertions.assertNotNull(resp.getREQUESTRETURN());
 
-        sendSmmUUID = uuid.toString();
-
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
     @Test
     @Order(5)
     @DisplayName("Serbest meslek makbuzu durum sorgulama")
-    public void getSmmStatus_givenValidUUID_then_returnsSmmStatus() { // getSmmStatus
+    void getSmmStatus_givenValidUUID_then_returnsSmmStatus() { // getSmmStatus
         GetSmmStatusRequest request = new GetSmmStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -187,7 +180,7 @@ public class ESmmTests {
     @Test
     @Order(6)
     @DisplayName("Serbest meslek makbuzu rapor listesi çekme")
-    public void getSmmReport_givenTimePeriod_then_returnsReportList() throws Exception{ // getSmmReport
+    void getSmmReport_givenTimePeriod_then_returnsReportList() throws Exception{ // getSmmReport
         GetSmmReportRequest request = new GetSmmReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -202,8 +195,7 @@ public class ESmmTests {
         GetSmmReportResponse resp = adapter.getSmmReport(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
-
-        smmReports = resp.getSMMREPORT();
+        Assertions.assertNotEquals(0, resp.getSMMREPORT().size());
 
         System.out.println(resp.getSMMREPORT().get(0).getHEADER().getSTATUS());
     }
@@ -211,7 +203,7 @@ public class ESmmTests {
     @Test
     @Order(7)
     @DisplayName("Serbest meslek makbuzu iptali")
-    public void cancelSmm_givenUUID_canCancelSmm() { // cancelSMm
+    void cancelSmm_givenUUID_canCancelSmm() { // cancelSMm
         CancelSmmRequest request = new CancelSmmRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -230,7 +222,7 @@ public class ESmmTests {
     @Test
     @Order(8)
     @DisplayName("Çıkış yapma")
-    public void logout() {
+    void logout() {
         AuthTests.logout(SESSION_ID);
 
         SESSION_ID = "";

@@ -15,7 +15,7 @@ public class EdespatchAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/EIrsaliyeWS/EIrsaliye";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.edespatch";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\edespatch";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public EdespatchAdapter() {
         of = new ObjectFactory();
@@ -23,7 +23,7 @@ public class EdespatchAdapter extends Adapter{
     }
 
     private boolean isCompressed(REQUESTHEADERType header) {
-        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED()) ? true : false;
+        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED());
     }
 
     public GetDespatchAdviceStatusResponse getDespatchAdviseStatus(GetDespatchAdviceStatusRequest request) {

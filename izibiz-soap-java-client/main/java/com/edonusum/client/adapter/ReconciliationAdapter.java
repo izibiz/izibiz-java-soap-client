@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBElement;
 public class ReconciliationAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/ReconciliationWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.reconciliation";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public ReconciliationAdapter() {
         setContextPath(CONTEXT_PATH);

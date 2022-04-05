@@ -21,15 +21,13 @@ import java.util.UUID;
 @DisplayName("E-Arşiv fatura servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class EiarchiveTests {
+class EiarchiveTests {
     
     @Autowired
     private EiarchiveAdapter adapter;
-    
-    private static String loadEiarchiveUUID = "";
+
     private static String sendEiarchiveUUID = "";
 
-    private static List<EARCHIVEINV> invoices;
     private static List<REPORT> reports;
 
     private static String SESSION_ID;
@@ -37,14 +35,16 @@ public class EiarchiveTests {
     @Test
     @Order(1)
     @DisplayName("Giriş Yapma")
-    public void login() {
+    void login() {
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertNotEquals("", SESSION_ID);
     }
 
     @Test
     @Order(2)
     @DisplayName("E-Arşiv yazma")
-    public void canWriteToArchive() throws IOException { // writeToEiArchiveExtended
+    void canWriteToArchive() throws IOException { // writeToEiArchiveExtended
         ArchiveInvoiceExtendedRequest request = new ArchiveInvoiceExtendedRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -93,7 +93,7 @@ public class EiarchiveTests {
     @Test
     @Order(3)
     @DisplayName("E-Arşiv okuma")
-    public void canReadFromArchive() { // readFromArchive
+    void canReadFromArchive() { // readFromArchive
         ArchiveInvoiceReadRequest request = new ArchiveInvoiceReadRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -116,7 +116,7 @@ public class EiarchiveTests {
     @Test
     @Order(4)
     @DisplayName("E-Arşiv Faturasını E-Posta Olarak Tekrar Gönderme")
-    public void canSendEmailInvoice() { // getEmailEarchiveInvoice
+    void canSendEmailInvoice() { // getEmailEarchiveInvoice
         GetEmailEarchiveInvoiceRequest request = new GetEmailEarchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -136,7 +136,7 @@ public class EiarchiveTests {
     @Test
     @Order(5)
     @DisplayName("E-Arşiv durum sorgulama")
-    public void canGetArchiveStatus() { // getEArchiveStatus
+    void canGetArchiveStatus() { // getEArchiveStatus
         GetEArchiveInvoiceStatusRequest request = new GetEArchiveInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -155,7 +155,7 @@ public class EiarchiveTests {
     @Test
     @Order(6)
     @DisplayName("E-Arşiv iptal etme")
-    public void canCancelArchiveInvoice() { // cancelEArchiveInvoice
+    void canCancelArchiveInvoice() { // cancelEArchiveInvoice
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -178,7 +178,7 @@ public class EiarchiveTests {
     @Test
     @Order(7)
     @DisplayName("E-Arşiv iptal etme (Delete)")
-    public void canCancelArchiveInvoice_withDeleteFlag() { // cancelEArchiveInvoice
+    void canCancelArchiveInvoice_withDeleteFlag() { // cancelEArchiveInvoice
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -212,7 +212,7 @@ public class EiarchiveTests {
     @Test
     @Order(8)
     @DisplayName("E-Arşiv rapor listesi çekme")
-    public void canGetArchiveReport() { // getEarchiveReport
+    void canGetArchiveReport() { // getEarchiveReport
         GetEArchiveReportRequest request = new GetEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -240,7 +240,7 @@ public class EiarchiveTests {
     @Test
     @Order(9)
     @DisplayName("E-Arşiv raporu okuma")
-    public void canReadArchiveReport() throws Exception { // ReadArchiveReport
+    void canReadArchiveReport() throws Exception { // ReadArchiveReport
         ReadEArchiveReportRequest request = new ReadEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -249,7 +249,7 @@ public class EiarchiveTests {
 
         request.setRAPORNO(reports.get(0).getREPORTNO());
 
-        ReadEArchiveReportResponse response = adapter.readEarchiveReport(request);;
+        ReadEArchiveReportResponse response = adapter.readEarchiveReport(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -259,7 +259,7 @@ public class EiarchiveTests {
     @Test
     @Order(10)
     @DisplayName("Çıkış yapma")
-    public void logout() {
+    void logout() {
         AuthTests.logout(SESSION_ID);
 
         SESSION_ID = "";

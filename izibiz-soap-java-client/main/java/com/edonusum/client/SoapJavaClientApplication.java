@@ -6,12 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {"com.edonusum.client"})
 public class SoapJavaClientApplication {
-    private AuthAdapter authAdapter;
-    private EinvoiceAdapter einvoiceAdapter;
-    private EiarchiveAdapter eiarchiveAdapter;
-    private EdespatchAdapter edespatchAdapter;
-    private CreditNoteAdapter creditNoteAdapter;
-    private SmmAdapter smmAdapter;
+    private final AuthAdapter authAdapter;
+    private final EinvoiceAdapter einvoiceAdapter;
+    private final EiarchiveAdapter eiarchiveAdapter;
+    private final EdespatchAdapter edespatchAdapter;
+    private final CreditNoteAdapter creditNoteAdapter;
+    private final SmmAdapter smmAdapter;
+    private final ReconciliationAdapter reconciliationAdapter;
 
     public SoapJavaClientApplication() {
         this.authAdapter = new AuthAdapter();
@@ -20,6 +21,7 @@ public class SoapJavaClientApplication {
         this.edespatchAdapter = new EdespatchAdapter();
         this.creditNoteAdapter = new CreditNoteAdapter();
         this.smmAdapter = new SmmAdapter();
+        this.reconciliationAdapter = new ReconciliationAdapter();
 
         //TODO: declarations
     }
@@ -52,4 +54,9 @@ public class SoapJavaClientApplication {
     public SmmAdapter smmWS() {
         return this.smmAdapter;
     }
+
+    public ReconciliationAdapter reconciliationWS() {
+        return this.reconciliationAdapter;
+    }
+
 }

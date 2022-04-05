@@ -16,7 +16,7 @@ public class EinvoiceAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/EInvoiceWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.einvoice";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS+"\\einvoice";
-    private ObjectFactory of;
+    private final ObjectFactory of;
 
     public EinvoiceAdapter() {
         setContextPath(CONTEXT_PATH);
@@ -52,7 +52,7 @@ public class EinvoiceAdapter extends Adapter{
 
         JAXB.marshal(respObj.getValue(),FileUtils.createDirectoryAndFile(dir, "invoices_with_type.xml"));
 
-        String extension = "";
+        String extension;
 
         if("Y".equals(request.getREQUESTHEADER().getCOMPRESSED()) || null == request.getREQUESTHEADER().getCOMPRESSED()) {
             extension = "zip";

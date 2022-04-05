@@ -42,9 +42,6 @@ public class GibUserDTO {
     @XmlElement(name = "DOCUMENT_TYPE")
     protected String documenttype;
 
-    public GibUserDTO() {
-    }
-
     public String getIDENTIFIER() {
         return this.identifier;
     }

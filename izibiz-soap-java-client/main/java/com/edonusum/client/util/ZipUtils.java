@@ -44,7 +44,6 @@ public class ZipUtils {
     public static void unzipMultiple(List<File> files) throws Exception{
         for(File f : files) {
             if(f.getName().endsWith(".zip")) {
-                ZipFile zf = new ZipFile(f);
                 unzipDefault(f);
             }
         }
@@ -54,12 +53,12 @@ public class ZipUtils {
         try {
             Path file = Files.createDirectories(Paths.get(path+"\\"));
 
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file+"\\"+fileName), base64.length);
-            bos.write(base64);
-            ZipFile zf = new ZipFile(path+"\\"+fileName);
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file+"\\"+fileName), base64.length);
+            outputStream.write(base64);
+            ZipFile zipFile = new ZipFile(path+"\\"+fileName);
 
-            bos.close();
-            return zf;
+            outputStream.close();
+            return zipFile;
 
         } catch (Exception e) {
             e.printStackTrace();

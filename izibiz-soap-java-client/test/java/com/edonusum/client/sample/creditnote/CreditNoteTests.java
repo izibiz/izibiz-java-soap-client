@@ -21,12 +21,11 @@ import java.util.stream.Collectors;
 @DisplayName("E-Müstahsil servisi")
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CreditNoteTests {
+class CreditNoteTests {
 
     @Autowired
     private CreditNoteAdapter adapter;
 
-    private static String loadCreditNoteUUID = "";
     private static String sendCreditNoteUUID = "";
 
     private static List<CREDITNOTE> creditnotes;
@@ -37,14 +36,16 @@ public class CreditNoteTests {
     @Test
     @Order(1)
     @DisplayName("Giriş yapma")
-    public void login() {
+    void login() {
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertNotEquals("", SESSION_ID);
     }
 
     @Test
     @Order(2)
     @DisplayName("E-Müstahsil okuma")
-    public void canGetCreditNoteList() throws Exception { // getCreditNote
+    void canGetCreditNoteList() throws Exception { // getCreditNote
         GetCreditNoteRequest request = new GetCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -80,7 +81,7 @@ public class CreditNoteTests {
     @Test
     @Order(3)
     @DisplayName("Taslak e-müstahsil yükleme")
-    public void canLoadCreditNote() throws IOException { // loadCreditNote
+    void canLoadCreditNote() throws IOException { // loadCreditNote
         LoadCreditNoteRequest request = new LoadCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -120,15 +121,13 @@ public class CreditNoteTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        loadCreditNoteUUID = uuid.toString();
-
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
     @Test
     @Order(4)
     @DisplayName("E-Müstahsil gönderme")
-    public void canSendCreditNote() throws IOException { // sendCreditNote
+    void canSendCreditNote() throws IOException { // sendCreditNote
         SendCreditNoteRequest request = new SendCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -172,14 +171,14 @@ public class CreditNoteTests {
     @Test
     @Order(5)
     @DisplayName("E-Müstahsil durum sorgulama")
-    public void canGetCreditNoteStatus() { // getCreditNoteStatus
+    void canGetCreditNoteStatus() { // getCreditNoteStatus
         GetCreditNoteStatusRequest request = new GetCreditNoteStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.getUUID().addAll(creditnotes.stream().map(c -> c.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
+        request.getUUID().addAll(creditnotes.stream().map(CREDITNOTE::getUUID).collect(Collectors.toList())); // toplu status sorgulama
 
         GetCreditNoteStatusResponse resp = adapter.getCreditNoteStatus(request);
 
@@ -191,7 +190,7 @@ public class CreditNoteTests {
     @Test
     @Order(6)
     @DisplayName("E-Müstahsil iptal etme")
-    public void canCancelCreditNote() { // cancelCreditNote
+    void canCancelCreditNote() { // cancelCreditNote
         CancelCreditNoteRequest request = new CancelCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -212,7 +211,7 @@ public class CreditNoteTests {
     @Test
     @Order(7)
     @DisplayName("E-Müstahsil raporu çekme")
-    public void canGetCreditNoteReport() throws Exception { // getCreditNoteReport
+    void canGetCreditNoteReport() throws Exception { // getCreditNoteReport
         GetCreditNoteReportRequest request = new GetCreditNoteReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -234,7 +233,7 @@ public class CreditNoteTests {
     @Test
     @Order(8)
     @DisplayName("E-Müstahsil işaretleme")
-    public void canMarkCreditNote() { // markCreditNote
+    void canMarkCreditNote() { // markCreditNote
         MarkCreditNoteRequest request = new MarkCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -243,7 +242,7 @@ public class CreditNoteTests {
 
         MarkCreditNoteRequest.MARK mark = new MarkCreditNoteRequest.MARK();
         mark.setValue("READ");
-        mark.getUUID().addAll(creditnotes.stream().map(c -> c.getUUID()).collect(Collectors.toList())); // toplu creditNote işaretleme
+        mark.getUUID().addAll(creditnotes.stream().map(CREDITNOTE::getUUID).collect(Collectors.toList())); // toplu creditNote işaretleme
 
         request.setMARK(mark);
 
@@ -257,7 +256,7 @@ public class CreditNoteTests {
     @Test
     @Order(9)
     @DisplayName("Çıkış yapma")
-    public void logout() {
+    void logout() {
         AuthTests.logout(SESSION_ID);
 
         SESSION_ID = "";
