@@ -3,13 +3,9 @@ package com.edonusum.client;
 import com.edonusum.client.wsdl.auth.LoginRequest;
 import com.edonusum.client.wsdl.auth.LoginResponse;
 import com.edonusum.client.wsdl.auth.REQUESTHEADERType;
-import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.xml.bind.JAXB;
-import java.io.File;
 
 @SpringBootTest
 class SoapJavaClientTests {

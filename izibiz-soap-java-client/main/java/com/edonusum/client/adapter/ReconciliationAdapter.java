@@ -1,6 +1,5 @@
 package com.edonusum.client.adapter;
 
-import com.edonusum.client.wsdl.edespatch.GetReceiptAdviceStatusResponse;
 import com.edonusum.client.wsdl.reconciliation.*;
 import org.springframework.stereotype.Component;
 

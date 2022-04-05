@@ -1,18 +1,13 @@
 package com.edonusum.client.adapter;
 
 import com.edonusum.client.util.FileUtils;
-import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.eiarchive.*;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.zip.ZipFile;
 
 @Component
 public class EiarchiveAdapter extends Adapter{

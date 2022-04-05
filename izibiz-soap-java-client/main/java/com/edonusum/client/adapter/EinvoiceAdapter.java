@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
