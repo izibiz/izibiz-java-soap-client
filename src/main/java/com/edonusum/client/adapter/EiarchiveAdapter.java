@@ -1,11 +1,15 @@
 package com.edonusum.client.adapter;
 
 import com.edonusum.client.util.FileUtils;
+import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.eiarchive.*;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +29,28 @@ public class EiarchiveAdapter extends Adapter{
         return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED());
     }
 
-    public ArchiveInvoiceReadResponse readFromArchive(ArchiveInvoiceReadRequest request) {
+    public ArchiveInvoiceReadResponse readFromArchive(ArchiveInvoiceReadRequest request) throws Exception{
         JAXBElement<ArchiveInvoiceReadResponse> respObj = (JAXBElement<ArchiveInvoiceReadResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL,of.createArchiveInvoiceReadRequest(request));
+
+        String dir = DOCUMENT_DIR + "\\readFromArchive";
+
+        String extension = ("Y".equals(request.getREQUESTHEADER().getCOMPRESSED()) || null == request.getREQUESTHEADER().getCOMPRESSED()) ? "zip" : request.getPROFILE().toLowerCase();
+
+        List<File> files = FileUtils.writeToFile(respObj.getValue().getINVOICE().stream().map(Base64Binary::getValue).collect(Collectors.toList()), dir,"invoice", extension);
+
+        if("zip".equals(extension)) {
+            files = ZipUtils.unzipMultiple(files); // extracted files
+        }
+
+        if(files.size() != 0 && request.getPROFILE().equalsIgnoreCase("xml")) {
+            List<InvoiceType> invoiceList = new ArrayList<>();
+            for(File xml : files) {
+                invoiceList.add(JAXB.unmarshal(xml, InvoiceType.class));
+            }
+
+            // TODO: do some business with invoices
+        }
 
         return respObj.getValue();
     }

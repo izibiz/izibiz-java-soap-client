@@ -3,10 +3,14 @@ package com.edonusum.client.adapter;
 import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.edespatch.*;
+import oasis.names.specification.ubl.schema.xsd.despatchadvice_2.DespatchAdviceType;
+import oasis.names.specification.ubl.schema.xsd.receiptadvice_2.ReceiptAdviceType;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +50,18 @@ public class EdespatchAdapter extends Adapter{
         List<byte[]> contents = respObj.getValue().getDESPATCHADVICE().stream().map(despatch -> despatch.getCONTENT().getValue()).collect(Collectors.toList());
         List<File> files = FileUtils.writeToFile(contents, path, "despatch_advice", ext);
 
-        if(ext.equals("zip")) ZipUtils.unzipMultiple(files);
+        if(ext.equals("zip")) {
+            files = ZipUtils.unzipMultiple(files); // extracted files
+        }
+
+        if(request.getSEARCHKEY().getCONTENTTYPE() == CONTENTTYPE.XML && ! files.isEmpty()) {
+            List<DespatchAdviceType> despatchAdviceList = new ArrayList<>(); // irsaliye listesi
+            for(File xml : files) {
+                despatchAdviceList.add(JAXB.unmarshal(xml, DespatchAdviceType.class));
+            }
+        }
+
+        // TODO: do business with despatch advice list
 
         return respObj.getValue();
     }
@@ -99,7 +114,18 @@ public class EdespatchAdapter extends Adapter{
         List<byte[]> contents = respObj.getValue().getRECEIPTADVICE().stream().map(despatch -> despatch.getCONTENT().getValue()).collect(Collectors.toList());
         List<File> files = FileUtils.writeToFile(contents, path, "receipt_advice", ext);
 
-        if(ext.equals("zip")) ZipUtils.unzipMultiple(files);
+        if(ext.equals("zip")) {
+            files = ZipUtils.unzipMultiple(files); // extracted files
+        }
+
+        if(request.getSEARCHKEY().getCONTENTTYPE() == CONTENTTYPE.XML && ! files.isEmpty()) {
+            List<ReceiptAdviceType> receiptAdviceList = new ArrayList<>();
+            for(File xml : files) {
+                receiptAdviceList.add(JAXB.unmarshal(xml, ReceiptAdviceType.class));
+            }
+        }
+
+        // TODO: do business with receipt advice list
 
         return respObj.getValue();
     }

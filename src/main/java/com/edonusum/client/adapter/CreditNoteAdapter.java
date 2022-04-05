@@ -3,11 +3,15 @@ package com.edonusum.client.adapter;
 import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.crnote.*;
+import oasis.names.specification.ubl.schema.xsd.creditnote_2.CreditNoteType;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,9 +43,19 @@ public class CreditNoteAdapter extends Adapter{
         List<byte[]> contents = respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList());
 
         List<File> files = FileUtils.writeToFile(contents,path, "credit_note", ext);
-        if(ext.equals("zip")) {
-            ZipUtils.unzipMultiple(files);
+        if("zip".equals(ext)){
+            files = ZipUtils.unzipMultiple(files); // extracted files
         }
+
+        if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
+            // xml files
+            List<CreditNoteType> creditnotes = new ArrayList<>();
+            for(File xml : files) {
+                creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+            }
+        }
+
+        // TODO: do business with credit note list
 
         return respObj.getValue();
     }
@@ -93,7 +107,19 @@ public class CreditNoteAdapter extends Adapter{
 
         List<File> files = FileUtils.writeToFile(contents, path, "credit_note_report",ext);
 
-        if("zip".equals(ext)) ZipUtils.unzipMultiple(files);
+        if("zip".equals(ext)){
+            files = ZipUtils.unzipMultiple(files); // extracted files
+        }
+
+        if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
+            // xml files
+            List<CreditNoteType> creditnotes = new ArrayList<>();
+            for(File xml : files) {
+                creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+            }
+        }
+
+        // TODO: do business with credit note report list
 
         return respObj.getValue();
     }

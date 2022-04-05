@@ -57,6 +57,8 @@ public class AuthAdapter extends Adapter {
         GibUserDTO [] userList = users.getUsers();
         System.out.println(userList.length);
 
+        // TODO: do business with user list
+
         return response.getValue();
     }
 

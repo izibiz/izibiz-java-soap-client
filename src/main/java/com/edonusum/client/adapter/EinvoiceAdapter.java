@@ -3,11 +3,13 @@ package com.edonusum.client.adapter;
 import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.einvoice.*;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,10 +39,21 @@ public class EinvoiceAdapter extends Adapter{
 
         JAXB.marshal(respObj.getValue(), FileUtils.createDirectoryAndFile(dir, "invoices.xml")); // marshall invoice list to single xml
 
-        List<byte[]> contentList = respObj.getValue().getINVOICE().stream().map(inv -> inv.getCONTENT().getValue()).collect(Collectors.toList());
-        List<File> files = FileUtils.writeToFile(contentList, dir, "invoice", "zip");
+        String extension = ("Y".equals(getInvoiceRequest.getREQUESTHEADER().getCOMPRESSED()) || null == getInvoiceRequest.getREQUESTHEADER().getCOMPRESSED()) ? "zip" : "xml";
 
-        ZipUtils.unzipMultiple(files);
+        List<byte[]> contentList = respObj.getValue().getINVOICE().stream().map(inv -> inv.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contentList, dir, "invoice", extension);
+
+        if ("zip".equals(extension)) {
+            files = ZipUtils.unzipMultiple(files); // assign extracted files to variable files
+        }
+
+        List<InvoiceType> invoices = new ArrayList<>();
+        for(File xml : files) {
+            invoices.add(JAXB.unmarshal(xml, InvoiceType.class));
+        }
+
+        // TODO: do business with invoices
 
         return respObj.getValue();
     }
@@ -64,8 +77,10 @@ public class EinvoiceAdapter extends Adapter{
         List<File> files = FileUtils.writeToFile(contentList, dir, "invoice", extension);
 
         if ("zip".equals(extension)) {
-            ZipUtils.unzipMultiple(files);
+            files = ZipUtils.unzipMultiple(files); // assign extracted files to variable files
         }
+
+        // TODO: do business with invoices
 
         return respObj.getValue();
     }
