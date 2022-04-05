@@ -2,21 +2,22 @@ package com.edonusum.client.adapter;
 
 import com.edonusum.client.dto.GibUserDTO;
 import com.edonusum.client.dto.GibUsers;
+import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.auth.*;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.ZipFile;
+import java.util.List;
 
 @Component
 public class AuthAdapter extends Adapter {
 
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/AuthenticationWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.auth";
+    private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\auth";
 
     private ObjectFactory of;
 
@@ -38,17 +39,23 @@ public class AuthAdapter extends Adapter {
         return respObj.getValue();
     }
 
-    public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) throws IOException, JAXBException {
+    public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) throws Exception {
         JAXBElement<GetGibUserListResponse> response = (JAXBElement<GetGibUserListResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(URL, of.createGetGibUserListRequest(request));
 
-        String pathToFile = PATH_TO_DOCUMENTS + "\\auth\\getGibUserList\\";
-        ZipFile file = ZipUtils.base64ToZip(response.getValue().getCONTENT().getValue(), pathToFile, "users.zip");
-        ZipUtils.UnZipAllFiles(file,pathToFile);
+        String pathToFile = DOCUMENTS_DIR + "\\getGibUserList";
 
-        GibUsers users = (GibUsers) unmarshaller(GibUsers.class).unmarshal(new File(pathToFile+"\\users"));
+        String extension = "xml";
+        if("Y".equals(request.getREQUESTHEADER().getCOMPRESSED()) || null == request.getREQUESTHEADER().getCOMPRESSED()) {
+            extension = "zip";
+        }
+
+        List<File> files = FileUtils.writeToFile(List.of(response.getValue().getCONTENT().getValue()),pathToFile,"users", extension);
+        ZipUtils.unzipMultiple(files);
+
+        GibUsers users = JAXB.unmarshal(files.get(0).getParent()+"\\users.xml", GibUsers.class); // single xml file
         GibUserDTO [] userList = users.getUsers();
-        System.out.println(userList[0].getTITLE());
+        System.out.println(userList.length);
 
         return response.getValue();
     }

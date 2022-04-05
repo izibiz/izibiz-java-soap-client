@@ -1,17 +1,21 @@
 package com.edonusum.client.adapter;
 
+import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.crnote.*;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.zip.ZipFile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Component
 public class CreditNoteAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/CreditNoteWS/CreditNote";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.crnote";
+    private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\creditnote";
     private ObjectFactory of;
 
     public CreditNoteAdapter() {
@@ -19,26 +23,26 @@ public class CreditNoteAdapter extends Adapter{
         of = new ObjectFactory();
     }
 
-    public GetCreditNoteResponse getCreditNote(GetCreditNoteRequest request) {
+    private boolean isCompressed(REQUESTHEADERType header) {
+        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED()) ? true : false;
+    }
+
+    public GetCreditNoteResponse getCreditNote(GetCreditNoteRequest request) throws Exception{
         JAXBElement<GetCreditNoteResponse> respObj = (JAXBElement<GetCreditNoteResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetCreditNoteRequest(request));
 
-        try {
-            String path = PATH_TO_DOCUMENTS + "\\creditnote\\getCreditNote\\";
-            String currentPath;
-            File dir;
-            ZipFile zf;
-            for (CREDITNOTE cr : respObj.getValue().getCREDITNOTE()) {
-                currentPath = path + cr.getID();
+        String path = DOCUMENTS_DIR + "\\getCreditNote\\";
 
-                dir = new File(currentPath);
-                dir.mkdirs();
+        if(null == request.getCONTENTTYPE()) request.setCONTENTTYPE(CONTENTTYPE.XML);
 
-                zf = ZipUtils.base64ToZip(cr.getCONTENT().getValue(), currentPath, cr.getID()+".zip");
-                ZipUtils.UnZipAllFiles(zf, currentPath);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getCONTENTTYPE().value();
+
+        List<byte[]> contents = new ArrayList<>();
+        contents.addAll(respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList()));
+
+        List<File> files = FileUtils.writeToFile(contents,path, "credit_note", ext);
+        if(ext.equals("zip")) {
+            ZipUtils.unzipMultiple(files);
         }
 
         return respObj.getValue();
@@ -79,29 +83,20 @@ public class CreditNoteAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    public GetCreditNoteReportResponse getCreditNoteReport(GetCreditNoteReportRequest request) {
+    public GetCreditNoteReportResponse getCreditNoteReport(GetCreditNoteReportRequest request) throws Exception{
         JAXBElement<GetCreditNoteReportResponse> respObj = (JAXBElement<GetCreditNoteReportResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetCreditNoteReportRequest(request));
 
-        String path = PATH_TO_DOCUMENTS + "\\creditnote\\getCreditNoteReport";
-        String currentPath;
-        int index = 0;
-        File dir, temp;
-        for(REPORT report : respObj.getValue().getCREDITNOTEREPORT()) {
-            currentPath = path + "\\" + "report"+index;
-            dir = new File(currentPath);
-            dir.mkdirs();
+        String path = DOCUMENTS_DIR + "\\getCreditNoteReport";
 
-            try {
-                temp = new File(dir, "report.xml");
-                temp.createNewFile();
-                dir.createNewFile();
-                Files.write(temp.toPath(), report.getCONTENT().getValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            index++;
-        }
+        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : "xml";
+
+        List<byte[]> contents = new ArrayList<>();
+        contents.addAll(respObj.getValue().getCREDITNOTEREPORT().stream().map(report -> report.getCONTENT().getValue()).collect(Collectors.toList()));
+
+        List<File> files = FileUtils.writeToFile(contents, path, "credit_note_report",ext);
+
+        if("zip".equals(ext)) ZipUtils.unzipMultiple(files);
 
         return respObj.getValue();
     }

@@ -1,13 +1,13 @@
 package com.edonusum.client.sample.einvoice;
 
-import com.edonusum.client.SoapJavaClientApplication;
+import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.einvoice.*;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
@@ -18,100 +18,35 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName("E-Fatura servisi")
+@DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 public class EinvoiceTests {
-    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
     
-    private String sendEinvoiceUUID = "";
-    private String loadEinvoiceUUID = "";
+    @Autowired
+    private EinvoiceAdapter adapter;
     
-    private List<INVOICE> invoices;
+    private static String sendEinvoiceUUID = "";
+    private static String loadEinvoiceUUID = "";
+    
+    private static List<INVOICE> invoices;
     
     private static String SESSION_ID = "";
 
     @Test
-    public void runAllTests() throws Exception{
-        // login
-        login();
-
-        // getInvoice
-        getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList();
-
-        // getInvoiceWithType
-        getInvoiceWithType_givenInvoiceSearchKey_andGivenType_then_returnsInvoiceList();
-
-        // loadInvoice
-        loadInvoice_givenValidDraftInvoice_then_loadInvoiceSucceeds();
-
-        // sendInvoice
-        sendInvoice_givenValidInvoice_then_sendInvoiceSucceeds();
-
-        // markInvoice
-        markInvoice_givenValidInvoice_andGivenMarkValue_then_marksInvoice();
-
-        // sendInvoiceResponseWithServerSign
-        sendInvoiceResponseWithServerSign_givenStatus_then_sendsResponse();
-
-        // getInvoiceStatus
-        getInvoiceStatus_givenValidInvoice_then_returnsStatus();
-
-        // getInvoiceStatusAll
-        getInvoiceStatusAll_givenInvoiceList_then_returnsStatusList();
-
-        // logout
-        logout();
-    }
-    
-
-    private void login() { // login
+    @Order(1)
+    @DisplayName("Giriş yapma")
+    public void login() { // login
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertFalse(SESSION_ID == "");
+        Assertions.assertNotNull(SESSION_ID);
     }
 
-    private void logout() { // logout
-        AuthTests.logout(SESSION_ID);
-
-        SESSION_ID = "";
-    }
-
-    private void sendInvoice_givenValidInvoice_then_sendInvoiceSucceeds() throws IOException { // sendInvoice
-        SendInvoiceRequest request = new SendInvoiceRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        header.setCOMPRESSED("N");
-        request.setREQUESTHEADER(header);
-
-        INVOICE inv = new INVOICE();
-
-        //invoice header
-        INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
-        invoiceHeader.setDIRECTION("IN");
-        inv.setHEADER(invoiceHeader);
-
-        // id
-        UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
-
-        //invoice content
-        File draft = new File("xml\\draft-invoice.xml"); // draft invoice
-        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
-
-        Base64Binary b64array = new Base64Binary();
-        b64array.setValue(Files.readAllBytes(createdXML.toPath()));
-
-        inv.setCONTENT(b64array);
-
-        request.getINVOICE().add(inv);
-
-        SendInvoiceResponse resp = client.einvoiceWS().sendInvoice(request);
-
-        createdXML.delete();
-
-        Assertions.assertNull(resp.getERRORTYPE());
-
-        sendEinvoiceUUID = uuid.toString();
-    }
-    
-    private void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws Exception { // getInvoice
+    @Test
+    @Order(2)
+    @DisplayName("E-Fatura listesi çekme")
+    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws Exception { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -134,7 +69,7 @@ public class EinvoiceTests {
         key.setUUID("EXAMPLE");
         */
 
-        GetInvoiceResponse response = client.einvoiceWS().getInvoice(request);
+        GetInvoiceResponse response = adapter.getInvoice(request);
 
         invoices = response.getINVOICE();
 
@@ -142,8 +77,11 @@ public class EinvoiceTests {
 
         System.out.println(response.getINVOICE().get(0).getHEADER().getSUPPLIER());
     }
-    
-    private void getInvoiceWithType_givenInvoiceSearchKey_andGivenType_then_returnsInvoiceList() throws Exception{ // getInvoiceWithType
+
+    @Test
+    @Order(3)
+    @DisplayName("E-Fatura okuma (Tip ile))")
+    public void getInvoiceWithType_givenInvoiceSearchKey_andGivenType_then_returnsInvoiceList() throws Exception{ // getInvoiceWithType
         GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -152,7 +90,7 @@ public class EinvoiceTests {
 
         GetInvoiceWithTypeRequest.INVOICESEARCHKEY key = new GetInvoiceWithTypeRequest.INVOICESEARCHKEY();
 
-        key.setTYPE("XML");
+        key.setTYPE("PDF");
         key.setDIRECTION("OUT");
         // Tarihe göre alma
         key.setSTARTDATE(DateUtils.minusDays(30));
@@ -165,14 +103,17 @@ public class EinvoiceTests {
 
         request.setHEADERONLY("N");
 
-        GetInvoiceWithTypeResponse response = client.einvoiceWS().getInvoiceWithType(request);
+        GetInvoiceWithTypeResponse response = adapter.getInvoiceWithType(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
         System.out.println(response.getINVOICE().get(0).getHEADER().getSUPPLIER());
     }
 
-    private void loadInvoice_givenValidDraftInvoice_then_loadInvoiceSucceeds() throws IOException { // loadInvoice
+    @Test
+    @Order(4)
+    @DisplayName("Taslak e-fatura yükleme")
+    public void loadInvoice_givenValidDraftInvoice_then_loadInvoiceSucceeds() throws IOException { // loadInvoice
         LoadInvoiceRequest request = new LoadInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -202,7 +143,7 @@ public class EinvoiceTests {
 
         header.setCOMPRESSED("N");
 
-        LoadInvoiceResponse response = client.einvoiceWS().loadInvoice(request);
+        LoadInvoiceResponse response = adapter.loadInvoice(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
@@ -213,7 +154,52 @@ public class EinvoiceTests {
         System.out.println(response.getREQUESTRETURN().getRETURNCODE());
     }
 
-    private void markInvoice_givenValidInvoice_andGivenMarkValue_then_marksInvoice() { // markInvoice
+    @Test
+    @Order(5)
+    @DisplayName("E-Fatura gönderme")
+    public void sendInvoice_givenValidInvoice_then_sendInvoiceSucceeds() throws IOException { // sendInvoice
+        SendInvoiceRequest request = new SendInvoiceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        header.setCOMPRESSED("N");
+        request.setREQUESTHEADER(header);
+
+        INVOICE inv = new INVOICE();
+
+        //invoice header
+        INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
+        invoiceHeader.setDIRECTION("IN");
+        inv.setHEADER(invoiceHeader);
+
+        // id
+        UUID uuid = UUID.randomUUID();
+        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
+
+        //invoice content
+        File draft = new File("xml\\draft-invoice.xml"); // draft invoice
+        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+
+        Base64Binary b64array = new Base64Binary();
+        b64array.setValue(Files.readAllBytes(createdXML.toPath()));
+
+        inv.setCONTENT(b64array);
+
+        request.getINVOICE().add(inv);
+
+        SendInvoiceResponse resp = adapter.sendInvoice(request);
+
+        createdXML.delete();
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        sendEinvoiceUUID = uuid.toString();
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("E-Fatura işaretleme")
+    public void markInvoice_givenValidInvoice_andGivenMarkValue_then_marksInvoice() { // markInvoice
         MarkInvoiceRequest request = new MarkInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -228,48 +214,17 @@ public class EinvoiceTests {
 
         request.setREQUESTHEADER(header);
 
-        MarkInvoiceResponse response = client.einvoiceWS().markInvoice(request);
+        MarkInvoiceResponse response = adapter.markInvoice(request);
 
         Assertions.assertNull(response.getERRORTYPE());
 
         System.out.println(response.getREQUESTRETURN().getINTLTXNID()); // transaction id
     }
 
-    private void getInvoiceStatus_givenValidInvoice_then_returnsStatus() { // getInvoiceStatus
-        GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        request.setREQUESTHEADER(header);
-
-        request.setINVOICE(invoices.get(0));
-
-        GetInvoiceStatusResponse response = client.einvoiceWS().getInvoiceStatus(request);
-
-        Assertions.assertNull(response.getERRORTYPE());
-
-        System.out.println(response.getINVOICESTATUS().getSTATUSDESCRIPTION());
-    }
-
-    private void getInvoiceStatusAll_givenInvoiceList_then_returnsStatusList() { // getInvoiceStatusAll
-        GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-
-        request.setREQUESTHEADER(header);
-
-        // getting status for all invoices that returns from getInvoice
-        request.getUUID().addAll(invoices.stream().map(inv -> inv.getUUID()).collect(Collectors.toList()));
-
-        GetInvoiceStatusAllResponse response = client.einvoiceWS().getInvoiceStatusAll(request);
-
-        Assertions.assertNull(response.getERRORTYPE());
-
-        System.out.println(response.getINVOICESTATUS().get(0).getHEADER().getSTATUS());
-    }
-
-    private void sendInvoiceResponseWithServerSign_givenStatus_then_sendsResponse() { // sendInvoiceResponseWithServerSign
+    @Test
+    @Order(7)
+    @DisplayName("E-Fatura yanıtı gönderme (Server imzalı)")
+    public void sendInvoiceResponseWithServerSign_givenStatus_then_sendsResponse() { // sendInvoiceResponseWithServerSign
         SendInvoiceResponseWithServerSignRequest request = new SendInvoiceResponseWithServerSignRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -280,12 +235,61 @@ public class EinvoiceTests {
 
         request.getINVOICE().addAll(invoices);
 
-        SendInvoiceResponseWithServerSignResponse response = client.einvoiceWS().sendInvoiceResponseWithServerSign(request);
+        SendInvoiceResponseWithServerSignResponse response = adapter.sendInvoiceResponseWithServerSign(request);
 
         // Belirtilen ID ye sahip bir fatura bulunamadı
         Assertions.assertNull(response.getERRORTYPE());
 
         System.out.println(response.getERRORTYPE());
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("E-Fatura durum sorgulama")
+    public void getInvoiceStatus_givenValidInvoice_then_returnsStatus() { // getInvoiceStatus
+        GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        request.setINVOICE(invoices.get(0));
+
+        GetInvoiceStatusResponse response = adapter.getInvoiceStatus(request);
+
+        Assertions.assertNull(response.getERRORTYPE());
+
+        System.out.println(response.getINVOICESTATUS().getSTATUSDESCRIPTION());
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("E-Fatura toplu durum sorgulama")
+    public void getInvoiceStatusAll_givenInvoiceList_then_returnsStatusList() { // getInvoiceStatusAll
+        GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+
+        request.setREQUESTHEADER(header);
+
+        // getting status for all invoices that returns from getInvoice
+        request.getUUID().addAll(invoices.stream().map(inv -> inv.getUUID()).collect(Collectors.toList()));
+
+        GetInvoiceStatusAllResponse response = adapter.getInvoiceStatusAll(request);
+
+        Assertions.assertNull(response.getERRORTYPE());
+
+        System.out.println(response.getINVOICESTATUS().get(0).getHEADER().getSTATUS());
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Çıkış yapma")
+    public void logout() { // logout
+        AuthTests.logout(SESSION_ID);
+
+        SESSION_ID = "";
     }
 
 }

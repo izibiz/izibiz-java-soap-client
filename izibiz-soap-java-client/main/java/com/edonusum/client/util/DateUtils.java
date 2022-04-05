@@ -11,23 +11,6 @@ import java.util.GregorianCalendar;
 public class DateUtils {
     private DateUtils() {}
 
-    public static XMLGregorianCalendar lastMonth() throws DatatypeConfigurationException {
-        LocalDate date = LocalDate.now();
-        
-        Date d = Date.from(date.minusMonths(1)
-                    .withDayOfMonth(1)
-                    .atStartOfDay()
-                    .atZone(ZoneId.systemDefault())
-                    .toInstant());
-
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(d);
-
-        XMLGregorianCalendar result = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-        return result;
-    }
-
     public static XMLGregorianCalendar minusDays(int days) throws DatatypeConfigurationException {
         LocalDate date = LocalDate.now();
         date = date.minusDays(days);

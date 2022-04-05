@@ -178,6 +178,21 @@
                             </schemas>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>mutabakat</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaLanguage>WSDL</schemaLanguage>
+                            <generatePackage>com.edonusum.client.wsdl.reconciliation</generatePackage>
+                            <schemas>
+                                <schema>
+                                    <url>https://efaturatest.izibiz.com.tr/ReconciliationWS?wsdl</url>
+                                </schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

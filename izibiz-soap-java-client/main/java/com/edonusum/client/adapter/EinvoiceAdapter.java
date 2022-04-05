@@ -1,66 +1,29 @@
 package com.edonusum.client.adapter;
 
+import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.einvoice.*;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipFile;
+import java.util.stream.Collectors;
 
 @Component
 public class EinvoiceAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/EInvoiceWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.einvoice";
+    private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS+"\\einvoice";
     private ObjectFactory of;
 
     public EinvoiceAdapter() {
         setContextPath(CONTEXT_PATH);
         of = new ObjectFactory();
-    }
-
-    private void extractInvoices(Class clazz, String dir, JAXBElement element, List<INVOICE> invoices) {
-        MarshallToXML(clazz, dir, "invoices.xml", element);
-
-        List<ZipFile> zips = new ArrayList<>();
-
-        try {
-            ZipFile zip;
-            byte[] content;
-            String pathToInvoices = dir+"\\invoices\\";
-            String currentPath = "";
-
-            for(INVOICE inv : invoices) {
-                currentPath = pathToInvoices+inv.getID() + "\\";
-
-                content = inv.getCONTENT().getValue();
-                zip = ZipUtils.base64ToZip(content, currentPath, inv.getID()+".zip");
-                ZipUtils.UnZipAllFiles(zip, currentPath);
-
-                zips.add(zip);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void MarshallToXML(Class clazz, String path, String fileName, Object o) {
-        File dir = new File(path);
-        dir.mkdirs();
-
-        try {
-            marshaller(clazz).marshal(o, new FileOutputStream(dir.getPath()+ "\\" + fileName));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public SendInvoiceResponse sendInvoice(SendInvoiceRequest sendInvoiceRequest) {
@@ -69,23 +32,43 @@ public class EinvoiceAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest getInvoiceRequest) throws JAXBException {
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest getInvoiceRequest) throws Exception {
         JAXBElement<GetInvoiceResponse> respObj = (JAXBElement<GetInvoiceResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceRequest(getInvoiceRequest));
 
-        String dir = PATH_TO_DOCUMENTS+"\\einvoice\\getInvoice\\";
+        String dir = DOCUMENTS_DIR+"\\getInvoice\\";
 
-        extractInvoices(GetInvoiceResponse.class, dir, respObj, respObj.getValue().getINVOICE());
+        JAXB.marshal(respObj.getValue(), FileUtils.createDirectoryAndFile(dir, "invoices.xml")); // marshall invoice list to single xml
+
+        List<byte[]> contentList = respObj.getValue().getINVOICE().stream().map(inv -> inv.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contentList, dir, "invoice", "zip");
+
+        ZipUtils.unzipMultiple(files);
 
         return respObj.getValue();
     }
 
-    public GetInvoiceWithTypeResponse getInvoiceWithType(GetInvoiceWithTypeRequest request) {
+    public GetInvoiceWithTypeResponse getInvoiceWithType(GetInvoiceWithTypeRequest request) throws Exception{
         JAXBElement<GetInvoiceWithTypeResponse> respObj = (JAXBElement<GetInvoiceWithTypeResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceWithTypeRequest(request));
 
-        String dir = PATH_TO_DOCUMENTS+"\\einvoice\\getInvoiceWithType\\";
+        String dir = DOCUMENTS_DIR+"\\getInvoiceWithType\\";
 
-        extractInvoices(GetInvoiceWithTypeResponse.class ,dir,respObj, respObj.getValue().getINVOICE());
+        JAXB.marshal(respObj.getValue(),FileUtils.createDirectoryAndFile(dir, "invoices_with_type.xml"));
+
+        String extension = "";
+
+        if("Y".equals(request.getREQUESTHEADER().getCOMPRESSED()) || null == request.getREQUESTHEADER().getCOMPRESSED()) {
+            extension = "zip";
+        } else {
+            extension = request.getINVOICESEARCHKEY().getTYPE();
+        }
+
+        List<byte[]> contentList = respObj.getValue().getINVOICE().stream().map(inv -> inv.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contentList, dir, "invoice", extension);
+
+        if ("zip".equals(extension)) {
+            ZipUtils.unzipMultiple(files);
+        }
 
         return respObj.getValue();
     }

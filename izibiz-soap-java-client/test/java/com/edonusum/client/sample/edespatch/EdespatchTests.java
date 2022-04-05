@@ -1,16 +1,15 @@
 package com.edonusum.client.sample.edespatch;
 
-import com.edonusum.client.SoapJavaClientApplication;
+import com.edonusum.client.adapter.EdespatchAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.edespatch.*;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,8 +18,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootTest
+@DisplayName("E-İrsaliye servisi")
+@DisplayNameGeneration(DisplayNameGenerator.Simple.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EdespatchTests {
-    private static SoapJavaClientApplication client = new SoapJavaClientApplication();
+
+    @Autowired
+    private EdespatchAdapter adapter;
 
     private static String loadDespatchAdviceUUID = "";
     private static String loadReceiptAdviceUUID = "";
@@ -33,73 +37,20 @@ public class EdespatchTests {
     private static String SESSION_ID;
 
     @Test
-    public void runAllTests() throws Exception{
-        // login
-        login();
-
-        // getDespatchAdvice
-        getDespatchAdvice_givenSearchKey_returnsDespatchList();
-
-        // getReceiptAdvice
-        getReceiptAdvice_canGetReceiptList_withGivenParameters();
-
-        // loadDespatchAdvice
-        loadDespatchAdvice_givenDespatchAdviceContent_then_canLoadDraftDespatchAdvice();
-
-        // sendReceiptAdvice
-        loadReceiptAdvice_givenValidContent_thenSendsDespatchAdviceAsDraft();
-
-        // sendDespatchAdvice
-        sendDespatchAdvice_givenValidDestpachAdvice_then_canSendDespatchAdvice();
-
-        // sendReceiptAdvice
-        //sendReceiptAdvice_givenValidContent_then_canSendReceiptAdvice();
-
-        // getDespatchAdviceStatus
-        getDespatchAdviceStatus_givenEdespatchUUID_then_returnsStatus();
-
-        // getReceiptAdviceStatus
-        getReceiptAdviceStatus_givenUUID_returnsReceiptStatus();
-
-        // markDespatchAdvice
-        markDespatchAdvice_givenDespatchUUID_andGivenAction_marksDespatchAdvice();
-
-        // markReceiptAdvice
-        markReceiptAdvice_marksReceipts_withGivenParameters();
-
-        // logout
-        logout();
-    }
-
-    private void login() {
+    @Order(1)
+    @DisplayName("Giriş yapma")
+    public void login() {
         SESSION_ID = AuthTests.login();
     }
-    
-    private void logout() {
-        AuthTests.logout(SESSION_ID);
-        
-        SESSION_ID = "";
-    }
 
-    private void getDespatchAdviceStatus_givenEdespatchUUID_then_returnsStatus() { // GetDespatchAdviceStatus
-        GetDespatchAdviceStatusRequest request = new GetDespatchAdviceStatusRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        request.setREQUESTHEADER(header);
-
-        request.getUUID().addAll(despatchadvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
-
-        GetDespatchAdviceStatusResponse resp = client.despatchAdviceWS().getDespatchAdviseStatus(request);
-
-        Assertions.assertNull(resp.getERRORTYPE());
-
-        System.out.println(resp.getDESPATCHADVICESTATUS().get(0).getSTATUS());
-    }
-
-    private void getDespatchAdvice_givenSearchKey_returnsDespatchList() throws IOException, DatatypeConfigurationException { // GetDespatchAdvice
+    @Test
+    @Order(2)
+    @DisplayName("E-İrsaliye listesi çekme")
+    public void getDespatchAdvice_givenSearchKey_returnsDespatchList() throws Exception { // GetDespatchAdvice
         GetDespatchAdviceRequest request = new GetDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setCOMPRESSED("N");
 
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
@@ -109,8 +60,9 @@ public class EdespatchTests {
         key.setDIRECTION("OUT");
         key.setSTARTDATE(DateUtils.minusDays(30));
         key.setENDDATE(DateUtils.now());
+        key.setCONTENTTYPE(CONTENTTYPE.XML);
 
-        /*
+        /* bkz: dev.izibiz
         key.setLIMIT(20);
         key.setCONTENTTYPE(CONTENTTYPE.XML);
         key.setDATETYPE(DATETYPE.CREATE);
@@ -124,7 +76,7 @@ public class EdespatchTests {
 
         request.setSEARCHKEY(key);
 
-        GetDespatchAdviceResponse resp = client.despatchAdviceWS().getDespatchAdvice(request);
+        GetDespatchAdviceResponse resp = adapter.getDespatchAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
@@ -133,7 +85,44 @@ public class EdespatchTests {
         System.out.println(resp.getDESPATCHADVICE().get(0).getID());
     }
 
-    private void loadDespatchAdvice_givenDespatchAdviceContent_then_canLoadDraftDespatchAdvice() throws IOException { // LoadDespatchAdvice
+    @Test
+    @Order(3)
+    @DisplayName("E-İrsaliye yanıt listesi çekme")
+    public void getReceiptAdvice_canGetReceiptList_withGivenParameters() throws Exception { // getReceiptAdvice
+        GetReceiptAdviceRequest request = new GetReceiptAdviceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setCOMPRESSED("N");
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        GetReceiptAdviceRequest.SEARCHKEY key = new GetReceiptAdviceRequest.SEARCHKEY();
+
+        key.setSTARTDATE(DateUtils.minusDays(30));
+        key.setENDDATE(DateUtils.now());
+
+        key.setDIRECTION("OUT");
+        key.setREADINCLUDED(true);
+        key.setCONTENTTYPE(CONTENTTYPE.XML);
+        // key.setLIMIT(10);
+
+        request.setSEARCHKEY(key);
+
+        header.setSESSIONID(AuthTests.login());
+        GetReceiptAdviceResponse resp = adapter.getReceiptAdvice(request);
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        receiptadvices = resp.getRECEIPTADVICE();
+
+        System.out.println(resp.getRECEIPTADVICE().get(0).getID());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Taslak E-İrsaliye yükleme")
+    public void loadDespatchAdvice_givenDespatchAdviceContent_then_canLoadDraftDespatchAdvice() throws IOException { // LoadDespatchAdvice
         LoadDespatchAdviceRequest request = new LoadDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -160,7 +149,7 @@ public class EdespatchTests {
 
         request.getDESPATCHADVICE().add(despatch);
 
-        LoadDespatchAdviceResponse resp = client.despatchAdviceWS().loadDespatchAdvice(request);
+        LoadDespatchAdviceResponse resp = adapter.loadDespatchAdvice(request);
 
         createdXml.delete();
 
@@ -171,7 +160,47 @@ public class EdespatchTests {
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
-    private void sendDespatchAdvice_givenValidDestpachAdvice_then_canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
+    @Test
+    @Order(5)
+    @DisplayName("Taslak E-İrsaliye yanıtı yükleme")
+    public void loadReceiptAdvice_givenValidContent_thenSendsDespatchAdviceAsDraft() throws IOException { // loadReceiptAdvice
+        LoadReceiptAdviceRequest request = new LoadReceiptAdviceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        header.setCOMPRESSED("N"); // "Y" if sending a zipped file
+        request.setREQUESTHEADER(header);
+
+        //ID
+        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
+        UUID uuid = UUID.randomUUID();
+
+        File draft = new File("xml\\draft-receiptAdvice.xml");
+        File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+
+        Base64Binary b64 = new Base64Binary();
+        b64.setValue(Files.readAllBytes(created.toPath()));
+
+        RECEIPTADVICE receiptadvice = new RECEIPTADVICE();
+        receiptadvice.setCONTENT(b64);
+
+        request.getRECEIPTADVICE().add(receiptadvice);
+
+        LoadReceiptAdviceResponse resp = adapter.loadReceiptAdvice(request);
+
+        created.delete();
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        loadReceiptAdviceUUID = uuid.toString();
+
+        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("E-İrsaliye gönderme")
+    public void sendDespatchAdvice_givenValidDestpachAdvice_then_canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
         SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -204,7 +233,7 @@ public class EdespatchTests {
 
         request.getDESPATCHADVICE().add(despatch);
 
-        SendDespatchAdviceResponse resp = client.despatchAdviceWS().sendDespatchAdvice(request);
+        SendDespatchAdviceResponse resp = adapter.sendDespatchAdvice(request);
 
         createdXml.delete();
 
@@ -215,38 +244,17 @@ public class EdespatchTests {
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
-    private void markDespatchAdvice_givenDespatchUUID_andGivenAction_marksDespatchAdvice() { // markDespatchAdvice
-        MarkDespatchAdviceRequest request = new MarkDespatchAdviceRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        request.setREQUESTHEADER(header);
-
-        MarkDespatchAdviceRequest.MARK mark = new MarkDespatchAdviceRequest.MARK();
-        mark.setValue("UNREAD");
-
-        DESPATCHADVICEINFO info = new DESPATCHADVICEINFO();
-        info.setUUID(sendDespatchAdviceUUID); // UUID ile istek gönderme
-
-        mark.getDESPATCHADVICEINFO().add(info);
-
-        request.setMARK(mark);
-
-        MarkDespatchAdviceResponse resp = client.despatchAdviceWS().markDespatchAdvice(request);
-
-        Assertions.assertNull(resp.getERRORTYPE());
-
-        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
-    }
-
     // referans e-irsaliye belgesinin yüklenmesinin üzerinden 7 gün geçtiği için hata döndürülmektedir
     // güncel bir taslak.xml ile çalıştırılmalıdır.
-    private void sendReceiptAdvice_givenValidContent_then_canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
+    @Test
+    @Order(7)
+    @DisplayName("E-irsaliye yanıtı gönderme")
+    public void sendReceiptAdvice_givenValidContent_then_canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
         SendReceiptAdviceRequest request = new SendReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
-        header.setCOMPRESSED("N");
+        header.setCOMPRESSED("Y");
         request.setREQUESTHEADER(header);
 
         //ID
@@ -269,7 +277,7 @@ public class EdespatchTests {
 
         request.getRECEIPTADVICE().add(receipt);
 
-        SendReceiptAdviceResponse resp = client.despatchAdviceWS().sendReceiptAdvice(request);
+        SendReceiptAdviceResponse resp = adapter.sendReceiptAdvice(request);
 
         createdXml.delete();
 
@@ -280,69 +288,29 @@ public class EdespatchTests {
         System.out.println(resp.getRECEIPTID());
     }
 
-    private void loadReceiptAdvice_givenValidContent_thenSendsDespatchAdviceAsDraft() throws IOException { // loadReceiptAdvice
-        LoadReceiptAdviceRequest request = new LoadReceiptAdviceRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        header.setCOMPRESSED("N"); // "Y" if sending a zipped file
-        request.setREQUESTHEADER(header);
-
-        //ID
-        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
-        UUID uuid = UUID.randomUUID();
-
-        File draft = new File("xml\\draft-receiptAdvice.xml");
-        File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
-
-        Base64Binary b64 = new Base64Binary();
-        b64.setValue(Files.readAllBytes(created.toPath()));
-
-        RECEIPTADVICE receiptadvice = new RECEIPTADVICE();
-        receiptadvice.setCONTENT(b64);
-
-        request.getRECEIPTADVICE().add(receiptadvice);
-
-        LoadReceiptAdviceResponse resp = client.despatchAdviceWS().loadReceiptAdvice(request);
-
-        created.delete();
-
-        Assertions.assertNull(resp.getERRORTYPE());
-
-        loadReceiptAdviceUUID = uuid.toString();
-
-        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
-    }
-
-    private void getReceiptAdvice_canGetReceiptList_withGivenParameters() throws DatatypeConfigurationException { // getReceiptAdvice
-        GetReceiptAdviceRequest request = new GetReceiptAdviceRequest();
+    @Test
+    @Order(8)
+    @DisplayName("E-İrsaliye durum sorgulama")
+    public void getDespatchAdviceStatus_givenEdespatchUUID_then_returnsStatus() { // GetDespatchAdviceStatus
+        GetDespatchAdviceStatusRequest request = new GetDespatchAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        GetReceiptAdviceRequest.SEARCHKEY key = new GetReceiptAdviceRequest.SEARCHKEY();
+        request.getUUID().addAll(despatchadvices.stream().map(d -> d.getUUID()).collect(Collectors.toList())); // toplu status sorgulama
 
-        key.setSTARTDATE(DateUtils.minusDays(30));
-        key.setENDDATE(DateUtils.now());
-
-        key.setDIRECTION("OUT");
-        key.setREADINCLUDED(true);
-        key.setCONTENTTYPE(CONTENTTYPE.XML);
-        // key.setLIMIT(10);
-
-        request.setSEARCHKEY(key);
-
-        GetReceiptAdviceResponse resp = client.despatchAdviceWS().getReceiptAdvice(request);
+        GetDespatchAdviceStatusResponse resp = adapter.getDespatchAdviseStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        receiptadvices = resp.getRECEIPTADVICE();
-
-        System.out.println(resp.getRECEIPTADVICE().get(0).getID());
+        System.out.println(resp.getDESPATCHADVICESTATUS().get(0).getSTATUS());
     }
 
-    private void getReceiptAdviceStatus_givenUUID_returnsReceiptStatus() { // getReceiptAdviceStatus
+    @Test
+    @Order(9)
+    @DisplayName("E-İrsaliye yanıtı durumu sorgulama")
+    public void getReceiptAdviceStatus_givenUUID_returnsReceiptStatus() { // getReceiptAdviceStatus
         GetReceiptAdviceStatusRequest request = new GetReceiptAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -351,14 +319,44 @@ public class EdespatchTests {
 
         request.getUUID().addAll(receiptadvices.stream().map(r -> r.getUUID()).collect(Collectors.toList()));
 
-        GetReceiptAdviceStatusResponse resp = client.despatchAdviceWS().getReceiptAdviceStatus(request);
+        GetReceiptAdviceStatusResponse resp = adapter.getReceiptAdviceStatus(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
         System.out.println(resp.getRECEIPTADVICESTATUS().get(0).getID());
     }
 
-    private void markReceiptAdvice_marksReceipts_withGivenParameters() throws Exception{ // markReceiptAdvice
+    @Test
+    @Order(10)
+    @DisplayName("E-İrsaliye işaretleme")
+    public void markDespatchAdvice_givenDespatchUUID_andGivenAction_marksDespatchAdvice() { // markDespatchAdvice
+        MarkDespatchAdviceRequest request = new MarkDespatchAdviceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        MarkDespatchAdviceRequest.MARK mark = new MarkDespatchAdviceRequest.MARK();
+        mark.setValue("UNREAD");
+
+        DESPATCHADVICEINFO info = new DESPATCHADVICEINFO();
+        info.setUUID(sendDespatchAdviceUUID); // UUID ile istek gönderme
+
+        mark.getDESPATCHADVICEINFO().add(info);
+
+        request.setMARK(mark);
+
+        MarkDespatchAdviceResponse resp = adapter.markDespatchAdvice(request);
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("E-İrsaliye yanıtı işaretleme")
+    public void markReceiptAdvice_marksReceipts_withGivenParameters() { // markReceiptAdvice
         MarkReceiptAdviceRequest request = new MarkReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -374,11 +372,20 @@ public class EdespatchTests {
 
         request.setMARK(mark);
 
-        MarkReceiptAdviceResponse resp = client.despatchAdviceWS().markReceiptAdvice(request);
+        MarkReceiptAdviceResponse resp = adapter.markReceiptAdvice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
 
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Giriş yapma")
+    private void logout() {
+        AuthTests.logout(SESSION_ID);
+
+        SESSION_ID = "";
     }
 
 }

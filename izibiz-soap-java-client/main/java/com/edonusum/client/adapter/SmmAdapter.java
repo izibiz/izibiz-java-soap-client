@@ -1,12 +1,20 @@
 package com.edonusum.client.adapter;
 
+import com.edonusum.client.util.FileUtils;
+import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.smm.*;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Component
 public class SmmAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/SmmWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.smm";
+    private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\smm";
     private ObjectFactory of;
 
     public SmmAdapter() {
@@ -14,9 +22,23 @@ public class SmmAdapter extends Adapter{
         of = new ObjectFactory();
     }
 
-    public GetSmmResponse getSmm(GetSmmRequest request) {
+    private boolean isCompressed(REQUESTHEADERType header) {
+        return (null == header.getCOMPRESSED() || "Y".equals(header.getCOMPRESSED())) ? true : false;
+    }
+
+    public GetSmmResponse getSmm(GetSmmRequest request) throws Exception{
         JAXBElement<GetSmmResponse> respObj = (JAXBElement<GetSmmResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetSmmRequest(request));
+
+        String dir = DOCUMENTS_DIR + "\\getSmm";
+        String ext = "xml";
+
+        if(isCompressed(request.getREQUESTHEADER())) ext = "zip";
+
+        List<byte[]> contents = respObj.getValue().getSMM().stream().map(smm -> smm.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contents, dir, "smm", ext);
+
+        if("zip".equals(ext)) ZipUtils.unzipMultiple(files);
 
         return respObj.getValue();
     }

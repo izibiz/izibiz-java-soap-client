@@ -1,25 +1,29 @@
 package com.edonusum.client.adapter;
 
+import com.edonusum.client.util.FileUtils;
+import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.edespatch.*;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EdespatchAdapter extends Adapter{
     private static final String URL = "https://efaturatest.izibiz.com.tr:443/EIrsaliyeWS/EIrsaliye";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.edespatch";
+    private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\edespatch";
     private ObjectFactory of;
 
     public EdespatchAdapter() {
         of = new ObjectFactory();
         setContextPath(CONTEXT_PATH);
+    }
+
+    private boolean isCompressed(REQUESTHEADERType header) {
+        return ("Y".equals(header.getCOMPRESSED()) || null == header.getCOMPRESSED()) ? true : false;
     }
 
     public GetDespatchAdviceStatusResponse getDespatchAdviseStatus(GetDespatchAdviceStatusRequest request) {
@@ -29,41 +33,20 @@ public class EdespatchAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    public List<File> getDespatchAdvicesFromDisk() {
-        String path = PATH_TO_DOCUMENTS + "\\edespatch\\getDespatchAdvice";
-        File file = new File(path);
-
-        if(! file.isDirectory()) {
-            return null;
-        }
-
-        File temp;
-        List<File> files = new ArrayList<>();
-        for(File f : file.listFiles()) {
-            temp = f.listFiles()[0];
-            files.add(temp);
-        }
-
-        return files;
-    }
-
-    public GetDespatchAdviceResponse getDespatchAdvice(GetDespatchAdviceRequest request) throws IOException {
+    public GetDespatchAdviceResponse getDespatchAdvice(GetDespatchAdviceRequest request) throws Exception {
         JAXBElement<GetDespatchAdviceResponse> respObj = (JAXBElement<GetDespatchAdviceResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetDespatchAdviceRequest(request));
 
-        String path = PATH_TO_DOCUMENTS + "\\edespatch\\getDespatchAdvice\\";
-        File file = new File(path);
-        file.mkdirs();
+        String path = DOCUMENTS_DIR + "\\getDespatchAdvice\\";
 
-        File tempFile;
-        String currentPath = "";
-        for(DESPATCHADVICE despatchAdvice : respObj.getValue().getDESPATCHADVICE()) {
-            currentPath = path + despatchAdvice.getID();
-            tempFile = new File(currentPath);
-            tempFile.mkdirs();
+        if(null == request.getSEARCHKEY().getCONTENTTYPE()) request.getSEARCHKEY().setCONTENTTYPE(CONTENTTYPE.XML);
 
-            Files.write(Paths.get(currentPath+"\\"+despatchAdvice.getID()+".xml"), despatchAdvice.getCONTENT().getValue());
-        }
+        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getSEARCHKEY().getCONTENTTYPE().value();
+
+        List<byte[]> contents = respObj.getValue().getDESPATCHADVICE().stream().map(despatch -> despatch.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contents, path, "despatch_advice", ext);
+
+        if(ext.equals("zip")) ZipUtils.unzipMultiple(files);
 
         return respObj.getValue();
     }
@@ -103,9 +86,20 @@ public class EdespatchAdapter extends Adapter{
         return respObj.getValue();
     }
 
-    public GetReceiptAdviceResponse getReceiptAdvice(GetReceiptAdviceRequest request) {
+    public GetReceiptAdviceResponse getReceiptAdvice(GetReceiptAdviceRequest request) throws Exception{
         JAXBElement<GetReceiptAdviceResponse> respObj = (JAXBElement<GetReceiptAdviceResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetReceiptAdviceRequest(request));
+
+        String path = DOCUMENTS_DIR + "\\getReceiptAdvice\\";
+
+        if(null == request.getSEARCHKEY().getCONTENTTYPE()) request.getSEARCHKEY().setCONTENTTYPE(CONTENTTYPE.XML);
+
+        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getSEARCHKEY().getCONTENTTYPE().value();
+
+        List<byte[]> contents = respObj.getValue().getRECEIPTADVICE().stream().map(despatch -> despatch.getCONTENT().getValue()).collect(Collectors.toList());
+        List<File> files = FileUtils.writeToFile(contents, path, "receipt_advice", ext);
+
+        if(ext.equals("zip")) ZipUtils.unzipMultiple(files);
 
         return respObj.getValue();
     }

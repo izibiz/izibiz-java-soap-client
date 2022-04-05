@@ -1,9 +1,10 @@
 package com.edonusum.client;
 
 import com.edonusum.client.adapter.*;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.edonusum.client"})
 public class SoapJavaClientApplication {
     private AuthAdapter authAdapter;
     private EinvoiceAdapter einvoiceAdapter;
@@ -22,6 +23,11 @@ public class SoapJavaClientApplication {
 
         //TODO: declarations
     }
+
+    public static void main(String[] args) {
+        SpringApplication.run(SoapJavaClientApplication.class,args);
+    }
+
 
     public AuthAdapter authWS() {
         return this.authAdapter;
