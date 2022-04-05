@@ -63,7 +63,7 @@ class CreditNoteTests {
         /* Okunmuş belgelerin alınması */
         searchKey.setREADINCLUDED(FLAGVALUE.Y);
 
-        request.setCONTENTTYPE(CONTENTTYPE.PDF);
+        request.setCONTENTTYPE(CONTENTTYPE.XML);
 
         request.setCREDITNOTESEARCHKEY(searchKey);
         request.setHEADERONLY(FLAGVALUE.N);

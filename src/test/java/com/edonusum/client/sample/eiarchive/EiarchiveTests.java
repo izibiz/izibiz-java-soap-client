@@ -93,7 +93,7 @@ class EiarchiveTests {
     @Test
     @Order(3)
     @DisplayName("E-Arşiv okuma")
-    void canReadFromArchive() { // readFromArchive
+    void canReadFromArchive() throws Exception{ // readFromArchive
         ArchiveInvoiceReadRequest request = new ArchiveInvoiceReadRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

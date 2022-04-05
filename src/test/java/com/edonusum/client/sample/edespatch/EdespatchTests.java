@@ -39,6 +39,8 @@ class EdespatchTests {
     @DisplayName("Giriş yapma")
     void login() {
         SESSION_ID = AuthTests.login();
+
+        Assertions.assertNotEquals("", SESSION_ID);
     }
 
     @Test
