@@ -219,7 +219,7 @@ public class EdespatchTests {
         Base64Binary base64Binary = new Base64Binary();
 
         //ID
-        String id = IdentifierUtils.createInvoiceIdRandom("EIR");
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
         UUID uuid = UUID.randomUUID();
 
         File draft = new File("xml\\draft-edespatch.xml");
@@ -258,7 +258,7 @@ public class EdespatchTests {
         request.setREQUESTHEADER(header);
 
         //ID
-        String id = IdentifierUtils.createInvoiceIdRandom("EIR");
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
         UUID uuid = UUID.randomUUID();
 
         File draft = new File("xml\\draft-receiptAdvice.xml");

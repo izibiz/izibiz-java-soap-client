@@ -142,7 +142,7 @@ public class CreditNoteTests {
 
         // id
         UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
 
         File draft = new File("xml\\draft-creditNote.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);

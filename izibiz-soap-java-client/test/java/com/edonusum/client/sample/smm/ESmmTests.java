@@ -140,7 +140,7 @@ public class ESmmTests {
         request.setSMMPROPERTIES(smmProperties);
 
         // id
-        String id = IdentifierUtils.createInvoiceIdRandom("X01");
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
         UUID uuid = UUID.randomUUID();
 
         // preparing the content

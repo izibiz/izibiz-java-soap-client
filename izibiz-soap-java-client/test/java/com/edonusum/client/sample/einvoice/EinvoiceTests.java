@@ -174,7 +174,7 @@ public class EinvoiceTests {
 
         // id
         UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandom("DMY");
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
 
         //invoice content
         File draft = new File("xml\\draft-invoice.xml"); // draft invoice

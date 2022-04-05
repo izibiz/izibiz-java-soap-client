@@ -59,7 +59,7 @@ public class EiarchiveTests {
 
         // id
         UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandom("X01");
+        String id = IdentifierUtils.createInvoiceIdRandom("X01"); // taslak değil ise createInvoiceIdRandomPrefix() kullanılmalı
 
         File draftFile = new File("xml\\draft-eiarchive.xml");
         File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, uuid, id);
@@ -71,7 +71,7 @@ public class EiarchiveTests {
 
         EARSIVPROPERTIES eiarchiveProps = new EARSIVPROPERTIES();
         eiarchiveProps.setEARSIVTYPE(EARSIVTYPEVALUE.NORMAL);
-        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.NEW); // new or draft
+        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.DRAFT); // new veya draft
 
         props.setEARSIVPROPERTIES(eiarchiveProps);
 
