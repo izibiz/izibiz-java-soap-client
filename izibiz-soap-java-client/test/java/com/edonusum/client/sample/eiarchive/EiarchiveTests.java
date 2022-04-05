@@ -44,7 +44,7 @@ public class EiarchiveTests {
     @Test
     @Order(2)
     @DisplayName("E-Arşiv yazma")
-    public void writeToEiarchiveExtended_givenValidEiarchive_then_writesToArchive() throws IOException { // writeToEiArchiveExtended
+    public void canWriteToArchive() throws IOException { // writeToEiArchiveExtended
         ArchiveInvoiceExtendedRequest request = new ArchiveInvoiceExtendedRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -93,7 +93,7 @@ public class EiarchiveTests {
     @Test
     @Order(3)
     @DisplayName("E-Arşiv okuma")
-    public void readFromArchive_givenInvoiceId_then_returnsArchiveInvoice() { // readFromArchive
+    public void canReadFromArchive() { // readFromArchive
         ArchiveInvoiceReadRequest request = new ArchiveInvoiceReadRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -116,7 +116,7 @@ public class EiarchiveTests {
     @Test
     @Order(4)
     @DisplayName("E-Arşiv Faturasını E-Posta Olarak Tekrar Gönderme")
-    public void getEmailEarchiveInvoice_givenInvoiceUUID_andValidEmail_then_sendsInvoiceToEmail() { // getEmailEarchiveInvoice
+    public void canSendEmailInvoice() { // getEmailEarchiveInvoice
         GetEmailEarchiveInvoiceRequest request = new GetEmailEarchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -136,7 +136,7 @@ public class EiarchiveTests {
     @Test
     @Order(5)
     @DisplayName("E-Arşiv durum sorgulama")
-    public void getEarchiveStatus_givenInvoiceId_then_returnsEArchiveInvoiceStatus() { // getEArchiveStatus
+    public void canGetArchiveStatus() { // getEArchiveStatus
         GetEArchiveInvoiceStatusRequest request = new GetEArchiveInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -155,7 +155,7 @@ public class EiarchiveTests {
     @Test
     @Order(6)
     @DisplayName("E-Arşiv iptal etme")
-    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_then_cancelsInvoice() { // cancelEArchiveInvoice
+    public void canCancelArchiveInvoice() { // cancelEArchiveInvoice
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -178,7 +178,7 @@ public class EiarchiveTests {
     @Test
     @Order(7)
     @DisplayName("E-Arşiv iptal etme (Delete)")
-    public void cancelEarchiveInvoiceResponse_givenInvoiceUUID_andGivenDeleteFlag_then_cancelsInvoice() { // cancelEArchiveInvoice
+    public void canCancelArchiveInvoice_withDeleteFlag() { // cancelEArchiveInvoice
         CancelEArchiveInvoiceRequest request = new CancelEArchiveInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -212,7 +212,7 @@ public class EiarchiveTests {
     @Test
     @Order(8)
     @DisplayName("E-Arşiv rapor listesi çekme")
-    public void getEarchiveReport_givenPeriod_andGivenFlagValues_then_returnsReportList() { // getEarchiveReport
+    public void canGetArchiveReport() { // getEarchiveReport
         GetEArchiveReportRequest request = new GetEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -240,7 +240,7 @@ public class EiarchiveTests {
     @Test
     @Order(9)
     @DisplayName("E-Arşiv raporu okuma")
-    public void readArchiveReport_givenReportId_thenReturnsReportContent() throws Exception { // ReadArchiveReport
+    public void canReadArchiveReport() throws Exception { // ReadArchiveReport
         ReadEArchiveReportRequest request = new ReadEArchiveReportRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

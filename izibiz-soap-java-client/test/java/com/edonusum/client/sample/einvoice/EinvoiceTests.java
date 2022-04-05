@@ -27,6 +27,7 @@ public class EinvoiceTests {
     private EinvoiceAdapter adapter;
     
     private static String sendEinvoiceUUID = "";
+    private static String sendEinvoiceID = "";
     private static String loadEinvoiceUUID = "";
     
     private static List<INVOICE> invoices;
@@ -46,7 +47,7 @@ public class EinvoiceTests {
     @Test
     @Order(2)
     @DisplayName("E-Fatura listesi çekme")
-    public void getInvoice_givenInvoiceSearchKey_then_returnsInvoiceList() throws Exception { // getInvoice
+    public void canGetInvoiceList() throws Exception { // getInvoice
         GetInvoiceRequest request = new GetInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -81,7 +82,7 @@ public class EinvoiceTests {
     @Test
     @Order(3)
     @DisplayName("E-Fatura okuma (Tip ile))")
-    public void getInvoiceWithType_givenInvoiceSearchKey_andGivenType_then_returnsInvoiceList() throws Exception{ // getInvoiceWithType
+    public void canGetInvoiceList_withType() throws Exception{ // getInvoiceWithType
         GetInvoiceWithTypeRequest request = new GetInvoiceWithTypeRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -113,7 +114,7 @@ public class EinvoiceTests {
     @Test
     @Order(4)
     @DisplayName("Taslak e-fatura yükleme")
-    public void loadInvoice_givenValidDraftInvoice_then_loadInvoiceSucceeds() throws IOException { // loadInvoice
+    public void canLoadInvoice() throws IOException { // loadInvoice
         LoadInvoiceRequest request = new LoadInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -157,7 +158,7 @@ public class EinvoiceTests {
     @Test
     @Order(5)
     @DisplayName("E-Fatura gönderme")
-    public void sendInvoice_givenValidInvoice_then_sendInvoiceSucceeds() throws IOException { // sendInvoice
+    public void canSendInvoice() throws IOException { // sendInvoice
         SendInvoiceRequest request = new SendInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -194,12 +195,40 @@ public class EinvoiceTests {
         Assertions.assertNull(resp.getERRORTYPE());
 
         sendEinvoiceUUID = uuid.toString();
+        sendEinvoiceID = id;
     }
+
 
     @Test
     @Order(6)
+    @DisplayName("E-Fatura yanıtı gönderme (Server imzalı)")
+    public void canSendInvoiceResponse_withServerSign() { // sendInvoiceResponseWithServerSign
+        SendInvoiceResponseWithServerSignRequest request = new SendInvoiceResponseWithServerSignRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        request.setSTATUS("KABUL");
+
+        INVOICE invoice = new INVOICE();
+        invoice.setUUID(sendEinvoiceUUID);
+        invoice.setID(sendEinvoiceID);
+
+        request.getINVOICE().add(invoice);
+
+        SendInvoiceResponseWithServerSignResponse response = adapter.sendInvoiceResponseWithServerSign(request);
+
+        // Belirtilen ID ye sahip bir fatura bulunamadı
+        Assertions.assertNull(response.getERRORTYPE());
+
+        System.out.println(response.getERRORTYPE());
+    }
+
+    @Test
+    @Order(7)
     @DisplayName("E-Fatura işaretleme")
-    public void markInvoice_givenValidInvoice_andGivenMarkValue_then_marksInvoice() { // markInvoice
+    public void canMarkInvoice() { // markInvoice
         MarkInvoiceRequest request = new MarkInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -222,31 +251,9 @@ public class EinvoiceTests {
     }
 
     @Test
-    @Order(7)
-    @DisplayName("E-Fatura yanıtı gönderme (Server imzalı)")
-    public void sendInvoiceResponseWithServerSign_givenStatus_then_sendsResponse() { // sendInvoiceResponseWithServerSign
-        SendInvoiceResponseWithServerSignRequest request = new SendInvoiceResponseWithServerSignRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setSESSIONID(SESSION_ID);
-        request.setREQUESTHEADER(header);
-
-        request.setSTATUS("KABUL");
-
-        request.getINVOICE().addAll(invoices);
-
-        SendInvoiceResponseWithServerSignResponse response = adapter.sendInvoiceResponseWithServerSign(request);
-
-        // Belirtilen ID ye sahip bir fatura bulunamadı
-        Assertions.assertNull(response.getERRORTYPE());
-
-        System.out.println(response.getERRORTYPE());
-    }
-
-    @Test
     @Order(8)
     @DisplayName("E-Fatura durum sorgulama")
-    public void getInvoiceStatus_givenValidInvoice_then_returnsStatus() { // getInvoiceStatus
+    public void canGetInvoiceStatus() { // getInvoiceStatus
         GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -265,7 +272,7 @@ public class EinvoiceTests {
     @Test
     @Order(9)
     @DisplayName("E-Fatura toplu durum sorgulama")
-    public void getInvoiceStatusAll_givenInvoiceList_then_returnsStatusList() { // getInvoiceStatusAll
+    public void canGetInvoiceStatus_multiple() { // getInvoiceStatusAll
         GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 

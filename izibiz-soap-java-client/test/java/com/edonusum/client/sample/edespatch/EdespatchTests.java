@@ -46,7 +46,7 @@ public class EdespatchTests {
     @Test
     @Order(2)
     @DisplayName("E-İrsaliye listesi çekme")
-    public void getDespatchAdvice_givenSearchKey_returnsDespatchList() throws Exception { // GetDespatchAdvice
+    public void canGetDespatchAdviceList() throws Exception { // GetDespatchAdvice
         GetDespatchAdviceRequest request = new GetDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -88,7 +88,7 @@ public class EdespatchTests {
     @Test
     @Order(3)
     @DisplayName("E-İrsaliye yanıt listesi çekme")
-    public void getReceiptAdvice_canGetReceiptList_withGivenParameters() throws Exception { // getReceiptAdvice
+    public void canGetReceiptAdviceList() throws Exception { // getReceiptAdvice
         GetReceiptAdviceRequest request = new GetReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -122,7 +122,7 @@ public class EdespatchTests {
     @Test
     @Order(4)
     @DisplayName("Taslak E-İrsaliye yükleme")
-    public void loadDespatchAdvice_givenDespatchAdviceContent_then_canLoadDraftDespatchAdvice() throws IOException { // LoadDespatchAdvice
+    public void canLoadDespatchAdvice() throws IOException { // LoadDespatchAdvice
         LoadDespatchAdviceRequest request = new LoadDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -163,7 +163,7 @@ public class EdespatchTests {
     @Test
     @Order(5)
     @DisplayName("Taslak E-İrsaliye yanıtı yükleme")
-    public void loadReceiptAdvice_givenValidContent_thenSendsDespatchAdviceAsDraft() throws IOException { // loadReceiptAdvice
+    public void canLoadReceiptAdvice() throws IOException { // loadReceiptAdvice
         LoadReceiptAdviceRequest request = new LoadReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -200,7 +200,7 @@ public class EdespatchTests {
     @Test
     @Order(6)
     @DisplayName("E-İrsaliye gönderme")
-    public void sendDespatchAdvice_givenValidDestpachAdvice_then_canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
+    public void canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
         SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -249,7 +249,7 @@ public class EdespatchTests {
     @Test
     @Order(7)
     @DisplayName("E-irsaliye yanıtı gönderme")
-    public void sendReceiptAdvice_givenValidContent_then_canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
+    public void canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
         SendReceiptAdviceRequest request = new SendReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -291,7 +291,7 @@ public class EdespatchTests {
     @Test
     @Order(8)
     @DisplayName("E-İrsaliye durum sorgulama")
-    public void getDespatchAdviceStatus_givenEdespatchUUID_then_returnsStatus() { // GetDespatchAdviceStatus
+    public void canGetDespatchAdviceStatus() { // GetDespatchAdviceStatus
         GetDespatchAdviceStatusRequest request = new GetDespatchAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -310,7 +310,7 @@ public class EdespatchTests {
     @Test
     @Order(9)
     @DisplayName("E-İrsaliye yanıtı durumu sorgulama")
-    public void getReceiptAdviceStatus_givenUUID_returnsReceiptStatus() { // getReceiptAdviceStatus
+    public void canGetReceiptAdviceStatus() { // getReceiptAdviceStatus
         GetReceiptAdviceStatusRequest request = new GetReceiptAdviceStatusRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -329,7 +329,7 @@ public class EdespatchTests {
     @Test
     @Order(10)
     @DisplayName("E-İrsaliye işaretleme")
-    public void markDespatchAdvice_givenDespatchUUID_andGivenAction_marksDespatchAdvice() { // markDespatchAdvice
+    public void canMarkDespatchAdvice() { // markDespatchAdvice
         MarkDespatchAdviceRequest request = new MarkDespatchAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -356,7 +356,7 @@ public class EdespatchTests {
     @Test
     @Order(11)
     @DisplayName("E-İrsaliye yanıtı işaretleme")
-    public void markReceiptAdvice_marksReceipts_withGivenParameters() { // markReceiptAdvice
+    public void canMarkReceiptAdvice() { // markReceiptAdvice
         MarkReceiptAdviceRequest request = new MarkReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
