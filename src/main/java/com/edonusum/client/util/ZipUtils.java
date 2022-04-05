@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -13,40 +14,56 @@ public class ZipUtils {
     private static final String DEFAULT_EXTENSION = ".xml";
     private ZipUtils(){}
 
-    public static void unzipAllFiles(ZipFile zf, String pathToExtract) throws IOException {
+    public static List<File> unzipAllFiles(ZipFile zf, String pathToExtract) throws IOException {
         Enumeration<? extends ZipEntry> entries = zf.entries();
 
         String ext = "";
+        List<File> extractedFiles = new ArrayList<>();
+        ZipEntry entry;
+        String entryFileName;
         while(entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
+             entry = entries.nextElement();
 
             if(! entry.getName().contains(".")) {
                 ext = DEFAULT_EXTENSION;
             }
 
+            entryFileName = pathToExtract + "\\" + entry.getName()+ext;
+
             try(InputStream inputStream = zf.getInputStream(entry);
-                FileOutputStream fileOutputStream = new FileOutputStream(pathToExtract+"\\"+entry.getName()+ext)) {
+                FileOutputStream fileOutputStream = new FileOutputStream(entryFileName)) {
                 inputStream.transferTo(fileOutputStream);
+                extractedFiles.add(new File(entryFileName));
             }
         }
+        return extractedFiles;
     }
 
-    public static void unzipDefault(File f) throws Exception{
+    public static List<File> unzipDefault(File f) throws Exception{
         if(f.getName().endsWith(".zip")) {
             ZipFile zf = new ZipFile(f);
 
+            List<File> extractedFiles = new ArrayList<>();
+
             String path = f.getParent();
 
-            unzipAllFiles(zf, path);
+            extractedFiles.addAll(unzipAllFiles(zf, path));
+
+            return extractedFiles;
         }
+        return List.of();
     }
 
-    public static void unzipMultiple(List<File> files) throws Exception{
+    public static List<File> unzipMultiple(List<File> files) throws Exception{
+        List<File> extractedFiles = new ArrayList<>();
+
         for(File f : files) {
             if(f.getName().endsWith(".zip")) {
-                unzipDefault(f);
+                extractedFiles.addAll(unzipDefault(f));
             }
         }
+
+        return extractedFiles;
     }
 
     public static ZipFile base64ToZip(byte[] base64, String path, String fileName) {
