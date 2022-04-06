@@ -55,6 +55,7 @@ class EinvoiceTests {
 
         GetInvoiceRequest.INVOICESEARCHKEY searchKey = new GetInvoiceRequest.INVOICESEARCHKEY();
         searchKey.setDIRECTION("OUT");
+        searchKey.setLIMIT(100);
 
         request.setINVOICESEARCHKEY(searchKey);
 

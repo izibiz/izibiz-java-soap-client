@@ -56,6 +56,7 @@ class CreditNoteTests {
         GetCreditNoteRequest.CREDITNOTESEARCHKEY searchKey = new GetCreditNoteRequest.CREDITNOTESEARCHKEY();
         searchKey.setSTARTDATE(DateUtils.minusDays(30));
         searchKey.setENDDATE(DateUtils.now());
+        searchKey.setLIMIT(100);
 
         /* Query with ID */
         // searchKey.setUUID("");
@@ -226,6 +227,7 @@ class CreditNoteTests {
         GetCreditNoteReportResponse resp = adapter.getCreditNoteReport(request);
 
         Assertions.assertNull(resp.getERRORTYPE());
+        Assertions.assertNotEquals(0, resp.getCREDITNOTEREPORT().size());
 
         System.out.println(resp.getCREDITNOTEREPORT().get(0).getHEADER().getSTATUS());
     }

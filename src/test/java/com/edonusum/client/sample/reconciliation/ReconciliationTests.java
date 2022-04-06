@@ -52,7 +52,7 @@ class ReconciliationTests {
         reconciliation.setUUID(UUID.randomUUID().toString());
 
         // Cari Mutabakat için zorunlu alanlar
-        reconciliation.setCMAMOUNT(BigDecimal.valueOf(5001));
+        reconciliation.setCMAMOUNT(BigDecimal.valueOf(1));
         reconciliation.setCMAMOUNTTYPE(CMTYPE.A);
         reconciliation.setCMDATE(LocalDate.now().toString());
 

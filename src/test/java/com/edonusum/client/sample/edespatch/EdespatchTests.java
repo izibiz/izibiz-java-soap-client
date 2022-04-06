@@ -62,16 +62,15 @@ class EdespatchTests {
         searchKey.setENDDATE(DateUtils.now());
         searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
 
-        /* bkz: dev.izibiz
+        /* bkz: dev.izibiz.com.tr
         searchKey.setLIMIT(20);
-        searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
         searchKey.setDATETYPE(DATETYPE.CREATE);
         */
 
         /* Okunmuş belgeler isteniyorsa */
         searchKey.setREADINCLUDED(true);
 
-        /* Query with ID */
+        /* UUID değeri ile sorgulama */
         // searchKey.setUUID("552f87b8-aa28-42bc-a326-7da282976cda");
 
         request.setSEARCHKEY(searchKey);
@@ -105,6 +104,7 @@ class EdespatchTests {
         searchKey.setDIRECTION("OUT");
         searchKey.setREADINCLUDED(true);
         searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
+        searchKey.setLIMIT(100);
         // searchKey.setLIMIT(10);
 
         request.setSEARCHKEY(searchKey);
@@ -166,7 +166,7 @@ class EdespatchTests {
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
-        header.setCOMPRESSED("N"); // "Y" if sending a zipped file
+        header.setCOMPRESSED("N"); // zipli dosya gönderiliyorsa "Y" verilmeli
         request.setREQUESTHEADER(header);
 
         //ID
