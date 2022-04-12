@@ -1,8 +1,16 @@
 package com.edonusum.client;
 
+import com.edonusum.client.ubl.ReceiptAdviceUBL;
+import com.edonusum.client.ubl.Xslt;
+import com.edonusum.client.util.IdentifierUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.UUID;
 
 @SpringBootTest
 class SoapJavaClientTests {

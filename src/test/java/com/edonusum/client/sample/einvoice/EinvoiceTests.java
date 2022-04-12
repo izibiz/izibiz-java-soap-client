@@ -2,14 +2,18 @@ package com.edonusum.client.sample.einvoice;
 
 import com.edonusum.client.adapter.EinvoiceAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.ubl.InvoiceUBL;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.einvoice.*;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.ObjectFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXB;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -157,7 +161,7 @@ class EinvoiceTests {
     @Test
     @Order(5)
     @DisplayName("E-Fatura gönderme")
-    void canSendInvoice() throws IOException { // sendInvoice
+    void canSendInvoice() throws Exception { // sendInvoice
         SendInvoiceRequest request = new SendInvoiceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -172,16 +176,17 @@ class EinvoiceTests {
         invoiceHeader.setDIRECTION("IN");
         inv.setHEADER(invoiceHeader);
 
-        // id
-        UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
-
-        //invoice content
-        File draft = new File("xml\\draft-invoice.xml"); // draft invoice
-        File createdXML = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
-
         Base64Binary base64Binary = new Base64Binary();
-        base64Binary.setValue(Files.readAllBytes(createdXML.toPath()));
+
+        // take data from ubl
+        InvoiceType ubl = new InvoiceUBL().getInvoice();
+        File file = new File(System.getProperty("user.home")+"\\Documents\\izibiz\\einvoice\\sendInvoice\\lastSendInvoice.xml");
+        ObjectFactory o = new ObjectFactory();
+        JAXB.marshal(o.createInvoice(ubl), file);
+
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
+
+        file.delete();
 
         inv.setCONTENT(base64Binary);
 
@@ -189,12 +194,10 @@ class EinvoiceTests {
 
         SendInvoiceResponse resp = adapter.sendInvoice(request);
 
-        createdXML.delete();
-
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendEinvoiceUUID = uuid.toString();
-        sendEinvoiceID = id;
+        sendEinvoiceUUID = ubl.getUUID().toString();
+        sendEinvoiceID = ubl.getID().getSchemeID();
     }
 
 

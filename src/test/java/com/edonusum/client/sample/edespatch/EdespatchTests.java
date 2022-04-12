@@ -2,14 +2,20 @@ package com.edonusum.client.sample.edespatch;
 
 import com.edonusum.client.adapter.EdespatchAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.ubl.DespatchAdviceUBL;
+import com.edonusum.client.ubl.ReceiptAdviceUBL;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.edespatch.*;
+import oasis.names.specification.ubl.schema.xsd.despatchadvice_2.DespatchAdviceType;
+import oasis.names.specification.ubl.schema.xsd.receiptadvice_2.ObjectFactory;
+import oasis.names.specification.ubl.schema.xsd.receiptadvice_2.ReceiptAdviceType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXB;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +33,8 @@ class EdespatchTests {
     private EdespatchAdapter adapter;
 
     private static String sendDespatchAdviceUUID = "";
+    private static String sendDespatchAdviceID = "";
+
     private static String sendReceiptAdviceUUID = "";
 
     private static List<DESPATCHADVICE> despatchAdvices;
@@ -160,6 +168,57 @@ class EdespatchTests {
 
     @Test
     @Order(5)
+    @DisplayName("E-İrsaliye gönderme")
+    void canSendDespatchAdvice() throws Exception { // SendDespatchAdvice
+        SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setCOMPRESSED("N");
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        SendDespatchAdviceRequest.RECEIVER receiver = new SendDespatchAdviceRequest.RECEIVER();
+        receiver.setVkn("4840847211");
+        receiver.setAlias("urn:mail:defaultgb@izibiz.com.tr");
+
+        request.setRECEIVER(receiver);
+
+        //ID
+        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
+        UUID uuid = UUID.randomUUID();
+
+        oasis.names.specification.ubl.schema.xsd.despatchadvice_2.ObjectFactory factory = new oasis.names.specification.ubl.schema.xsd.despatchadvice_2.ObjectFactory();
+
+        File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
+        DespatchAdviceType despatchAdvice = new DespatchAdviceUBL(id, uuid.toString()).getDespatchAdvice(); // create from UBL
+        JAXB.marshal(factory.createDespatchAdvice(despatchAdvice), file);
+
+        Base64Binary base64Binary = new Base64Binary();
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
+
+        file.delete();
+
+        DESPATCHADVICE despatch = new DESPATCHADVICE();
+        DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
+
+        despatch.setDESPATCHADVICEHEADER(despatchHeader);
+        despatch.setCONTENT(base64Binary);
+
+        request.getDESPATCHADVICE().add(despatch);
+
+        SendDespatchAdviceResponse resp = adapter.sendDespatchAdvice(request);
+
+        Assertions.assertNull(resp.getERRORTYPE());
+
+        sendDespatchAdviceUUID = uuid.toString();
+        sendDespatchAdviceID = id;
+
+        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
+    }
+
+    @Test
+    @Order(6)
     @DisplayName("Taslak E-İrsaliye yanıtı yükleme")
     void canLoadReceiptAdvice() throws IOException { // loadReceiptAdvice
         LoadReceiptAdviceRequest request = new LoadReceiptAdviceRequest();
@@ -193,89 +252,43 @@ class EdespatchTests {
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
-    @Test
-    @Order(6)
-    @DisplayName("E-İrsaliye gönderme")
-    void canSendDespatchAdvice() throws IOException { // SendDespatchAdvice
-        SendDespatchAdviceRequest request = new SendDespatchAdviceRequest();
-        REQUESTHEADERType header = new REQUESTHEADERType();
-
-        header.setCOMPRESSED("N");
-
-        header.setSESSIONID(SESSION_ID);
-        request.setREQUESTHEADER(header);
-
-        SendDespatchAdviceRequest.RECEIVER receiver = new SendDespatchAdviceRequest.RECEIVER();
-        receiver.setVkn("4840847211");
-        receiver.setAlias("urn:mail:defaultgb@izibiz.com.tr");
-
-        request.setRECEIVER(receiver);
-
-        DESPATCHADVICE despatch = new DESPATCHADVICE();
-        Base64Binary base64Binary = new Base64Binary();
-
-        //ID
-        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
-        UUID uuid = UUID.randomUUID();
-
-        File draft = new File("xml\\draft-edespatch.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
-
-        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
-        despatch.setCONTENT(base64Binary);
-
-        DESPATCHADVICEHEADER despatchHeader = new DESPATCHADVICEHEADER();
-        despatch.setDESPATCHADVICEHEADER(despatchHeader);
-
-        request.getDESPATCHADVICE().add(despatch);
-
-        SendDespatchAdviceResponse resp = adapter.sendDespatchAdvice(request);
-
-        createdXml.delete();
-
-        Assertions.assertNull(resp.getERRORTYPE());
-
-        sendDespatchAdviceUUID = uuid.toString();
-
-        System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
-    }
-
     // referans e-irsaliye belgesinin yüklenmesinin üzerinden 7 gün geçtiği için hata döndürülmektedir
     // güncel bir taslak.xml ile çalıştırılmalıdır.
     @Test
     @Order(7)
     @DisplayName("E-irsaliye yanıtı gönderme")
-    void canSendReceiptAdvice() throws IOException { // sendReceiptAdvice
+    void canSendReceiptAdvice() throws Exception { // sendReceiptAdvice
         SendReceiptAdviceRequest request = new SendReceiptAdviceRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
         header.setSESSIONID(SESSION_ID);
-        header.setCOMPRESSED("Y");
+        header.setCOMPRESSED("N");
         request.setREQUESTHEADER(header);
 
         //ID
         String id = IdentifierUtils.createInvoiceIdRandomPrefix();
         UUID uuid = UUID.randomUUID();
 
-        File draft = new File("xml\\draft-receiptAdvice.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+        ObjectFactory factory = new ObjectFactory();
+
+        File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
+        ReceiptAdviceType receipt = new ReceiptAdviceUBL(sendDespatchAdviceID, sendDespatchAdviceUUID,"2022-04-06").getReceiptAdvice(); // create from UBL
+        JAXB.marshal(factory.createReceiptAdvice(receipt), file);
 
         Base64Binary base64Binary = new Base64Binary();
-        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
 
-        RECEIPTADVICE receipt = new RECEIPTADVICE();
-        receipt.setUUID(UUID.randomUUID().toString());
-
+        RECEIPTADVICE receiptAdvice = new RECEIPTADVICE();
+        receiptAdvice.setUUID(UUID.randomUUID().toString());
+        receiptAdvice.setCONTENT(base64Binary);
 
         RECEIPTADVICEHEADER receiptHeader = new RECEIPTADVICEHEADER();
 
-        receipt.setRECEIPTADVICEHEADER(receiptHeader);
+        receiptAdvice.setRECEIPTADVICEHEADER(receiptHeader);
 
-        request.getRECEIPTADVICE().add(receipt);
+        request.getRECEIPTADVICE().add(receiptAdvice);
 
         SendReceiptAdviceResponse resp = adapter.sendReceiptAdvice(request);
-
-        createdXml.delete();
 
         Assertions.assertNull(resp.getERRORTYPE());
 

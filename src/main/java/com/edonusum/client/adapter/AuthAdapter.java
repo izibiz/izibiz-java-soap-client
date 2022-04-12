@@ -2,6 +2,7 @@ package com.edonusum.client.adapter;
 
 import com.edonusum.client.dto.GibUserDTO;
 import com.edonusum.client.dto.GibUsers;
+import com.edonusum.client.ubl.Xslt;
 import com.edonusum.client.util.FileUtils;
 import com.edonusum.client.util.ZipUtils;
 import com.edonusum.client.wsdl.auth.*;

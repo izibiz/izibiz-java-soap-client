@@ -2,14 +2,17 @@ package com.edonusum.client.sample.creditnote;
 
 import com.edonusum.client.adapter.CreditNoteAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.ubl.CreditNoteUBL;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.crnote.*;
+import oasis.names.specification.ubl.schema.xsd.creditnote_2.ObjectFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXB;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -128,7 +131,7 @@ class CreditNoteTests {
     @Test
     @Order(4)
     @DisplayName("E-Müstahsil gönderme")
-    void canSendCreditNote() throws IOException { // sendCreditNote
+    void canSendCreditNote() throws Exception { // sendCreditNote
         SendCreditNoteRequest request = new SendCreditNoteRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -144,11 +147,18 @@ class CreditNoteTests {
         UUID uuid = UUID.randomUUID();
         String id = IdentifierUtils.createInvoiceIdRandomPrefix();
 
-        File draft = new File("xml\\draft-creditNote.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+        //File draft = new File("xml\\draft-creditNote.xml");
+        //File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+
+        ObjectFactory o = new ObjectFactory();
+        CreditNoteUBL creditNote = new CreditNoteUBL();
+
+        File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
+
+        JAXB.marshal(o.createCreditNote(creditNote.getCreditNote()), file);
 
         Base64Binary base64Binary = new Base64Binary();
-        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
 
         creditnote.setCONTENT(base64Binary);
 
@@ -160,7 +170,7 @@ class CreditNoteTests {
 
         SendCreditNoteResponse resp = adapter.sendCreditNote(request);
 
-        createdXml.delete();
+        //createdXml.delete();
 
         Assertions.assertNull(resp.getERRORTYPE());
 
