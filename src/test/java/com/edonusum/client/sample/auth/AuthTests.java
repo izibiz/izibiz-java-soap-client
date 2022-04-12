@@ -19,8 +19,8 @@ public class AuthTests {
     private AuthAdapter adapter;
 
     private static String SESSION_ID = "";
-    private static final String USERNAME = "izibiz-test2";
-    private static final String PASSWORD = "izi321";
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
 
     @Test
     @Order(1)
