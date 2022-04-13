@@ -130,7 +130,7 @@ class EinvoiceTests {
 
         // invoice header
         INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
-        invoiceHeader.setDIRECTION("IN");
+        invoiceHeader.setDIRECTION("OUT");
         inv.setHEADER(invoiceHeader);
 
         // id
@@ -180,7 +180,8 @@ class EinvoiceTests {
 
         // take data from ubl
         InvoiceType ubl = new InvoiceUBL().getInvoice();
-        File file = new File(System.getProperty("user.home")+"\\Documents\\izibiz\\einvoice\\sendInvoice\\lastSendInvoice.xml");
+        File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
+
         ObjectFactory o = new ObjectFactory();
         JAXB.marshal(o.createInvoice(ubl), file);
 

@@ -2,20 +2,19 @@ package com.edonusum.client.sample.eiarchive;
 
 import com.edonusum.client.adapter.EiarchiveAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
-import com.edonusum.client.util.IdentifierUtils;
-import com.edonusum.client.util.XMLUtils;
+import com.edonusum.client.ubl.ArchiveInvoiceUBL;
 import com.edonusum.client.wsdl.eiarchive.*;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.ObjectFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXB;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @SpringBootTest
 @DisplayName("E-Arşiv fatura servisi")
@@ -44,7 +43,7 @@ class EiarchiveTests {
     @Test
     @Order(2)
     @DisplayName("E-Arşiv yazma")
-    void canWriteToArchive() throws IOException { // writeToEiArchiveExtended
+    void canWriteToArchive() throws Exception { // writeToEiArchiveExtended
         ArchiveInvoiceExtendedRequest request = new ArchiveInvoiceExtendedRequest();
         REQUESTHEADERType header = new REQUESTHEADERType();
 
@@ -58,14 +57,20 @@ class EiarchiveTests {
         props.setEARSIVFLAG(FLAGVALUE.Y);
 
         // id
-        UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandom("X01"); // taslak değil ise createInvoiceIdRandomPrefix() kullanılmalı
+        //UUID uuid = UUID.randomUUID();
+        //String id = IdentifierUtils.createInvoiceIdRandom("X01"); // taslak değil ise createInvoiceIdRandomPrefix() kullanılmalı
 
-        File draftFile = new File("xml\\draft-eiarchive.xml");
-        File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, uuid, id);
+        //File draftFile = new File("xml\\draft-eiarchive.xml");
+        //File createdXml = XMLUtils.createXmlFromDraftInvoice(draftFile, uuid, id);
+
+        ObjectFactory o = new ObjectFactory();
+        ArchiveInvoiceUBL ubl = new ArchiveInvoiceUBL();
+        File file = new File(System.getProperty("user.home") + "\\Desktop\\x.xml");
+
+        JAXB.marshal(o.createInvoice(ubl.getInvoice()), file);
 
         Base64Binary base64Binary = new Base64Binary();
-        base64Binary.setValue(Files.readAllBytes(createdXml.toPath()));
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
 
         props.setINVOICECONTENT(base64Binary);
 
@@ -81,11 +86,9 @@ class EiarchiveTests {
 
         ArchiveInvoiceExtendedResponse resp = adapter.writeToArchiveExtended(request);
 
-        createdXml.delete();
-
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendEiarchiveUUID = uuid.toString();
+        sendEiarchiveUUID = ubl.getInvoice().getUUID().getValue();
 
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }

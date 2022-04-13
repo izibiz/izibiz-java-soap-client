@@ -22,8 +22,6 @@ public class SoapJavaClientApplication {
         this.creditNoteAdapter = new CreditNoteAdapter();
         this.smmAdapter = new SmmAdapter();
         this.reconciliationAdapter = new ReconciliationAdapter();
-
-        //TODO: declarations
     }
 
     public static void main(String[] args) {

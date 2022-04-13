@@ -23,7 +23,7 @@ public class CreditNoteUBL extends UBL{
         taxTotal();
         legalMonetaryTotal();
         addCreditNoteLine();
-        addAdditionalDocumentReference();
+        addGibTemplate(); // Xslt şablonu
     }
 
     public CreditNoteType getCreditNote() {
@@ -182,7 +182,7 @@ public class CreditNoteUBL extends UBL{
         creditNote.getCreditNoteLine().add(line);
     }
 
-    private void addAdditionalDocumentReference() throws Exception{
+    private void addGibTemplate() throws Exception{
         DocumentReferenceType ref = new DocumentReferenceType();
         ref.setID(creditNote.getID());
         ref.setIssueDate(creditNote.getIssueDate());

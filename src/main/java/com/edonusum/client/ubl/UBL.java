@@ -4,7 +4,9 @@ import com.edonusum.client.util.DateUtils;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_2.*;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.*;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 public class UBL {
@@ -193,6 +195,10 @@ public class UBL {
         return party;
     }
 
+    public static PartyType defaultParty() {
+        return party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "İSTANBUL", "Yıldız Teknik üniversitesi Teknopark B Blok Kat:2 No:412 Davutpaşa -Esenler /İstanbu", "ATABEY", "34521", "Turkey", "DAVUTPAŞA", "2122121212", "21211111111", "defaultgb@izibiz.com.tr", "4840847211");
+    }
+
     public static SignatureType signature(String id) {
         SignatureType signatureType = new SignatureType();
 
@@ -223,6 +229,8 @@ public class UBL {
     public static AttachmentType defaultAttachment(String id, String embedded) {
         AttachmentType attachmentType = new AttachmentType();
 
+        System.out.println(embedded.length());
+
         attachmentType.setEmbeddedDocumentBinaryObject(new EmbeddedDocumentBinaryObjectType());
         attachmentType.getEmbeddedDocumentBinaryObject().setCharacterSetCode("UTF-8");
         attachmentType.getEmbeddedDocumentBinaryObject().setEncodingCode("base64");
@@ -232,5 +240,61 @@ public class UBL {
         attachmentType.getEmbeddedDocumentBinaryObject().setValue(embedded.getBytes(StandardCharsets.UTF_8));
 
         return attachmentType;
+    }
+
+    public static TaxTotalType taxTotal(double taxAmount, List<TaxSubtotalType> subTotals) {
+        TaxTotalType taxTotal = new TaxTotalType();
+
+        TaxAmountType amount = new TaxAmountType();
+        amount.setValue(BigDecimal.valueOf(taxAmount));
+        amount.setCurrencyID("TRY");
+
+        taxTotal.setTaxAmount(amount);
+
+        taxTotal.getTaxSubtotal().addAll(subTotals);
+
+        return taxTotal;
+    }
+
+    public static TaxSubtotalType subTotal(double taxableAmount, double taxAmount, int calculationSequenceNumeric, double percent, String taxScheme, String taxTypeCode) {
+        TaxSubtotalType subTotal = new TaxSubtotalType();
+
+        TaxableAmountType taxable = new TaxableAmountType();
+        taxable.setCurrencyID("TRY");
+        taxable.setValue(BigDecimal.valueOf(taxableAmount));
+
+        subTotal.setTaxableAmount(taxable);
+
+        TaxAmountType amount = new TaxAmountType();
+        amount.setValue(BigDecimal.valueOf(taxAmount));
+        amount.setCurrencyID("TRY");
+
+        subTotal.setTaxAmount(amount);
+
+        CalculationSequenceNumericType calculationSequence = new CalculationSequenceNumericType();
+        calculationSequence.setValue(BigDecimal.valueOf(calculationSequenceNumeric));
+
+        subTotal.setCalculationSequenceNumeric(calculationSequence);
+
+        PercentType percentType = new PercentType();
+        percentType.setFormat("%");
+        percentType.setValue(BigDecimal.valueOf(percent));
+
+        subTotal.setPercent(percentType);
+
+        TaxCategoryType category = new TaxCategoryType();
+        TaxSchemeType scheme = new TaxSchemeType();
+        TaxTypeCodeType code = new TaxTypeCodeType();
+
+        code.setValue(taxTypeCode);
+
+        scheme.setName(name(taxScheme));
+        scheme.setTaxTypeCode(code);
+
+        category.setTaxScheme(scheme);
+
+        subTotal.setTaxCategory(category);
+
+        return subTotal;
     }
 }

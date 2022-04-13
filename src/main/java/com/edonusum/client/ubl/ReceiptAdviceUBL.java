@@ -2,15 +2,11 @@ package com.edonusum.client.ubl;
 
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
-import com.edonusum.client.wsdl.edespatch.RECEIPTADVICEHEADER;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_2.*;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.*;
 import oasis.names.specification.ubl.schema.xsd.receiptadvice_2.ReceiptAdviceType;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,16 +20,14 @@ public class ReceiptAdviceUBL extends UBL{
         receiptAdvice = new ReceiptAdviceType();
 
         createHeader();
+        createSignature();
         createDespatchDocumentReference(uuid, date);
         createAdditionalDocumentReference(id);
-        addAdditionalDocRef();
-
-        receiptAdvice.getSignature().add(signature(receiptAdvice.getID().getValue()));
-
         createDelivery();
         createDespatchSupplierParty();
         createShipment();
         addReceiptLine();
+        addGibTemplate(); // Xslt şablonu
     }
 
     private void createHeader() throws Exception{
@@ -75,6 +69,10 @@ public class ReceiptAdviceUBL extends UBL{
         receiptAdvice.setDespatchDocumentReference(documentReferenceType);
     }
 
+    private void createSignature() {
+        receiptAdvice.getSignature().add(signature(receiptAdvice.getID().getValue()));
+    }
+
     private void createAdditionalDocumentReference(String id) {
         // yanıt verilen irsaliye id
         DocumentReferenceType documentReferenceType = new DocumentReferenceType();
@@ -96,8 +94,7 @@ public class ReceiptAdviceUBL extends UBL{
         SupplierPartyType supplierPartyType = new SupplierPartyType();
 
         // party
-        PartyType party = party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ ANONİM ŞİRKETİ", "ISTANBUL", "Yıldız Teknik Üniversitesi Teknoloji Geliştirme Bölgesi D2 Blok Z07", "MALTEPE", "34220", "TR", "KÜÇÜKYALI", "8508111199", "", "rtdonuk@gmail.com", "4840847211");
-        supplierPartyType.setParty(party);
+        supplierPartyType.setParty(defaultParty());
 
         // contact
         ContactType contactType = new ContactType();
@@ -195,7 +192,7 @@ public class ReceiptAdviceUBL extends UBL{
         receiptAdvice.getReceiptLine().add(line);
     }
 
-    private void addAdditionalDocRef() throws Exception{
+    private void addGibTemplate() throws Exception{
         DocumentReferenceType documentReferenceType = new DocumentReferenceType();
 
         // id

@@ -7,7 +7,6 @@ import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.*;
 import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +28,7 @@ public class InvoiceUBL extends UBL{
         addInvoiceLine();
         legalMonetarTotal();
         addAdditionalDocumentReference();
-        addDefaultDocumentReference();
+        addGibTemplate(); // Xslt şablonu
     }
 
     public InvoiceType getInvoice() {
@@ -175,39 +174,10 @@ public class InvoiceUBL extends UBL{
     }
 
     private void createTaxTotal() {
-        // tax total
-        TaxTotalType taxTotalType = new TaxTotalType();
+        TaxSubtotalType subTotal = subTotal(17.8, 3.2, 1, 18, "KDV", "0015");
+        TaxTotalType total = taxTotal(3.2, List.of(subTotal));
 
-        taxTotalType.setTaxAmount(new TaxAmountType());
-        taxTotalType.getTaxAmount().setCurrencyID("TRY");
-        taxTotalType.getTaxAmount().setValue(BigDecimal.valueOf(3.2));
-
-        // tax sub total
-        TaxSubtotalType taxSubtotalType = new TaxSubtotalType();
-
-        taxSubtotalType.setTaxableAmount(new TaxableAmountType());
-        taxSubtotalType.getTaxableAmount().setCurrencyID("TRY");
-        taxSubtotalType.getTaxableAmount().setValue(BigDecimal.valueOf(17.8));
-
-        taxSubtotalType.setTaxAmount(new TaxAmountType());
-        taxSubtotalType.getTaxAmount().setValue(BigDecimal.valueOf(3.2));
-        taxSubtotalType.getTaxAmount().setCurrencyID("TRY");
-
-        taxSubtotalType.setCalculationSequenceNumeric(new CalculationSequenceNumericType());
-        taxSubtotalType.getCalculationSequenceNumeric().setValue(BigDecimal.ONE);
-
-        taxSubtotalType.setPercent(new PercentType());
-        taxSubtotalType.getPercent().setValue(BigDecimal.valueOf(18));
-
-        taxSubtotalType.setTaxCategory(new TaxCategoryType());
-        taxSubtotalType.getTaxCategory().setTaxScheme(new TaxSchemeType());
-        taxSubtotalType.getTaxCategory().getTaxScheme().setName(name("KDV"));
-        taxSubtotalType.getTaxCategory().getTaxScheme().setTaxTypeCode(new TaxTypeCodeType());
-        taxSubtotalType.getTaxCategory().getTaxScheme().getTaxTypeCode().setValue("0015");
-
-        taxTotalType.getTaxSubtotal().add(taxSubtotalType);
-
-        invoice.getTaxTotal().add(taxTotalType);
+        invoice.getTaxTotal().add(total);
     }
 
     private void legalMonetarTotal() {
@@ -236,7 +206,7 @@ public class InvoiceUBL extends UBL{
         invoice.setLegalMonetaryTotal(monetaryTotalType);
     }
 
-    private void addDefaultDocumentReference() throws Exception{
+    private void addGibTemplate() throws Exception{
         DocumentReferenceType reference = new DocumentReferenceType();
 
         reference.setID(id(UUID.randomUUID().toString()));

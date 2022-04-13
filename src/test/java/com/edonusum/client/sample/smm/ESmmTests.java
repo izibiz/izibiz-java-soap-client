@@ -2,14 +2,17 @@ package com.edonusum.client.sample.smm;
 
 import com.edonusum.client.adapter.SmmAdapter;
 import com.edonusum.client.sample.auth.AuthTests;
+import com.edonusum.client.ubl.SmmUBL;
 import com.edonusum.client.util.DateUtils;
 import com.edonusum.client.util.IdentifierUtils;
 import com.edonusum.client.util.XMLUtils;
 import com.edonusum.client.wsdl.smm.*;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.ObjectFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.bind.JAXB;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.UUID;
@@ -114,7 +117,6 @@ class ESmmTests {
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
 
-    // Gönderen VKN ile session alan kullanıcı aynı değil
     @Test
     @Order(4)
     @DisplayName("Serbest meslek makbuzu gönderme")
@@ -135,15 +137,21 @@ class ESmmTests {
         request.setSMMPROPERTIES(smmProperties);
 
         // id
-        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
-        UUID uuid = UUID.randomUUID();
+        //String id = IdentifierUtils.createInvoiceIdRandomPrefix();
+        //UUID uuid = UUID.randomUUID();
 
         // preparing the content
-        File draft = new File("xml\\draft-ESmm.xml");
-        File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+        //File draft = new File("xml\\draft-ESmm.xml");
+        //File created = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
+
+        File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
+        SmmUBL ubl = new SmmUBL();
+        ObjectFactory o = new ObjectFactory();
+
+        JAXB.marshal(o.createInvoice(ubl.getInvoice()), file);
 
         Base64Binary base64Binary = new Base64Binary();
-        base64Binary.setValue(Files.readAllBytes(created.toPath()));
+        base64Binary.setValue(Files.readAllBytes(file.toPath()));
 
         SMM smmToSend = new SMM();
         smmToSend.setCONTENT(base64Binary);

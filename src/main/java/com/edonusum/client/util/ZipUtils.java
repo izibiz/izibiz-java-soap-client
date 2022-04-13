@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/*
+* Buradaki işlemler InputStream ve FileOutputStream kullanılarak byte array şeklindeki veriyi
+* yazma ve okuma şeklinde bir algoritma ile yapılmıştır. Apachee ArchiveStream kütüphanesi
+* kullanılarak daha iyi bir yoldan yapılabilir.
+ */
 public class ZipUtils {
     private static final String DEFAULT_EXTENSION = ".xml";
     private ZipUtils(){}

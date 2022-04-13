@@ -20,7 +20,7 @@ public class DespatchAdviceUBL extends UBL{
         delivery();
         shipment();
         addDespatchLine();
-        addDefaultDocumentReference();
+        addGibTemplate(); // Xslt şablonu
     }
 
     public DespatchAdviceType getDespatchAdvice() {
@@ -52,7 +52,7 @@ public class DespatchAdviceUBL extends UBL{
     private void despatchSupplierParty() {
         SupplierPartyType supplier = new SupplierPartyType();
 
-        supplier.setParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "İSTANBUL", "Yıldız Teknik üniversitesi Teknopark B Blok Kat:2 No:412 Davutpaşa -Esenler /İstanbu", "ATABEY", "34521", "Turkey", "DAVUTPAŞA", "2122121212", "21211111111", "defaultgb@izibiz.com.tr", "4840847211"));
+        supplier.setParty(defaultParty());
 
         supplier.setDespatchContact(new ContactType());
         supplier.getDespatchContact().setName(name(""));
@@ -63,7 +63,7 @@ public class DespatchAdviceUBL extends UBL{
     private void delivery() {
         CustomerPartyType customer = new CustomerPartyType();
 
-        customer.setParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "İSTANBUL", "Yıldız Teknik üniversitesi Teknopark B Blok Kat:2 No:412 Davutpaşa -Esenler /İstanbu", "ATABEY", "34521", "Turkey", "DAVUTPAŞA", "2122121212", "21211111111", "defaultgb@izibiz.com.tr", "4840847211"));
+        customer.setParty(defaultParty());
 
         despatchAdvice.setDeliveryCustomerParty(customer);
     }
@@ -132,7 +132,7 @@ public class DespatchAdviceUBL extends UBL{
         delivery.getDeliveryAddress().setPostalZone(postalZone("34065"));
         delivery.getDeliveryAddress().setCitySubdivisionName(citySub("info@bicycleworld.com"));
 
-        delivery.setCarrierParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "İSTANBUL", "Yıldız Teknik üniversitesi Teknopark B Blok Kat:2 No:412 Davutpaşa -Esenler /İstanbu", "ATABEY", "34521", "Turkey", "DAVUTPAŞA", "2122121212", "21211111111", "defaultgb@izibiz.com.tr", "4840847211"));
+        delivery.setCarrierParty(defaultParty());
 
         delivery.setDespatch(new DespatchType());
         delivery.getDespatch().setActualDespatchTime(new ActualDespatchTimeType());
@@ -200,7 +200,7 @@ public class DespatchAdviceUBL extends UBL{
         despatchAdvice.getDespatchLine().add(line);
     }
 
-    private void addDefaultDocumentReference() throws Exception {
+    private void addGibTemplate() throws Exception {
         DocumentReferenceType ref = new DocumentReferenceType();
 
         ref.setID(id(UUID.randomUUID().toString()));
