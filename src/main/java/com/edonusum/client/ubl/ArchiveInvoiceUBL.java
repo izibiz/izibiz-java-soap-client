@@ -24,7 +24,7 @@ public class ArchiveInvoiceUBL extends UBL {
         createTaxTotal();
         createLegalMonetaryTotal();
         addInvoiceLine();
-        addAdditionalDocumentReference();
+        addAdditionalDocumentReferences();
         addGibTemplate(); // Xslt şablonu
     }
 
@@ -56,7 +56,7 @@ public class ArchiveInvoiceUBL extends UBL {
         invoice.getLineCountNumeric().setValue(BigDecimal.valueOf(1));
     }
 
-    private void addAdditionalDocumentReference() {
+    private void addAdditionalDocumentReferences() {
         DocumentReferenceType ref = new DocumentReferenceType();
 
         ref.setID(id(UUID.randomUUID().toString()));
@@ -64,6 +64,14 @@ public class ArchiveInvoiceUBL extends UBL {
         ref.setDocumentType(documentType("XSLT"));
 
         invoice.getAdditionalDocumentReference().add(ref);
+
+        DocumentReferenceType ref2 = new DocumentReferenceType();
+        ref2.setID(id("1"));
+        ref2.setIssueDate(invoice.getIssueDate());
+        ref2.setDocumentTypeCode(documentTypeCode("SendingType"));
+        ref2.setDocumentType(documentType("ELEKTRONIK"));
+
+        invoice.getAdditionalDocumentReference().add(ref2);
     }
 
     private void createSignature() {
@@ -81,7 +89,7 @@ public class ArchiveInvoiceUBL extends UBL {
     private void createAccountCustomerParty() {
         CustomerPartyType customer = new CustomerPartyType();
 
-        customer.setParty(party("Taha anonim şirketi", "Malatya", "Street caddesi", "Yeşilyurt", "44444", "Güney Sudan", "DAVUTPAŞA","11111111111", "11111111112", "email@example.com", "44444444444"));
+        customer.setParty(party("Taha anonim şirketi", "Malatya", "Street caddesi", "Yeşilyurt", "44444", "Güney Sudan", "DAVUTPAŞA","11111111111", "11111111112", "email@example.com", "4444444444"));
 
         invoice.setAccountingCustomerParty(customer);
     }
@@ -110,6 +118,10 @@ public class ArchiveInvoiceUBL extends UBL {
         line.setInvoicedQuantity(new InvoicedQuantityType());
         line.getInvoicedQuantity().setValue(BigDecimal.valueOf(1));
         line.getInvoicedQuantity().setUnitCode("EA");
+
+        line.setLineExtensionAmount(new LineExtensionAmountType());
+        line.getLineExtensionAmount().setCurrencyID("TRY");
+        line.getLineExtensionAmount().setValue(BigDecimal.valueOf(1));
 
         TaxSubtotalType subTotal = subTotal(17.8, 3.2, 1, 18, "KDV","0015");
         TaxTotalType taxTotal = taxTotal(3.2, List.of(subTotal));
