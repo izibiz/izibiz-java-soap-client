@@ -109,14 +109,14 @@ public class DespatchAdviceUBL extends UBL{
         stage.setTransportMeans(new TransportMeansType());
         stage.getTransportMeans().setRoadTransport(new RoadTransportType());
         stage.getTransportMeans().getRoadTransport().setLicensePlateID(new LicensePlateIDType());
-        stage.getTransportMeans().getRoadTransport().getLicensePlateID().setValue("34FB69");
+        stage.getTransportMeans().getRoadTransport().getLicensePlateID().setValue("44FB444");
         stage.getTransportMeans().getRoadTransport().getLicensePlateID().setSchemeID("PLAKA");
 
         PersonType driver = new PersonType();
         driver.setFirstName(new FirstNameType());
-        driver.getFirstName().setValue("TAHA");
+        driver.getFirstName().setValue("AD");
         driver.setFamilyName(new FamilyNameType());
-        driver.getFamilyName().setValue("EXAMPLE");
+        driver.getFamilyName().setValue("SOYAD");
         driver.setNationalityID(new NationalityIDType());
         driver.getNationalityID().setValue("11111111111");
 
@@ -160,7 +160,7 @@ public class DespatchAdviceUBL extends UBL{
         line.getOrderLineReference().setLineID(new LineIDType());
 
         ItemType item = new ItemType();
-        item.setName(name("Laptop"));
+        item.setName(name("DEFTER"));
         item.setSellersItemIdentification(new ItemIdentificationType());
         item.getSellersItemIdentification().setID(id("BP001"));
 
@@ -209,5 +209,7 @@ public class DespatchAdviceUBL extends UBL{
         ref.setDocumentType(documentType("XSLT"));
 
         ref.setAttachment(defaultAttachment(despatchAdvice.getID().getValue(), Xslt.readDespatch()));
+
+        despatchAdvice.getAdditionalDocumentReference().add(ref);
     }
 }

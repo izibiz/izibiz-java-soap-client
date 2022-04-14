@@ -76,7 +76,7 @@ class EiarchiveTests {
 
         EARSIVPROPERTIES eiarchiveProps = new EARSIVPROPERTIES();
         eiarchiveProps.setEARSIVTYPE(EARSIVTYPEVALUE.NORMAL);
-        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.DRAFT); // new veya draft
+        eiarchiveProps.setSUBSTATUS(SUBSTATUSVALUE.NEW); // new veya draft
 
         props.setEARSIVPROPERTIES(eiarchiveProps);
 

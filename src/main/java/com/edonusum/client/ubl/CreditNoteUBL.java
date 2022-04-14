@@ -122,23 +122,7 @@ public class CreditNoteUBL extends UBL{
     }
 
     private void legalMonetaryTotal() {
-        MonetaryTotalType monetaryTotal = new MonetaryTotalType();
-
-        monetaryTotal.setLineExtensionAmount(new LineExtensionAmountType());
-        monetaryTotal.getLineExtensionAmount().setValue(BigDecimal.valueOf(25));
-        monetaryTotal.getLineExtensionAmount().setCurrencyID("TRY");
-
-        monetaryTotal.setTaxExclusiveAmount(new TaxExclusiveAmountType());
-        monetaryTotal.getTaxExclusiveAmount().setValue(BigDecimal.valueOf(25));
-        monetaryTotal.getTaxExclusiveAmount().setCurrencyID("TRY");
-
-        monetaryTotal.setTaxInclusiveAmount(new TaxInclusiveAmountType());
-        monetaryTotal.getTaxInclusiveAmount().setCurrencyID("TRY");
-        monetaryTotal.getTaxInclusiveAmount().setValue(BigDecimal.valueOf(24.5));
-
-        monetaryTotal.setPayableAmount(new PayableAmountType());
-        monetaryTotal.getPayableAmount().setValue(BigDecimal.valueOf(24.5));
-        monetaryTotal.getPayableAmount().setCurrencyID("TRY");
+        MonetaryTotalType monetaryTotal = legalMonetaryTotal(25, 25, 24.5, 24.5,0);
 
         creditNote.setLegalMonetaryTotal(monetaryTotal);
     }

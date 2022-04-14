@@ -297,4 +297,31 @@ public class UBL {
 
         return subTotal;
     }
+
+    public static MonetaryTotalType legalMonetaryTotal(double lineExtensionAmount, double taxExclusiveAmount, double taxInclusiveAmount, double payableAmount, double allowanceTotal) {
+        MonetaryTotalType monetaryTotal = new MonetaryTotalType();
+
+        monetaryTotal.setLineExtensionAmount(new LineExtensionAmountType());
+        monetaryTotal.setTaxExclusiveAmount(new TaxExclusiveAmountType());
+        monetaryTotal.setTaxInclusiveAmount(new TaxInclusiveAmountType());
+        monetaryTotal.setPayableAmount(new PayableAmountType());
+        monetaryTotal.setAllowanceTotalAmount(new AllowanceTotalAmountType());
+
+        monetaryTotal.getLineExtensionAmount().setCurrencyID("TRY");
+        monetaryTotal.getLineExtensionAmount().setValue(BigDecimal.valueOf(lineExtensionAmount));
+
+        monetaryTotal.getTaxExclusiveAmount().setValue(BigDecimal.valueOf(taxExclusiveAmount));
+        monetaryTotal.getTaxExclusiveAmount().setCurrencyID("TRY");
+
+        monetaryTotal.getTaxInclusiveAmount().setValue(BigDecimal.valueOf(taxInclusiveAmount));
+        monetaryTotal.getTaxInclusiveAmount().setCurrencyID("TRY");
+
+        monetaryTotal.getPayableAmount().setValue(BigDecimal.valueOf(payableAmount));
+        monetaryTotal.getPayableAmount().setCurrencyID("TRY");
+
+        monetaryTotal.getAllowanceTotalAmount().setValue(BigDecimal.valueOf(allowanceTotal));
+        monetaryTotal.getAllowanceTotalAmount().setCurrencyID("TRY");
+
+        return monetaryTotal;
+    }
 }

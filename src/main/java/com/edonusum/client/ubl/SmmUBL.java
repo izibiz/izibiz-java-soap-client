@@ -168,24 +168,7 @@ public class SmmUBL extends UBL {
     }
 
     private void createLegalMonetaryTotal() {
-        MonetaryTotalType monetaryTotal = new MonetaryTotalType();
-
-        monetaryTotal.setLineExtensionAmount(new LineExtensionAmountType());
-        monetaryTotal.setTaxExclusiveAmount(new TaxExclusiveAmountType());
-        monetaryTotal.setTaxInclusiveAmount(new TaxInclusiveAmountType());
-        monetaryTotal.setPayableAmount(new PayableAmountType());
-
-        monetaryTotal.getLineExtensionAmount().setCurrencyID("TRY");
-        monetaryTotal.getLineExtensionAmount().setValue(BigDecimal.valueOf(17.8));
-
-        monetaryTotal.getTaxExclusiveAmount().setValue(BigDecimal.valueOf(17.8));
-        monetaryTotal.getTaxExclusiveAmount().setCurrencyID("TRY");
-
-        monetaryTotal.getTaxInclusiveAmount().setValue(BigDecimal.valueOf(21.8));
-        monetaryTotal.getTaxInclusiveAmount().setCurrencyID("TRY");
-
-        monetaryTotal.getPayableAmount().setValue(BigDecimal.valueOf(16.8));
-        monetaryTotal.getPayableAmount().setCurrencyID("TRY");
+        MonetaryTotalType monetaryTotal = legalMonetaryTotal(17.8, 17.8, 21.8, 16.8, 0);
 
         invoice.setLegalMonetaryTotal(monetaryTotal);
     }

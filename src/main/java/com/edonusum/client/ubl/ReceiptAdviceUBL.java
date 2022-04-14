@@ -188,7 +188,7 @@ public class ReceiptAdviceUBL extends UBL{
     }
 
     private void addReceiptLine() {
-        ReceiptLineType line = createLine("1", "1", "", "DEFTER");
+        ReceiptLineType line = createLine("BP001", "1", "", "DEFTER");
         receiptAdvice.getReceiptLine().add(line);
     }
 

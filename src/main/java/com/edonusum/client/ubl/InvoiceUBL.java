@@ -181,27 +181,7 @@ public class InvoiceUBL extends UBL{
     }
 
     private void legalMonetarTotal() {
-        MonetaryTotalType monetaryTotalType = new MonetaryTotalType();
-
-        monetaryTotalType.setAllowanceTotalAmount(new AllowanceTotalAmountType());
-        monetaryTotalType.getAllowanceTotalAmount().setValue(BigDecimal.ZERO);
-        monetaryTotalType.getAllowanceTotalAmount().setCurrencyID("TRY");
-
-        monetaryTotalType.setPayableAmount(new PayableAmountType());
-        monetaryTotalType.getPayableAmount().setValue(BigDecimal.valueOf(21));
-        monetaryTotalType.getPayableAmount().setCurrencyID("TRY");
-
-        monetaryTotalType.setTaxExclusiveAmount(new TaxExclusiveAmountType());
-        monetaryTotalType.getTaxExclusiveAmount().setValue(BigDecimal.ZERO);
-        monetaryTotalType.getTaxExclusiveAmount().setCurrencyID("TRY");
-
-        monetaryTotalType.setTaxInclusiveAmount(new TaxInclusiveAmountType());
-        monetaryTotalType.getTaxInclusiveAmount().setValue(BigDecimal.ZERO);
-        monetaryTotalType.getTaxInclusiveAmount().setCurrencyID("TRY");
-
-        monetaryTotalType.setLineExtensionAmount(new LineExtensionAmountType());
-        monetaryTotalType.getLineExtensionAmount().setValue(BigDecimal.ZERO);
-        monetaryTotalType.getLineExtensionAmount().setCurrencyID("TRY");
+        MonetaryTotalType monetaryTotalType = legalMonetaryTotal(0, 0, 0, 21, 0);
 
         invoice.setLegalMonetaryTotal(monetaryTotalType);
     }

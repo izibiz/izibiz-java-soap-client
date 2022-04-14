@@ -139,25 +139,7 @@ public class ArchiveInvoiceUBL extends UBL {
     }
 
     private void createLegalMonetaryTotal() {
-        MonetaryTotalType monetaryTotal = new MonetaryTotalType();
-
-        monetaryTotal.setLineExtensionAmount(new LineExtensionAmountType());
-        monetaryTotal.setTaxInclusiveAmount(new TaxInclusiveAmountType());
-        monetaryTotal.setTaxExclusiveAmount(new TaxExclusiveAmountType());
-        monetaryTotal.setAllowanceTotalAmount(new AllowanceTotalAmountType());
-        monetaryTotal.setPayableAmount(new PayableAmountType());
-
-        monetaryTotal.getLineExtensionAmount().setValue(BigDecimal.valueOf(0));
-        monetaryTotal.getLineExtensionAmount().setCurrencyID("TRY");
-
-        monetaryTotal.getTaxInclusiveAmount().setCurrencyID("TRY");
-        monetaryTotal.getTaxInclusiveAmount().setValue(BigDecimal.ZERO);
-
-        monetaryTotal.getTaxExclusiveAmount().setCurrencyID("TRY");
-        monetaryTotal.getTaxExclusiveAmount().setValue(BigDecimal.ZERO);
-
-        monetaryTotal.getPayableAmount().setCurrencyID("TRY");
-        monetaryTotal.getPayableAmount().setValue(BigDecimal.valueOf(21));
+        MonetaryTotalType monetaryTotal = legalMonetaryTotal(0, 0, 0, 21, 0);
 
         invoice.setLegalMonetaryTotal(monetaryTotal);
     }
@@ -166,6 +148,7 @@ public class ArchiveInvoiceUBL extends UBL {
         DocumentReferenceType ref = new DocumentReferenceType();
 
         ref.setID(id(UUID.randomUUID().toString()));
+
         ref.setIssueDate(invoice.getIssueDate());
         ref.setDocumentType(documentType("XSLT"));
 
