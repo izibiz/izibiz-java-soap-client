@@ -137,7 +137,7 @@ public class DespatchAdviceUBL extends UBL{
         delivery.setDespatch(new DespatchType());
         delivery.getDespatch().setActualDespatchTime(new ActualDespatchTimeType());
         delivery.getDespatch().setActualDespatchDate(new ActualDespatchDateType());
-        delivery.getDespatch().getActualDespatchDate().setValue(DateUtils.now());
+        delivery.getDespatch().getActualDespatchDate().setValue(DateUtils.nowWithoutTime());
         delivery.getDespatch().getActualDespatchTime().setValue(DateUtils.now());
 
         shipment.setDelivery(delivery);

@@ -32,8 +32,7 @@ class EdespatchTests {
     @Autowired
     private EdespatchAdapter adapter;
 
-    private static String sendDespatchAdviceUUID = "";
-    private static String sendDespatchAdviceID = "";
+    private static DespatchAdviceType lastSentDespatchAdvice;
 
     private static String sendReceiptAdviceUUID = "";
 
@@ -211,8 +210,7 @@ class EdespatchTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendDespatchAdviceUUID = uuid.toString();
-        sendDespatchAdviceID = id;
+        lastSentDespatchAdvice = despatchAdvice;
 
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
@@ -266,13 +264,13 @@ class EdespatchTests {
         request.setREQUESTHEADER(header);
 
         //ID
-        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
-        UUID uuid = UUID.randomUUID();
+        String id = lastSentDespatchAdvice.getID().getValue();
+        String uuid = lastSentDespatchAdvice.getUUID().getValue();
 
         ObjectFactory factory = new ObjectFactory();
 
         File file = new File(System.getProperty("user.home")+"\\Desktop\\x.xml");
-        ReceiptAdviceType receipt = new ReceiptAdviceUBL(sendDespatchAdviceID, sendDespatchAdviceUUID,"2022-04-06").getReceiptAdvice(); // create from UBL
+        ReceiptAdviceType receipt = new ReceiptAdviceUBL(id, uuid,lastSentDespatchAdvice.getShipment().getDelivery().getDespatch().getActualDespatchDate().getValue().toString()).getReceiptAdvice(); // create from UBL
         JAXB.marshal(factory.createReceiptAdvice(receipt), file);
 
         Base64Binary base64Binary = new Base64Binary();
@@ -292,7 +290,7 @@ class EdespatchTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendReceiptAdviceUUID = uuid.toString();
+        sendReceiptAdviceUUID = uuid;
 
         System.out.println(resp.getRECEIPTID());
     }
@@ -349,7 +347,7 @@ class EdespatchTests {
         mark.setValue("UNREAD");
 
         DESPATCHADVICEINFO info = new DESPATCHADVICEINFO();
-        info.setUUID(sendDespatchAdviceUUID); // UUID ile istek gönderme
+        info.setUUID(lastSentDespatchAdvice.getUUID().getValue()); // UUID ile istek gönderme
 
         mark.getDESPATCHADVICEINFO().add(info);
 
