@@ -53,7 +53,7 @@ public class AuthAdapter extends Adapter {
         List<File> files = FileUtils.writeToFile(List.of(response.getValue().getCONTENT().getValue()),pathToFile,"users", extension);
         ZipUtils.unzipMultiple(files);
 
-        GibUsers users = JAXB.unmarshal(files.get(0).getParent()+"\\users.xml", GibUsers.class); // single xml file
+        GibUsers users = JAXB.unmarshal(files.get(0).getParent()+"\\users", GibUsers.class); // single xml file
         GibUserDTO [] userList = users.getUsers();
         System.out.println(userList.length);
 
