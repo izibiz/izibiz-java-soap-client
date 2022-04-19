@@ -37,11 +37,6 @@ public class ZipUtils {
         }
     }
 
-    /*
-        * Apachee commons implementations for same algorithm
-        * Can be used instead of above methods
-     */
-
     private static List<File> unzipDefault(File f) throws Exception{
         if(f.getName().endsWith(".zip")) {
             List<File> extractedFiles = new ArrayList<>();
