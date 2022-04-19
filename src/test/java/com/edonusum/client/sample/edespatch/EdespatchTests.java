@@ -388,7 +388,7 @@ class EdespatchTests {
 
     @Test
     @Order(12)
-    @DisplayName("Giriş yapma")
+    @DisplayName("Çıkış yapma")
     private void logout() {
         AuthTests.logout(SESSION_ID);
 
