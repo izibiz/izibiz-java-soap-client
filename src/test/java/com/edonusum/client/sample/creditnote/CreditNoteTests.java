@@ -143,10 +143,6 @@ class CreditNoteTests {
         CREDITNOTE.HEADER crheader = new CREDITNOTE.HEADER();
         creditnote.setHEADER(crheader);
 
-        // id
-        UUID uuid = UUID.randomUUID();
-        String id = IdentifierUtils.createInvoiceIdRandomPrefix();
-
         //File draft = new File("xml\\draft-creditNote.xml");
         //File createdXml = XMLUtils.createXmlFromDraftInvoice(draft, uuid, id);
 
@@ -174,7 +170,7 @@ class CreditNoteTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendCreditNoteUUID = uuid.toString();
+        sendCreditNoteUUID = creditNote.getCreditNote().getUUID().getValue();
 
         System.out.println(resp.getREQUESTRETURN().getRETURNCODE());
     }
