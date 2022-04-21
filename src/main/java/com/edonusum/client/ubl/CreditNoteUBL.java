@@ -171,7 +171,7 @@ public class CreditNoteUBL extends UBL{
         ref.setID(creditNote.getID());
         ref.setIssueDate(creditNote.getIssueDate());
         ref.setDocumentType(documentType("XSLT"));
-        ref.setAttachment(defaultAttachment(creditNote.getID().getValue(), Xslt.readCreditNote()));
+        ref.setAttachment(xsltTemplate(creditNote.getID().getValue(), Xslt.readCreditNote()));
 
         creditNote.getAdditionalDocumentReference().add(ref);
     }

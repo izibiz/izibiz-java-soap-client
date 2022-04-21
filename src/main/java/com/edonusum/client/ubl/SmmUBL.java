@@ -178,7 +178,7 @@ public class SmmUBL extends UBL {
         ref.setID(id(UUID.randomUUID().toString()));
         ref.setIssueDate(invoice.getIssueDate());
         ref.setDocumentType(documentType("XSLT"));
-        ref.setAttachment(defaultAttachment(invoice.getID().getValue(), Xslt.readSmm()));
+        ref.setAttachment(xsltTemplate(invoice.getID().getValue(), Xslt.readSmm()));
 
         invoice.getAdditionalDocumentReference().add(ref);
     }

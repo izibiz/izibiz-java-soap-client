@@ -193,7 +193,7 @@ public class InvoiceUBL extends UBL{
         reference.setIssueDate(issueDate());
         reference.setDocumentType(documentType("XSLT"));
 
-        reference.setAttachment(defaultAttachment(invoice.getID().getValue(), Xslt.readInvoice()));
+        reference.setAttachment(xsltTemplate(invoice.getID().getValue(), Xslt.readInvoice()));
 
         invoice.getAdditionalDocumentReference().add(reference);
     }

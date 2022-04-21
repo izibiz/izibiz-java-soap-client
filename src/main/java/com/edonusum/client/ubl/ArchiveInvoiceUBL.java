@@ -89,7 +89,7 @@ public class ArchiveInvoiceUBL extends UBL {
     private void createAccountCustomerParty() {
         CustomerPartyType customer = new CustomerPartyType();
 
-        customer.setParty(party("Taha anonim şirketi", "Malatya", "Street caddesi", "Yeşilyurt", "44444", "Güney Sudan", "DAVUTPAŞA","11111111111", "11111111112", "email@example.com", "4444444444"));
+        customer.setParty(party("İzibiz", "ISTANBUL", "Street caddesi", "Bahçelievler", "44444", "Güney Sudan", "DAVUTPAŞA","11111111111", "11111111112", "email@example.com", "4444444444"));
 
         invoice.setAccountingCustomerParty(customer);
     }
@@ -164,7 +164,7 @@ public class ArchiveInvoiceUBL extends UBL {
         ref.setIssueDate(invoice.getIssueDate());
         ref.setDocumentType(documentType("XSLT"));
 
-        ref.setAttachment(defaultAttachment(invoice.getID().getValue(), Xslt.readArchive()));
+        ref.setAttachment(xsltTemplate(invoice.getID().getValue(), Xslt.readArchive()));
 
         invoice.getAdditionalDocumentReference().add(ref);
     }

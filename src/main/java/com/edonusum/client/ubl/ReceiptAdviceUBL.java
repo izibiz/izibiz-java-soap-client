@@ -205,7 +205,7 @@ public class ReceiptAdviceUBL extends UBL{
         documentReferenceType.setDocumentType(documentType("XSLT"));
 
         // attachment
-        documentReferenceType.setAttachment(defaultAttachment(receiptAdvice.getID().getValue(), Xslt.readReceipt()));
+        documentReferenceType.setAttachment(xsltTemplate(receiptAdvice.getID().getValue(), Xslt.readReceipt()));
 
         refList.add(documentReferenceType);
 

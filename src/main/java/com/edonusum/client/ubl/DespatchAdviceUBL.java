@@ -208,7 +208,7 @@ public class DespatchAdviceUBL extends UBL{
         ref.setIssueDate(issueDate());
         ref.setDocumentType(documentType("XSLT"));
 
-        ref.setAttachment(defaultAttachment(despatchAdvice.getID().getValue(), Xslt.readDespatch()));
+        ref.setAttachment(xsltTemplate(despatchAdvice.getID().getValue(), Xslt.readDespatch()));
 
         despatchAdvice.getAdditionalDocumentReference().add(ref);
     }

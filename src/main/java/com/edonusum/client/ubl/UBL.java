@@ -226,7 +226,7 @@ public class UBL {
         return signatureType;
     }
     
-    public static AttachmentType defaultAttachment(String id, String embedded) {
+    public static AttachmentType xsltTemplate(String id, String embedded) {
         AttachmentType attachmentType = new AttachmentType();
 
         System.out.println(embedded.length());
