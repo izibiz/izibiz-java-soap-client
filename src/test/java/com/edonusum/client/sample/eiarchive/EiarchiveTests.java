@@ -126,8 +126,8 @@ class EiarchiveTests {
         header.setSESSIONID(SESSION_ID);
         request.setREQUESTHEADER(header);
 
-        request.setFATURAUUID(sendEiarchiveUUID); // example id
-        request.setEMAIL("example@email.com"); // email address to send
+        request.setFATURAUUID(sendEiarchiveUUID); // last sent invoice
+        request.setEMAIL("example@email.com"); // email address to send. must be valid to get this working
 
         GetEmailEarchiveInvoiceResponse resp = adapter.getEmailEarchiveInvoice(request);
 
