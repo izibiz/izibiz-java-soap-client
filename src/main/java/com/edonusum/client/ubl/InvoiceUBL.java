@@ -79,7 +79,7 @@ public class InvoiceUBL extends UBL{
     private void accountSupplierParty() {
         SupplierPartyType supplierPartyType = new SupplierPartyType();
 
-        supplierPartyType.setParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "ISPARTA",  "Yıldız Teknik üniversitesi Teknopark B Blok Kat:2 No:412 Davutpaşa -Esenler /İstanbul", "ATABEY", "34521", "Turkey", "DAVUTPAŞA","2122121212", null, "defaultgb@izibiz.com.tr", "4840847211"));
+        supplierPartyType.setParty(defaultParty());
 
         invoice.setAccountingSupplierParty(supplierPartyType);
     }
@@ -87,7 +87,7 @@ public class InvoiceUBL extends UBL{
     private void accountCustomerParty() {
         CustomerPartyType customerPartyType = new CustomerPartyType();
 
-        customerPartyType.setParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "ISPARTA",  null, null, null, null, null,"2122121212", null, "defaultgb@izibiz.com.tr", "4840847211"));
+        customerPartyType.setParty(defaultParty());
 
         invoice.setAccountingCustomerParty(customerPartyType);
     }
@@ -95,7 +95,7 @@ public class InvoiceUBL extends UBL{
     private void delivery() throws Exception{
         DeliveryType deliveryType = new DeliveryType();
 
-        deliveryType.setDeliveryParty(party("İZİBİZ BİLİŞİM TEKNOLOJİLERİ AŞ", "ISPARTA",  null, null, null, null, null,"2122121212", null, "defaultgb@izibiz.com.tr", "4840847211"));
+        deliveryType.setDeliveryParty(defaultParty());
 
         DespatchType despatch = new DespatchType();
         despatch.setActualDespatchDate(new ActualDespatchDateType());
@@ -157,9 +157,9 @@ public class InvoiceUBL extends UBL{
 
         // item
         ItemType item = new ItemType();
-        item.setName(name("PROSER.1028"));
+        item.setName(name("Defter"));
         item.setDescription(new DescriptionType());
-        item.getDescription().setValue("Fiyatı var");
+        item.getDescription().setValue("Item description");
 
         PriceType price = new PriceType();
         price.setPriceAmount(new PriceAmountType());

@@ -17,8 +17,9 @@ import java.util.zip.ZipFile;
 
 
 public class ZipUtils {
-    private static final String DEFAULT_EXTENSION = ".xml";
     private ZipUtils(){}
+
+    private static final String DEFAULT_EXTENSION = ".xml";
 
     public static ZipFile base64ToZip(byte[] base64, String path, String fileName) {
         try {
@@ -78,15 +79,17 @@ public class ZipUtils {
         try(ZipArchiveOutputStream output = new ZipArchiveOutputStream(zip)) {
             ZipArchiveEntry entry;
             for(File file : filesToZip) {
-                entry = new ZipArchiveEntry(file.getName().substring(file.getName().lastIndexOf("/")));
+                try(FileInputStream inputStream = new FileInputStream(file)) {
+                    entry = new ZipArchiveEntry(file.getName().substring(file.getName().lastIndexOf("/")));
 
-                output.putArchiveEntry(entry);
+                    output.putArchiveEntry(entry);
 
-                IOUtils.copy(new FileInputStream(file), output);
+                    IOUtils.copy(inputStream, output);
+
+                    output.closeArchiveEntry();
+                    output.finish();
+                }
             }
-
-            output.closeArchiveEntry();
-            output.finish();
 
             return zip;
         }
@@ -111,9 +114,9 @@ public class ZipUtils {
 
             try(InputStream inputStream = zf.getInputStream(entry);
                 FileOutputStream fileOutputStream = new FileOutputStream(entryFileName)) {
+
                 inputStream.transferTo(fileOutputStream);
                 extractedFiles.add(new File(entryFileName));
-
             }
         }
         return extractedFiles;
