@@ -53,7 +53,7 @@ public class EinvoiceAdapter extends Adapter{
             invoices.add(JAXB.unmarshal(xml, InvoiceType.class));
         }
 
-        // TODO: do business with invoices
+        // TODO: do the business with invoices
 
         return respObj.getValue();
     }

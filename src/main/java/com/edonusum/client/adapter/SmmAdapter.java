@@ -38,7 +38,9 @@ public class SmmAdapter extends Adapter{
         List<byte[]> contents = respObj.getValue().getSMM().stream().map(smm -> smm.getCONTENT().getValue()).collect(Collectors.toList());
         List<File> files = FileUtils.writeToFile(contents, dir, "smm", ext);
 
-        if("zip".equals(ext)) ZipUtils.unzipMultiple(files);
+        if("zip".equals(ext)) files = ZipUtils.unzipMultiple(files); // unzipped smm files
+
+        //TODO: do the business with the smm list
 
         return respObj.getValue();
     }

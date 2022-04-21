@@ -6,9 +6,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -16,29 +13,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 
-public class ZipUtils {
+public final class ZipUtils {
     private ZipUtils(){}
 
     private static final String DEFAULT_EXTENSION = ".xml";
 
-    public static ZipFile base64ToZip(byte[] base64, String path, String fileName) {
-        try {
-            Path file = Files.createDirectories(Paths.get(path+"\\"));
-
-            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file+"\\"+fileName), base64.length);
-            outputStream.write(base64);
-            ZipFile zipFile = new ZipFile(path+"\\"+fileName);
-
-            outputStream.close();
-            return zipFile;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static List<File> unzipDefault(File f) throws Exception{
+    /**
+     * Default ayarlar ile tek bir dosyayı unzip yapmak için kullanılır.
+     * @param f Unzip edilmek istenen dosya
+     * @return Verilen zip'ten çıkartılan dosyalar
+     * @throws Exception
+     */
+    public static List<File> unzipDefault(File f) throws Exception{
         if(f.getName().endsWith(".zip")) {
             List<File> extractedFiles = new ArrayList<>();
             extractedFiles.addAll(unzipWithCommons(f));
@@ -48,6 +34,12 @@ public class ZipUtils {
         return List.of();
     }
 
+    /**
+     * Default ayarlar ile birden fazla dosyayı unzip yapmak için kullanılır.
+     * @param files Unzip edilmek istenen zip dosyaları
+     * @return Unzip edilen tüm dosyaların tutulduğu liste
+     * @throws Exception
+     */
     public static List<File> unzipMultiple(List<File> files) throws Exception{
         List<File> extractedFiles = new ArrayList<>();
 

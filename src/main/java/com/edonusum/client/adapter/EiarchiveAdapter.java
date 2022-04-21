@@ -49,7 +49,7 @@ public class EiarchiveAdapter extends Adapter{
                 invoiceList.add(JAXB.unmarshal(xml, InvoiceType.class));
             }
 
-            // TODO: do some business with invoices
+            // TODO: do the business with invoices
         }
 
         return respObj.getValue();

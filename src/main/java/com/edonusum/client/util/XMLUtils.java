@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-public class XMLUtils {
+public final class XMLUtils {
     private XMLUtils(){}
 
     public static File createXmlFromDraftInvoice(File draft, UUID uuid, String invoiceId) throws IOException {

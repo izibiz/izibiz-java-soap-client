@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Random;
 
-public class IdentifierUtils {
+public final class IdentifierUtils {
     private IdentifierUtils() {}
 
     private static final DecimalFormat formatter = new DecimalFormat("#000000000");

@@ -118,7 +118,7 @@ public class CreditNoteAdapter extends Adapter{
             }
         }
 
-        // TODO: do business with credit note report list
+        // TODO: do the business with credit note report list
 
         return respObj.getValue();
     }

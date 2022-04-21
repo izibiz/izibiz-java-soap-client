@@ -61,7 +61,7 @@ public class EdespatchAdapter extends Adapter{
             }
         }
 
-        // TODO: do business with despatch advice list
+        // TODO: do the business with despatch advice list
 
         return respObj.getValue();
     }
@@ -125,7 +125,7 @@ public class EdespatchAdapter extends Adapter{
             }
         }
 
-        // TODO: do business with receipt advice list
+        // TODO: do the business with receipt advice list
 
         return respObj.getValue();
     }

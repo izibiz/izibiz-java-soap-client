@@ -3,6 +3,10 @@ package com.edonusum.client.ubl;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * XSLT formatındaki görüntüleme şablonlarının okunmasını sağlayan metodlar burada bulunmaktadır.
+ * Buradaki şablonlar döküman tipine göre her bir döküman içerisinde embedded olarak bulunmalıdır. Aksi taktirde şablon hatası alınacaktır.
+ */
 public class Xslt {
     private Xslt() {}
 
