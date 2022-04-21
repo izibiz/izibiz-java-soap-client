@@ -39,7 +39,7 @@ public class InvoiceUBL extends UBL{
         invoice.setUBLVersionID(ublVersion());
         invoice.setCustomizationID(customizationID("TR1.2"));
 
-        invoice.setProfileID(profileId("TEMELFATURA"));
+        invoice.setProfileID(profileId("TICARIFATURA"));
 
         invoice.setID(id(IdentifierUtils.createInvoiceIdRandomPrefix()));
         invoice.setUUID(uuid(UUID.randomUUID().toString()));

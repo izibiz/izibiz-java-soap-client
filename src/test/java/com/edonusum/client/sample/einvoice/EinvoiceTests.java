@@ -173,7 +173,7 @@ class EinvoiceTests {
 
         //invoice header
         INVOICE.HEADER invoiceHeader = new INVOICE.HEADER();
-        invoiceHeader.setDIRECTION("IN");
+
         inv.setHEADER(invoiceHeader);
 
         Base64Binary base64Binary = new Base64Binary();
@@ -197,8 +197,8 @@ class EinvoiceTests {
 
         Assertions.assertNull(resp.getERRORTYPE());
 
-        sendEinvoiceUUID = ubl.getUUID().toString();
-        sendEinvoiceID = ubl.getID().getSchemeID();
+        sendEinvoiceUUID = ubl.getUUID().getValue();
+        sendEinvoiceID = ubl.getID().getValue();
     }
 
 
@@ -220,6 +220,7 @@ class EinvoiceTests {
 
         request.getINVOICE().add(invoice);
 
+        // Debug modunda bu satıra gelmeden önce son gönderilen fatura portal gelen kutusunda görünene kadar bekleyiniz
         SendInvoiceResponseWithServerSignResponse response = adapter.sendInvoiceResponseWithServerSign(request);
 
         // Belirtilen ID ye sahip bir fatura bulunamadı
