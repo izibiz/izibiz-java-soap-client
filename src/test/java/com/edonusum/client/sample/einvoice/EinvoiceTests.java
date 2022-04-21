@@ -220,7 +220,7 @@ class EinvoiceTests {
 
         request.getINVOICE().add(invoice);
 
-        // Debug modunda bu satıra gelmeden önce son gönderilen fatura portal gelen kutusunda görünene kadar bekleyiniz
+        // Debug modunda bu satıra gelmeden önce, son gönderilen fatura portal gelen kutusunda görünene kadar bekleyiniz
         SendInvoiceResponseWithServerSignResponse response = adapter.sendInvoiceResponseWithServerSign(request);
 
         // Belirtilen ID ye sahip bir fatura bulunamadı
