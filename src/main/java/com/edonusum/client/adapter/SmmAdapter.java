@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class SmmAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/SmmWS";
+    private static final String URL_ENDPOINT = URL + "/SmmWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.smm";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\smm";
     private final ObjectFactory of;
@@ -28,7 +28,7 @@ public class SmmAdapter extends Adapter{
 
     public GetSmmResponse getSmm(GetSmmRequest request) throws Exception{
         JAXBElement<GetSmmResponse> respObj = (JAXBElement<GetSmmResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetSmmRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetSmmRequest(request));
 
         String dir = DOCUMENTS_DIR + "\\getSmm";
         String ext = "xml";
@@ -45,35 +45,35 @@ public class SmmAdapter extends Adapter{
 
     public GetSmmStatusResponse getSmmStatus(GetSmmStatusRequest request) {
         JAXBElement<GetSmmStatusResponse> respObj = (JAXBElement<GetSmmStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetSmmStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetSmmStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public GetSmmReportResponse getSmmReport(GetSmmReportRequest request) {
         JAXBElement<GetSmmReportResponse> respObj = (JAXBElement<GetSmmReportResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetSmmReportRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetSmmReportRequest(request));
 
         return respObj.getValue();
     }
 
     public LoadSmmResponse loadSmm(LoadSmmRequest request) {
         JAXBElement<LoadSmmResponse> respObj = (JAXBElement<LoadSmmResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createLoadSmmRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLoadSmmRequest(request));
 
         return respObj.getValue();
     }
 
     public SendSmmResponse sendSmm(SendSmmRequest request) {
         JAXBElement<SendSmmResponse> respObj = (JAXBElement<SendSmmResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendSmmRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendSmmRequest(request));
 
         return respObj.getValue();
     }
 
     public CancelSmmResponse cancelSmm(CancelSmmRequest request) {
         JAXBElement<CancelSmmResponse> respObj = (JAXBElement<CancelSmmResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createCancelSmmRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createCancelSmmRequest(request));
 
         return respObj.getValue();
     }

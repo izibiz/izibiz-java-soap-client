@@ -167,10 +167,11 @@ class EiarchiveTests {
         request.setREQUESTHEADER(header);
 
         CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent content = new CancelEArchiveInvoiceRequest.CancelEArsivInvoiceContent();
-        content.setFATURAUUID(sendEiarchiveUUID);
+        content.setFATURAUUID(sendEiarchiveUUID); // son gönderilen faturanın UUID değeri
 
         request.getCancelEArsivInvoiceContent().add(content);
 
+        // Debug modunda bu satıra gelmeden bekleyiniz, son gönderilen fatura portalde gelen kutusuna düşmedikçe bu metod çalışmayacaktır.
         CancelEArchiveInvoiceResponse resp = adapter.cancelEArchiveInvoice(request);
 
         Assertions.assertNull(resp.getERRORTYPE());

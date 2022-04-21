@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class EdespatchAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/EIrsaliyeWS/EIrsaliye";
+    private static final String URL_ENDPOINT = URL + "/EIrsaliye";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.edespatch";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\edespatch";
     private final ObjectFactory of;
@@ -32,14 +32,14 @@ public class EdespatchAdapter extends Adapter{
 
     public GetDespatchAdviceStatusResponse getDespatchAdviseStatus(GetDespatchAdviceStatusRequest request) {
         JAXBElement<GetDespatchAdviceStatusResponse> respObj = (JAXBElement<GetDespatchAdviceStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetDespatchAdviceStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetDespatchAdviceStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public GetDespatchAdviceResponse getDespatchAdvice(GetDespatchAdviceRequest request) throws Exception {
         JAXBElement<GetDespatchAdviceResponse> respObj = (JAXBElement<GetDespatchAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetDespatchAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetDespatchAdviceRequest(request));
 
         String path = DOCUMENTS_DIR + "\\getDespatchAdvice\\";
 
@@ -68,42 +68,42 @@ public class EdespatchAdapter extends Adapter{
 
     public LoadDespatchAdviceResponse loadDespatchAdvice(LoadDespatchAdviceRequest request) {
         JAXBElement<LoadDespatchAdviceResponse> respObj = (JAXBElement<LoadDespatchAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createLoadDespatchAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLoadDespatchAdviceRequest(request));
 
         return respObj.getValue();
     }
 
     public SendDespatchAdviceResponse sendDespatchAdvice(SendDespatchAdviceRequest request) {
         JAXBElement<SendDespatchAdviceResponse> respObj = (JAXBElement<SendDespatchAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendDespatchAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendDespatchAdviceRequest(request));
 
         return respObj.getValue();
     }
 
     public MarkDespatchAdviceResponse markDespatchAdvice(MarkDespatchAdviceRequest request) {
         JAXBElement<MarkDespatchAdviceResponse> respObj = (JAXBElement<MarkDespatchAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createMarkDespatchAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createMarkDespatchAdviceRequest(request));
 
         return respObj.getValue();
     }
 
     public SendReceiptAdviceResponse sendReceiptAdvice(SendReceiptAdviceRequest request) {
         JAXBElement<SendReceiptAdviceResponse> respObj = (JAXBElement<SendReceiptAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendReceiptAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendReceiptAdviceRequest(request));
 
         return respObj.getValue();
     }
 
     public LoadReceiptAdviceResponse loadReceiptAdvice(LoadReceiptAdviceRequest request) {
         JAXBElement<LoadReceiptAdviceResponse> respObj = (JAXBElement<LoadReceiptAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createLoadReceiptAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLoadReceiptAdviceRequest(request));
 
         return respObj.getValue();
     }
 
     public GetReceiptAdviceResponse getReceiptAdvice(GetReceiptAdviceRequest request) throws Exception{
         JAXBElement<GetReceiptAdviceResponse> respObj = (JAXBElement<GetReceiptAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetReceiptAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetReceiptAdviceRequest(request));
 
         String path = DOCUMENTS_DIR + "\\getReceiptAdvice\\";
 
@@ -132,14 +132,14 @@ public class EdespatchAdapter extends Adapter{
 
     public GetReceiptAdviceStatusResponse getReceiptAdviceStatus(GetReceiptAdviceStatusRequest request) {
         JAXBElement<GetReceiptAdviceStatusResponse> respObj = (JAXBElement<GetReceiptAdviceStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetReceiptAdviceStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetReceiptAdviceStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public MarkReceiptAdviceResponse markReceiptAdvice(MarkReceiptAdviceRequest request) {
         JAXBElement<MarkReceiptAdviceResponse> respObj = (JAXBElement<MarkReceiptAdviceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createMarkReceiptAdviceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createMarkReceiptAdviceRequest(request));
 
         return respObj.getValue();
     }

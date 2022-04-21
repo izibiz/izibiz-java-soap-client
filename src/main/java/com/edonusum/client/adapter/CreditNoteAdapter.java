@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class CreditNoteAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/CreditNoteWS/CreditNote";
+    private static final String URL_ENDPOINT = URL + "/CreditNote";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.crnote";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\creditnote";
     private final ObjectFactory of;
@@ -31,7 +31,7 @@ public class CreditNoteAdapter extends Adapter{
 
     public GetCreditNoteResponse getCreditNote(GetCreditNoteRequest request) throws Exception{
         JAXBElement<GetCreditNoteResponse> respObj = (JAXBElement<GetCreditNoteResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetCreditNoteRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetCreditNoteRequest(request));
 
         String path = DOCUMENTS_DIR + "\\getCreditNote\\";
 
@@ -61,42 +61,42 @@ public class CreditNoteAdapter extends Adapter{
 
     public GetCreditNoteStatusResponse getCreditNoteStatus(GetCreditNoteStatusRequest request) {
         JAXBElement<GetCreditNoteStatusResponse> respObj = (JAXBElement<GetCreditNoteStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetCreditNoteStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetCreditNoteStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public SendCreditNoteResponse sendCreditNote(SendCreditNoteRequest request) {
         JAXBElement<SendCreditNoteResponse> respObj = (JAXBElement<SendCreditNoteResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendCreditNoteRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendCreditNoteRequest(request));
 
         return respObj.getValue();
     }
 
     public CancelCreditNoteResponse cancelCreditNote(CancelCreditNoteRequest request) {
         JAXBElement<CancelCreditNoteResponse> respObj = (JAXBElement<CancelCreditNoteResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createCancelCreditNoteRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createCancelCreditNoteRequest(request));
 
         return respObj.getValue();
     }
 
     public LoadCreditNoteResponse loadCreditNote(LoadCreditNoteRequest request) {
         JAXBElement<LoadCreditNoteResponse> respObj = (JAXBElement<LoadCreditNoteResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createLoadCreditNoteRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLoadCreditNoteRequest(request));
 
         return respObj.getValue();
     }
 
     public MarkCreditNoteResponse markCreditNote(MarkCreditNoteRequest request) {
         JAXBElement<MarkCreditNoteResponse> respObj = (JAXBElement<MarkCreditNoteResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createMarkCreditNoteRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createMarkCreditNoteRequest(request));
 
         return respObj.getValue();
     }
 
     public GetCreditNoteReportResponse getCreditNoteReport(GetCreditNoteReportRequest request) throws Exception{
         JAXBElement<GetCreditNoteReportResponse> respObj = (JAXBElement<GetCreditNoteReportResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetCreditNoteReportRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetCreditNoteReportRequest(request));
 
         String path = DOCUMENTS_DIR + "\\getCreditNoteReport";
 

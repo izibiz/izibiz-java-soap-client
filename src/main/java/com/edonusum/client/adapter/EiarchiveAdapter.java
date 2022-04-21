@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class EiarchiveAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive";
+    private static final String URL_ENDPOINT = URL + "/EFaturaArchive";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.eiarchive";
     private static final String DOCUMENT_DIR = PATH_TO_DOCUMENTS + "\\eiarchive";
     private final ObjectFactory of;
@@ -31,7 +31,7 @@ public class EiarchiveAdapter extends Adapter{
 
     public ArchiveInvoiceReadResponse readFromArchive(ArchiveInvoiceReadRequest request) throws Exception{
         JAXBElement<ArchiveInvoiceReadResponse> respObj = (JAXBElement<ArchiveInvoiceReadResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createArchiveInvoiceReadRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createArchiveInvoiceReadRequest(request));
 
         String dir = DOCUMENT_DIR + "\\readFromArchive";
 
@@ -57,35 +57,35 @@ public class EiarchiveAdapter extends Adapter{
 
     public GetEArchiveInvoiceStatusResponse getEArchiveStatus(GetEArchiveInvoiceStatusRequest request) {
         JAXBElement<GetEArchiveInvoiceStatusResponse> respObj = (JAXBElement<GetEArchiveInvoiceStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createGetEArchiveInvoiceStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createGetEArchiveInvoiceStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public CancelEArchiveInvoiceResponse cancelEArchiveInvoice(CancelEArchiveInvoiceRequest request) {
         JAXBElement<CancelEArchiveInvoiceResponse> respObj = (JAXBElement<CancelEArchiveInvoiceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createCancelEArchiveInvoiceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createCancelEArchiveInvoiceRequest(request));
 
         return respObj.getValue();
     }
 
     public GetEmailEarchiveInvoiceResponse getEmailEarchiveInvoice(GetEmailEarchiveInvoiceRequest request) {
         JAXBElement<GetEmailEarchiveInvoiceResponse> respObj = (JAXBElement<GetEmailEarchiveInvoiceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createGetEmailEarchiveInvoiceRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createGetEmailEarchiveInvoiceRequest(request));
 
         return respObj.getValue();
     }
 
     public GetEArchiveReportResponse getEarchiveReport(GetEArchiveReportRequest request) {
         JAXBElement<GetEArchiveReportResponse> respObj = (JAXBElement<GetEArchiveReportResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createGetEArchiveReportRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createGetEArchiveReportRequest(request));
 
         return respObj.getValue();
     }
 
     public ReadEArchiveReportResponse readEarchiveReport(ReadEArchiveReportRequest request) throws Exception {
         JAXBElement<ReadEArchiveReportResponse> respObj = (JAXBElement<ReadEArchiveReportResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createReadEArchiveReportRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createReadEArchiveReportRequest(request));
 
         String path = DOCUMENT_DIR + "\\readEarchiveReport\\";
 
@@ -102,7 +102,7 @@ public class EiarchiveAdapter extends Adapter{
 
     public ArchiveInvoiceExtendedResponse writeToArchiveExtended(ArchiveInvoiceExtendedRequest request) {
         JAXBElement<ArchiveInvoiceExtendedResponse> respObj = (JAXBElement<ArchiveInvoiceExtendedResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL,of.createArchiveInvoiceExtendedRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT,of.createArchiveInvoiceExtendedRequest(request));
 
         return respObj.getValue();
     }

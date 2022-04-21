@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class AuthAdapter extends Adapter {
 
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/AuthenticationWS";
+    private static final String URL_ENDPOINT = URL + "/AuthenticationWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.auth";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\auth";
 
@@ -28,20 +28,20 @@ public class AuthAdapter extends Adapter {
 
     public LoginResponse login(LoginRequest loginRequest) {
         JAXBElement<LoginRequest> finalRequest = of.createLoginRequest(loginRequest);
-        JAXBElement<LoginResponse> resp = (JAXBElement<LoginResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, finalRequest);
+        JAXBElement<LoginResponse> resp = (JAXBElement<LoginResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, finalRequest);
 
         return resp.getValue();
     }
 
     public LogoutResponse logout(LogoutRequest logoutRequest) {
-        JAXBElement<LogoutResponse> respObj = (JAXBElement<LogoutResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createLogoutRequest(logoutRequest));
+        JAXBElement<LogoutResponse> respObj = (JAXBElement<LogoutResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLogoutRequest(logoutRequest));
 
         return respObj.getValue();
     }
 
     public GetGibUserListResponse getGibUserList(GetGibUserListRequest request) throws Exception {
         JAXBElement<GetGibUserListResponse> response = (JAXBElement<GetGibUserListResponse>) getWebServiceTemplate()
-                .marshalSendAndReceive(URL, of.createGetGibUserListRequest(request));
+                .marshalSendAndReceive(URL_ENDPOINT, of.createGetGibUserListRequest(request));
 
         String pathToFile = DOCUMENTS_DIR + "\\getGibUserList";
 
@@ -64,7 +64,7 @@ public class AuthAdapter extends Adapter {
 
     public CheckUserResponse checkUser(CheckUserRequest request) {
         JAXBElement<CheckUserResponse> response = (JAXBElement<CheckUserResponse>) getWebServiceTemplate()
-                .marshalSendAndReceive(URL,of.createCheckUserRequest(request));
+                .marshalSendAndReceive(URL_ENDPOINT,of.createCheckUserRequest(request));
 
         return response.getValue();
     }

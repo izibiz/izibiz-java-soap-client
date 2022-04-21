@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class EinvoiceAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/EInvoiceWS";
+    private static final String URL_ENDPOINT = URL + "/EInvoiceWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.einvoice";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS+"\\einvoice";
     private final ObjectFactory of;
@@ -26,14 +26,14 @@ public class EinvoiceAdapter extends Adapter{
     }
 
     public SendInvoiceResponse sendInvoice(SendInvoiceRequest sendInvoiceRequest) {
-        JAXBElement<SendInvoiceResponse> respObj = (JAXBElement<SendInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendInvoiceRequest(sendInvoiceRequest));
+        JAXBElement<SendInvoiceResponse> respObj = (JAXBElement<SendInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendInvoiceRequest(sendInvoiceRequest));
 
         return respObj.getValue();
     }
 
     public GetInvoiceResponse getInvoice(GetInvoiceRequest getInvoiceRequest) throws Exception {
         JAXBElement<GetInvoiceResponse> respObj = (JAXBElement<GetInvoiceResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceRequest(getInvoiceRequest));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetInvoiceRequest(getInvoiceRequest));
 
         String dir = DOCUMENTS_DIR+"\\getInvoice\\";
 
@@ -59,7 +59,7 @@ public class EinvoiceAdapter extends Adapter{
     }
 
     public GetInvoiceWithTypeResponse getInvoiceWithType(GetInvoiceWithTypeRequest request) throws Exception{
-        JAXBElement<GetInvoiceWithTypeResponse> respObj = (JAXBElement<GetInvoiceWithTypeResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceWithTypeRequest(request));
+        JAXBElement<GetInvoiceWithTypeResponse> respObj = (JAXBElement<GetInvoiceWithTypeResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetInvoiceWithTypeRequest(request));
 
         String dir = DOCUMENTS_DIR+"\\getInvoiceWithType\\";
 
@@ -86,31 +86,31 @@ public class EinvoiceAdapter extends Adapter{
     }
 
     public LoadInvoiceResponse loadInvoice(LoadInvoiceRequest loadInvoiceRequest) {
-        JAXBElement<LoadInvoiceResponse> respObj = (JAXBElement<LoadInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createLoadInvoiceRequest(loadInvoiceRequest));
+        JAXBElement<LoadInvoiceResponse> respObj = (JAXBElement<LoadInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createLoadInvoiceRequest(loadInvoiceRequest));
 
         return respObj.getValue();
     }
 
     public MarkInvoiceResponse markInvoice(MarkInvoiceRequest markInvoiceRequest) {
-        JAXBElement<MarkInvoiceResponse> respObj = (JAXBElement<MarkInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createMarkInvoiceRequest(markInvoiceRequest));
+        JAXBElement<MarkInvoiceResponse> respObj = (JAXBElement<MarkInvoiceResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createMarkInvoiceRequest(markInvoiceRequest));
 
         return respObj.getValue();
     }
 
     public GetInvoiceStatusAllResponse getInvoiceStatusAll(GetInvoiceStatusAllRequest getInvoiceRequest) {
-        JAXBElement<GetInvoiceStatusAllResponse> respObj = (JAXBElement<GetInvoiceStatusAllResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceStatusAllRequest(getInvoiceRequest));
+        JAXBElement<GetInvoiceStatusAllResponse> respObj = (JAXBElement<GetInvoiceStatusAllResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetInvoiceStatusAllRequest(getInvoiceRequest));
 
         return respObj.getValue();
     }
 
     public SendInvoiceResponseWithServerSignResponse sendInvoiceResponseWithServerSign(SendInvoiceResponseWithServerSignRequest request) {
-        JAXBElement<SendInvoiceResponseWithServerSignResponse> respObj = (JAXBElement<SendInvoiceResponseWithServerSignResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendInvoiceResponseWithServerSignRequest(request));
+        JAXBElement<SendInvoiceResponseWithServerSignResponse> respObj = (JAXBElement<SendInvoiceResponseWithServerSignResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendInvoiceResponseWithServerSignRequest(request));
 
         return respObj.getValue();
     }
 
     public GetInvoiceStatusResponse getInvoiceStatus(GetInvoiceStatusRequest request) {
-        JAXBElement<GetInvoiceStatusResponse> respObj = (JAXBElement<GetInvoiceStatusResponse>) getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetInvoiceStatusRequest(request));
+        JAXBElement<GetInvoiceStatusResponse> respObj = (JAXBElement<GetInvoiceStatusResponse>) getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetInvoiceStatusRequest(request));
 
         return respObj.getValue();
     }

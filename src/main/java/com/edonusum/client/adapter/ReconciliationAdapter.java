@@ -7,7 +7,7 @@ import javax.xml.bind.JAXBElement;
 
 @Component
 public class ReconciliationAdapter extends Adapter{
-    private static final String URL = "https://efaturatest.izibiz.com.tr:443/ReconciliationWS";
+    private static final String URL_ENDPOINT = URL + "/ReconciliationWS";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.reconciliation";
     private final ObjectFactory of;
 
@@ -18,21 +18,21 @@ public class ReconciliationAdapter extends Adapter{
 
     public GetReconciliationStatusResponse getReconciliationStatus(GetReconciliationStatusRequest request) {
         JAXBElement<GetReconciliationStatusResponse> respObj = (JAXBElement<GetReconciliationStatusResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createGetReconciliationStatusRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetReconciliationStatusRequest(request));
 
         return respObj.getValue();
     }
 
     public SendReconciliationResponse sendReconciliation(SendReconciliationRequest request) {
         JAXBElement<SendReconciliationResponse> respObj = (JAXBElement<SendReconciliationResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendReconciliationRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendReconciliationRequest(request));
 
         return respObj.getValue();
     }
 
     public SendMailReconciliationResponse sendReconciliationMail(SendMailReconciliationRequest request) {
         JAXBElement<SendMailReconciliationResponse> respObj = (JAXBElement<SendMailReconciliationResponse>)
-                getWebServiceTemplate().marshalSendAndReceive(URL, of.createSendMailReconciliationRequest(request));
+                getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createSendMailReconciliationRequest(request));
 
         return respObj.getValue();
     }
