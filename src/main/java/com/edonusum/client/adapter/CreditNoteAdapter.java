@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class CreditNoteAdapter extends Adapter{
-    private static final String URL_ENDPOINT = URL + "/CreditNote";
+    private static final String URL_ENDPOINT = URL + "/CreditNoteWS/CreditNote";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.crnote";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\creditnote";
     private final ObjectFactory of;

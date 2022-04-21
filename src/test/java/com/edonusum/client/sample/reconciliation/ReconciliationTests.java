@@ -44,12 +44,13 @@ class ReconciliationTests {
 
         SendReconciliationRequest.RECONCILIATION reconciliation = new SendReconciliationRequest.RECONCILIATION();
         reconciliation.setTYPE(RECONCILIATIONTYPE.CM); // Cari Mutabakat: CM , BA/BAS Mutabakat: EM
-        reconciliation.setCUSTOMERIDENTIFIER("4840847211");
+        reconciliation.setCUSTOMERIDENTIFIER("11111111113");
         reconciliation.setCOMMERCIALNAME("İzibiz Bilişim Teknolojileri A.Ş.");
         reconciliation.setCUSTOMERADDRESS("test");
         reconciliation.setCURRENCYCODE(CURRENCYCODE.USD);
         reconciliation.setTAXOFFICE("DAVUTPAŞA");
         reconciliation.setUUID(UUID.randomUUID().toString());
+        reconciliation.setNOTE("Test amaçlıdır.");
 
         // Cari Mutabakat için zorunlu alanlar
         reconciliation.setCMAMOUNT(BigDecimal.valueOf(1));

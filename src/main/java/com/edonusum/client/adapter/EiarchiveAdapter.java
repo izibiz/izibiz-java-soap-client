@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class EiarchiveAdapter extends Adapter{
-    private static final String URL_ENDPOINT = URL + "/EFaturaArchive";
+    private static final String URL_ENDPOINT = URL + "/EIArchiveWS/EFaturaArchive";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.eiarchive";
     private static final String DOCUMENT_DIR = PATH_TO_DOCUMENTS + "\\eiarchive";
     private final ObjectFactory of;

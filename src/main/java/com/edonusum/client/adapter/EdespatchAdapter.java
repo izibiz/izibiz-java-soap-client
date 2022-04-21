@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class EdespatchAdapter extends Adapter{
-    private static final String URL_ENDPOINT = URL + "/EIrsaliye";
+    private static final String URL_ENDPOINT = URL + "/EIrsaliyeWS/EIrsaliye";
     private static final String CONTEXT_PATH = "com.edonusum.client.wsdl.edespatch";
     private static final String DOCUMENTS_DIR = PATH_TO_DOCUMENTS + "\\edespatch";
     private final ObjectFactory of;
