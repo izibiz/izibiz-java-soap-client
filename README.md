@@ -20,7 +20,8 @@ pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client
 ## Kullanım
 Kurulum tamamlandıktan sonra 'target' package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol edilmelidir. Bu noktada artık projemizde hata bulunmamalı ve başarıyla build yapılabiliyor olmalıdır.
 ###### (Eclipse için pom.xml dosyasında hatalar görünebilir, bunlar bug kaynaklı olmakla beraber yukarıdaki komutların uygulanmasını engellememektedir.)
-  
+
+Bu aşamada, projemiz teste hazırdır. Aşağıda açıklandığı şekilde test metodlarımızı çalıştırabilirsiniz.
   1. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
   2. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
   3. Sonuçlar return tipi olarak döndürülen Response objelerinin içleri incelenerek kontrol edilir
