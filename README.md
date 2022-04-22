@@ -10,7 +10,10 @@
 Değişiklik yapmaya gerek yoktur
 
 ### Eclipse
-pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client/files/8542638/pom.zip) ile değiştirdikten sonra kullanıma hazır olmalıdır.
+pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client/files/8542638/pom.zip) ile değiştirdikten sonra aşağıdaki adımlar tekrarlanmalıdır.
+  1. pom.xml -> sağ tık -> run as -> maven clean
+  2. pom.xml -> sağ tık -> run as -> maven generate-sources
+  3. pom.xml -> sağ tık -> run as -> maven update project
 
 
 
