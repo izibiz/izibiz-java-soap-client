@@ -5,9 +5,11 @@
 
 
 ## Kurulum
+Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır
 
 ### Intellij
-Kurulum gerekmemektedir. Kullanım kısmında belirtilen adımları uygulayınız.
+  1. wsimport komutlarının çalışması için için pom.xml dosyasında 'maven compile' komutu çalıştırılır
+  2. Projeye rebuild yapılır
 
 ### Eclipse
 pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client/files/8542638/pom.zip) ile değiştirdikten sonra aşağıdaki adımlar tekrarlanmalıdır.
@@ -15,16 +17,12 @@ pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client
   2. pom.xml -> sağ tık -> run as -> maven generate-sources
   3. pom.xml -> sağ tık -> run as -> maven update project
 
+Kurulum tamamlandıktan sonra 'target' package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol eidlmelidir. Bu noktada artık projemizde hata bulunmamalı ve başarıyla build yapılabiliyor olmalıdır.
 
 
 ## Kullanım
-
-  1. Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır
-  2. (Eclipse kullanılıyor ise) kurulum kısmında belirtilen adımlar uygulanır
-  3. (Intellij kullanılıyor ise) WSDL classlarının oluşturulması için pom.xml dosyasında 'maven compile' komutu çalıştırılır
-  4. Target package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol edilir
-  5. (Intellij kullanılıyor ise) Projeye rebuild yapılır 
-  6. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
-  7. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
-  8. Sonuçlar return tipi olarak döndürülen Response objelerinin içleri incelenerek kontrol edilir
+  
+  1. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
+  2. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
+  3. Sonuçlar return tipi olarak döndürülen Response objelerinin içleri incelenerek kontrol edilir
 
