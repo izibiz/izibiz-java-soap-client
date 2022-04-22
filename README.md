@@ -17,10 +17,8 @@ pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client
   2. pom.xml -> sağ tık -> run as -> maven generate-sources
   3. pom.xml -> sağ tık -> run as -> maven update project
 
-Kurulum tamamlandıktan sonra 'target' package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol eidlmelidir. Bu noktada artık projemizde hata bulunmamalı ve başarıyla build yapılabiliyor olmalıdır.
-
-
 ## Kullanım
+Kurulum tamamlandıktan sonra 'target' package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol eidlmelidir. Bu noktada artık projemizde hata bulunmamalı ve başarıyla build yapılabiliyor olmalıdır.
   
   1. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
   2. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
