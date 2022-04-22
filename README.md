@@ -8,7 +8,7 @@
 Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır
 
 ### Intellij
-  1. wsimport komutlarının çalışması için için pom.xml dosyasında 'maven compile' komutu çalıştırılır
+  1. wsimport komutlarının çalışması için pom.xml dosyasında 'maven compile' komutu çalıştırılır
   2. Projeye rebuild yapılır
 
 ### Eclipse
