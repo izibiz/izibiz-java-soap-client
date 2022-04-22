@@ -19,7 +19,7 @@ pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client
 
 ## Kullanım
 
-  1. Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır (Tercihen Intellij IDEA)
+  1. Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır
   2. (Eclipse kullanılıyor ise) kurulum kısmında belirtilen adımlar uygulanır
   3. (Intellij kullanılıyor ise) WSDL classlarının oluşturulması için pom.xml dosyasında 'maven compile' komutu çalıştırılır
   4. Target package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol edilir
