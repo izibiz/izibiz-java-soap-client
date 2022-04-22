@@ -7,7 +7,7 @@
 ## Kurulum
 
 ### Intellij
-Değişiklik yapmaya gerek yoktur
+Kurulum gerekmemektedir. Kullanım kısmında belirtilen adımları uygulayınız.
 
 ### Eclipse
 pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client/files/8542638/pom.zip) ile değiştirdikten sonra aşağıdaki adımlar tekrarlanmalıdır.
