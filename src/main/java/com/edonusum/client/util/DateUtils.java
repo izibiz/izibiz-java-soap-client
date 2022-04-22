@@ -13,7 +13,7 @@ public final class DateUtils {
     private DateUtils() {}
 
     /**
-     * Parametre olarak verilen gün sayısı kadar önceki tarihi XMLGregorianCalender tipinde döndürür
+     * Parametre olarak verilen gün sayısı kadar önceki tarihi XMLGregorianCalendar tipinde döndürür
      * @param days Şu anki tarihden eksiltilmek istenen gün sayısı
      * @return {@link XMLGregorianCalendar} tipindeki tarih objesi
      * @throws DatatypeConfigurationException

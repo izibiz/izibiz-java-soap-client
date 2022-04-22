@@ -109,7 +109,7 @@ class EdespatchTests {
         searchKey.setENDDATE(DateUtils.now());
 
         searchKey.setDIRECTION("OUT");
-        searchKey.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(false);
         searchKey.setCONTENTTYPE(CONTENTTYPE.XML);
         searchKey.setLIMIT(100);
         // searchKey.setLIMIT(10);

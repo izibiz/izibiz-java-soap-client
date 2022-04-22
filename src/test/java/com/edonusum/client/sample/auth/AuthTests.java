@@ -78,6 +78,9 @@ public class AuthTests {
         gibUser.setIDENTIFIER(exampleId);
         request.setUSER(gibUser);
 
+        /* INVOICE veya DESPATCHADVICE mükellefliği sorgulamak için kullanılır
+         * Bir değer girilmezse hem e-fatura hem e-irsaliye mükellefliği sorgulanır
+        */
         request.setDOCUMENTTYPE("DESPATCHADVICE");
 
         CheckUserResponse response = adapter.checkUser(request);

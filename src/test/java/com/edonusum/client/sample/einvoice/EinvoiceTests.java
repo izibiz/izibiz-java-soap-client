@@ -59,12 +59,12 @@ class EinvoiceTests {
 
         GetInvoiceRequest.INVOICESEARCHKEY searchKey = new GetInvoiceRequest.INVOICESEARCHKEY();
         searchKey.setDIRECTION("OUT");
-        searchKey.setLIMIT(100);
+        searchKey.setLIMIT(10);
 
         request.setINVOICESEARCHKEY(searchKey);
 
         /* okunmuş faturaları alma */
-        searchKey.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(false);
 
         // Tarihe göre alma
         searchKey.setSTARTDATE(DateUtils.minusDays(30));
@@ -103,7 +103,7 @@ class EinvoiceTests {
         searchKey.setENDDATE(DateUtils.now());
 
         /* Okunmuş faturaların alınması */
-        searchKey.setREADINCLUDED(true);
+        searchKey.setREADINCLUDED(false);
 
         request.setINVOICESEARCHKEY(searchKey);
 
@@ -240,7 +240,7 @@ class EinvoiceTests {
         request.setREQUESTHEADER(header);
 
         MarkInvoiceRequest.MARK mark = new MarkInvoiceRequest.MARK();
-        mark.setValue("UNREAD");
+        mark.setValue("READ");
 
         mark.getINVOICE().addAll(invoices);
         request.setMARK(mark);
@@ -256,6 +256,31 @@ class EinvoiceTests {
 
     @Test
     @Order(8)
+    @DisplayName("E-Fatura işaretleme")
+    void canMarkInvoiceAsUnread() { // markInvoice
+        MarkInvoiceRequest request = new MarkInvoiceRequest();
+        REQUESTHEADERType header = new REQUESTHEADERType();
+
+        header.setSESSIONID(SESSION_ID);
+        request.setREQUESTHEADER(header);
+
+        MarkInvoiceRequest.MARK mark = new MarkInvoiceRequest.MARK();
+        mark.setValue("UNREAD");
+
+        mark.getINVOICE().addAll(invoices);
+        request.setMARK(mark);
+
+        request.setREQUESTHEADER(header);
+
+        MarkInvoiceResponse response = adapter.markInvoice(request);
+
+        Assertions.assertNull(response.getERRORTYPE());
+
+        System.out.println(response.getREQUESTRETURN().getINTLTXNID()); // transaction id
+    }
+
+    @Test
+    @Order(9)
     @DisplayName("E-Fatura durum sorgulama")
     void canGetInvoiceStatus() { // getInvoiceStatus
         GetInvoiceStatusRequest request = new GetInvoiceStatusRequest();
@@ -274,7 +299,7 @@ class EinvoiceTests {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     @DisplayName("E-Fatura toplu durum sorgulama")
     void canGetInvoiceStatus_multiple() { // getInvoiceStatusAll
         GetInvoiceStatusAllRequest request = new GetInvoiceStatusAllRequest();
@@ -295,7 +320,7 @@ class EinvoiceTests {
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     @DisplayName("Çıkış yapma")
     void logout() { // logout
         AuthTests.logout(SESSION_ID);

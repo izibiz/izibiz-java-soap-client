@@ -33,28 +33,30 @@ public class CreditNoteAdapter extends Adapter{
         JAXBElement<GetCreditNoteResponse> respObj = (JAXBElement<GetCreditNoteResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetCreditNoteRequest(request));
 
-        String path = DOCUMENTS_DIR + "\\getCreditNote\\";
+        if(! respObj.getValue().getCREDITNOTE().isEmpty()) {
+            String path = DOCUMENTS_DIR + "\\getCreditNote\\";
 
-        if(null == request.getCONTENTTYPE()) request.setCONTENTTYPE(CONTENTTYPE.XML);
+            if(null == request.getCONTENTTYPE()) request.setCONTENTTYPE(CONTENTTYPE.XML);
 
-        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getCONTENTTYPE().value();
+            String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : request.getCONTENTTYPE().value();
 
-        List<byte[]> contents = respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList());
+            List<byte[]> contents = respObj.getValue().getCREDITNOTE().stream().map(cn -> cn.getCONTENT().getValue()).collect(Collectors.toList());
 
-        List<File> files = FileUtils.writeToFile(contents,path, "credit_note", ext);
-        if("zip".equals(ext)){
-            files = ZipUtils.unzipMultiple(files); // extracted files
-        }
-
-        if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
-            // xml files
-            List<CreditNoteType> creditnotes = new ArrayList<>();
-            for(File xml : files) {
-                creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+            List<File> files = FileUtils.writeToFile(contents,path, "credit_note", ext);
+            if("zip".equals(ext)){
+                files = ZipUtils.unzipMultiple(files); // extracted files
             }
-        }
 
-        // TODO: do business with credit note list
+            if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
+                // xml files
+                List<CreditNoteType> creditnotes = new ArrayList<>();
+                for(File xml : files) {
+                    creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+                }
+            }
+
+            // TODO: do business with credit note list
+        }
 
         return respObj.getValue();
     }
@@ -98,28 +100,28 @@ public class CreditNoteAdapter extends Adapter{
         JAXBElement<GetCreditNoteReportResponse> respObj = (JAXBElement<GetCreditNoteReportResponse>)
                 getWebServiceTemplate().marshalSendAndReceive(URL_ENDPOINT, of.createGetCreditNoteReportRequest(request));
 
-        String path = DOCUMENTS_DIR + "\\getCreditNoteReport";
+        if(! respObj.getValue().getCREDITNOTEREPORT().isEmpty()) {
+            String path = DOCUMENTS_DIR + "\\getCreditNoteReport";
 
-        String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : "xml";
+            String ext = isCompressed(request.getREQUESTHEADER()) ? "zip" : "xml";
 
-        List<byte[]> contents = respObj.getValue().getCREDITNOTEREPORT().stream().map(report -> report.getCONTENT().getValue()).collect(Collectors.toList());
+            List<byte[]> contents = respObj.getValue().getCREDITNOTEREPORT().stream().map(report -> report.getCONTENT().getValue()).collect(Collectors.toList());
 
-        List<File> files = FileUtils.writeToFile(contents, path, "credit_note_report",ext);
+            List<File> files = FileUtils.writeToFile(contents, path, "credit_note_report",ext);
 
-        if("zip".equals(ext)){
-            files = ZipUtils.unzipMultiple(files); // extracted files
-        }
-
-        if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
-            // xml files
-            List<CreditNoteType> creditnotes = new ArrayList<>();
-            for(File xml : files) {
-                creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+            if("zip".equals(ext)){
+                files = ZipUtils.unzipMultiple(files); // extracted files
             }
+
+            if(files.size() != 0 && files.get(0).getName().toLowerCase().endsWith(".xml")) {
+                // xml files
+                List<CreditNoteType> creditnotes = new ArrayList<>();
+                for(File xml : files) {
+                    creditnotes.add(JAXB.unmarshal(xml, CreditNoteType.class));
+                }
+            }
+            // TODO: do the business with credit note report list
         }
-
-        // TODO: do the business with credit note report list
-
         return respObj.getValue();
     }
 }
