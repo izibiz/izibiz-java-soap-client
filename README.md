@@ -4,7 +4,7 @@
 
 
 
-## Hazırlama
+## Kurulum
 
 ### Intellij
 Değişiklik yapmaya gerek yoktur
