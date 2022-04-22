@@ -20,10 +20,11 @@ pom.xml dosyasını [bu dosya](https://github.com/izibiz/izibiz-java-soap-client
 ## Kullanım
 
   1. Repository URL'i kullanılarak veya kaynak kodlar indirilerek proje herhangi bir IDE içerisinde açılır (Tercihen Intellij IDEA)
-  2. WSDL classlarının oluşturulması için pom.xml dosyasında 'maven compile' komutu çalıştırılır
-  3. Target package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol edilir
-  4. Projeye rebuild yapılır 
-  5. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
-  6. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
-  7. Sonuçlar return tipi olarak döndürülen Response objelerinin içleri incelenerek kontrol edilir
+  2. (Eclipse kullanılıyor ise) kurulum kısmında belirtilen adımlar uygulanır
+  3. (Intellij kullanılıyor ise) WSDL classlarının oluşturulması için pom.xml dosyasında 'maven compile' komutu çalıştırılır
+  4. Target package'ine (Eclipse için farklı olabilir) gidilerek auto-generated classların oluşturulup oluşturulmadığı kontrol edilir
+  5. (Intellij kullanılıyor ise) Projeye rebuild yapılır 
+  6. AuthTests sınıfında bulunan USERNAME ve PASSWORD alanlarına gerekli bilgiler yazılır
+  7. Test classlarına sağ tıklanarak run veya debug yapılır (debug önerilir)
+  8. Sonuçlar return tipi olarak döndürülen Response objelerinin içleri incelenerek kontrol edilir
 
