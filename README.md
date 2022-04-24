@@ -1,4 +1,4 @@
-# İzibiz Soap Java Örnek Entegrason İstemcisi
+# İzibiz Soap Java Örnek Entegrasyon İstemcisi
 
 İzibiz web servisleri için entegrasyon örneği olarak hazırlanmıştır. Kimlik Doğrulama, E-Fatura, E-Arşiv, E-İrsaliye, E-Müstahsil, E-Serbest Meslek ve E-Mutabakat ürünlerini kapsamaktadır. Her bir ürün için bir adet adaptörümüz bulunmakta ve bu adaptör sınıflarımız birer Spring component'i olarak yazılmıştır. Böylece, adaptör sınıflarımız ister autowiring kullanılarak, ister Client (Main class) instance'si oluşturularak bu instance üzerinden çağrılarak kullanılabilir. Test metodlarımız genellikle birbiriyle bağlantılı olduğu için metodlarımızı 'run' yerine 'debug' modunda çalıştırıp satır satır ilerletmeniz tavsiye edilir.
 
