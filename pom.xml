@@ -218,7 +218,7 @@
                 </executions>
                 <configuration>
                     <sources>
-                        <source>izibiz-soap-java-client/main/resources/xsdrt/maindoc</source>
+                        <source>${project.basedir}/src/main/resources/xsdrt/maindoc</source>
                     </sources>
                 </configuration>
             </plugin>
